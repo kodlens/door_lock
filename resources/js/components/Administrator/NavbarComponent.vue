@@ -17,9 +17,18 @@
                     Home
                 </b-navbar-item>
 
+                <b-navbar-item href="/academic-years">
+                    Academic Year
+                </b-navbar-item>
+
                 <b-navbar-item href="/doors">
                     Door
                 </b-navbar-item>
+
+                <b-navbar-item href="/schedule">
+                    Schedules
+                </b-navbar-item>
+                
                 <!-- <b-navbar-item href="/about">
                     ABOUT
                 </b-navbar-item> -->

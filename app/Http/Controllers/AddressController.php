@@ -6,6 +6,7 @@ use App\Models\Barangay;
 use App\Models\City;
 use App\Models\Province;
 use Illuminate\Http\Request;
+use App\Models\Semester;
 
 class AddressController extends Controller
 {
@@ -35,5 +36,11 @@ class AddressController extends Controller
             ->orderBy('brgyDesc', 'asc')
             ->get();
         return $barangays;
+    }
+
+
+    public function loadSemesters(){
+        return Semester::orderBy('id', 'asc')
+            ->get();
     }
 }

@@ -61,6 +61,7 @@ Route::post('/sign-up', [App\Http\Controllers\SignUpController::class, 'store'])
 Route::get('/load-provinces', [App\Http\Controllers\AddressController::class, 'loadProvinces']);
 Route::get('/load-cities', [App\Http\Controllers\AddressController::class, 'loadCities']);
 Route::get('/load-barangays', [App\Http\Controllers\AddressController::class, 'loadBarangays']);
+Route::get('/load-semesters', [App\Http\Controllers\AddressController::class, 'loadSemesters']);
 
 
 /*     ADMINSITRATOR
@@ -72,6 +73,16 @@ Route::resource('/admin-home', App\Http\Controllers\Administrator\AdminHomeContr
 
 Route::resource('/doors', App\Http\Controllers\Administrator\DoorController::class);
 Route::get('/get-doors', [App\Http\Controllers\Administrator\DoorController::class, 'getDoors']);
+
+
+
+Route::resource('/schedules', App\Http\Controllers\Administrator\ScheduleleController::class);
+
+
+Route::resource('/academic-years', App\Http\Controllers\Administrator\AcademicYearController::class);
+Route::get('/get-academic-years', [App\Http\Controllers\Administrator\AcademicYearController::class, 'getAcademicYears']);
+
+
 
 /*     ADMINSITRATOR
       */

@@ -222,7 +222,9 @@ $link-focus-border: $primary;
 $navbar-height: 5rem;
 $navbar-item-img-max-height: 4rem;
 
-
+.navbar{
+    border-bottom: 1px solid $primary;
+}
 //$navbar-burger-color: white;
 //$navbar-item-color: #ffffff;
 //$navbar-item-hover-color: #a7f1a7;

@@ -26909,6 +26909,10 @@ fieldset[disabled] .file-name, fieldset[disabled] .select select, .select fields
   padding: 0;
 }
 
+.navbar {
+  border-bottom: 1px solid #3490dc;
+}
+
 /*! bulma.io v0.9.3 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
 .pagination-previous,
