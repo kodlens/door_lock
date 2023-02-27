@@ -70,5 +70,9 @@ class DoorController extends Controller
 
     public function destroy($id){
         Door::destroy($id);
+
+        return response()->json([
+            'status' => 'deleted'
+        ],200);
     }
 }

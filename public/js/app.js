@@ -8171,8 +8171,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "AppointmentType",
   data: function data() {
@@ -8579,6 +8577,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+//
+//
+//
 //
 //
 //
@@ -33284,6 +33285,40 @@ component.options.__file = "resources/js/components/Administrator/NavbarComponen
 
 /***/ }),
 
+/***/ "./resources/js/components/Administrator/Schedule/ScheduleCreate.vue":
+/*!***************************************************************************!*\
+  !*** ./resources/js/components/Administrator/Schedule/ScheduleCreate.vue ***!
+  \***************************************************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! !../../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+var render, staticRenderFns
+var script = {}
+
+
+/* normalize component */
+;
+var component = (0,_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_0__["default"])(
+  script,
+  render,
+  staticRenderFns,
+  false,
+  null,
+  null,
+  null
+  
+)
+
+component.options.__file = "resources/js/components/Administrator/Schedule/ScheduleCreate.vue"
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (component.exports);
+
+/***/ }),
+
 /***/ "./resources/js/components/Administrator/Schedule/SchedulePage.vue":
 /*!*************************************************************************!*\
   !*** ./resources/js/components/Administrator/Schedule/SchedulePage.vue ***!
@@ -35494,13 +35529,7 @@ var render = function () {
                                       key: index,
                                       domProps: { value: item.semester },
                                     },
-                                    [
-                                      _vm._v(
-                                        _vm._s(item.semester) +
-                                          " - " +
-                                          _vm._s(item.semester)
-                                      ),
-                                    ]
+                                    [_vm._v(_vm._s(item.semester))]
                                   )
                                 }),
                                 0
@@ -36015,30 +36044,16 @@ var render = function () {
                   ]),
                 ]),
                 _vm._v(" "),
-                _c(
-                  "footer",
-                  { staticClass: "modal-card-foot" },
-                  [
-                    _c("b-button", {
-                      attrs: { label: "Close" },
-                      on: {
-                        click: function ($event) {
-                          _vm.isModalCreate = false
-                        },
-                      },
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        class: _vm.btnClass,
-                        attrs: { label: "Save", type: "is-success" },
-                      },
-                      [_vm._v("SAVE")]
-                    ),
-                  ],
-                  1
-                ),
+                _c("footer", { staticClass: "modal-card-foot" }, [
+                  _c(
+                    "button",
+                    {
+                      class: _vm.btnClass,
+                      attrs: { label: "Save", type: "is-success" },
+                    },
+                    [_vm._v("SAVE")]
+                  ),
+                ]),
               ]),
             ]
           ),
@@ -36262,7 +36277,7 @@ var render = function () {
                   _vm._v("\n                Door\n            "),
                 ]),
                 _vm._v(" "),
-                _c("b-navbar-item", { attrs: { href: "/schedule" } }, [
+                _c("b-navbar-item", { attrs: { href: "/schedules" } }, [
                   _vm._v("\n                Schedules\n            "),
                 ]),
                 _vm._v(" "),
@@ -36326,7 +36341,7 @@ var render = function () {
                   staticClass: "is-flex is-justify-content-center mb-2",
                   staticStyle: { "font-size": "20px", "font-weight": "bold" },
                 },
-                [_vm._v("DOORS")]
+                [_vm._v("SCHEDULES")]
               ),
               _vm._v(" "),
               _c("div", { staticClass: "level" }, [
@@ -36408,7 +36423,7 @@ var render = function () {
                         { attrs: { label: "Search" } },
                         [
                           _c("b-input", {
-                            attrs: { type: "text", placeholder: "Search Door" },
+                            attrs: { type: "text", placeholder: "Search" },
                             nativeOn: {
                               keyup: function ($event) {
                                 if (
@@ -36607,10 +36622,13 @@ var render = function () {
                     "b-button",
                     {
                       staticClass: "is-success",
-                      attrs: { "icon-right": "account-arrow-up-outline" },
-                      on: { click: _vm.openModal },
+                      attrs: {
+                        tag: "a",
+                        "icon-right": "calendar",
+                        href: "/schedules/create",
+                      },
                     },
-                    [_vm._v("ADD DOOR")]
+                    [_vm._v("NEW SCHEDULE")]
                   ),
                 ],
                 1
@@ -66241,6 +66259,7 @@ var map = {
 	"./components/Administrator/HomePage.vue": "./resources/js/components/Administrator/HomePage.vue",
 	"./components/Administrator/LoginPage.vue": "./resources/js/components/Administrator/LoginPage.vue",
 	"./components/Administrator/NavbarComponent.vue": "./resources/js/components/Administrator/NavbarComponent.vue",
+	"./components/Administrator/Schedule/ScheduleCreate.vue": "./resources/js/components/Administrator/Schedule/ScheduleCreate.vue",
 	"./components/Administrator/Schedule/SchedulePage.vue": "./resources/js/components/Administrator/Schedule/SchedulePage.vue",
 	"./components/Administrator/Services/ServicesPage.vue": "./resources/js/components/Administrator/Services/ServicesPage.vue",
 	"./components/Administrator/User/UserPage.vue": "./resources/js/components/Administrator/User/UserPage.vue",

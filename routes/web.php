@@ -77,6 +77,7 @@ Route::get('/get-doors', [App\Http\Controllers\Administrator\DoorController::cla
 
 
 Route::resource('/schedules', App\Http\Controllers\Administrator\ScheduleleController::class);
+Route::get('/get-schedules',[App\Http\Controllers\Administrator\ScheduleleController::class, 'getSchedules']);
 
 
 Route::resource('/academic-years', App\Http\Controllers\Administrator\AcademicYearController::class);

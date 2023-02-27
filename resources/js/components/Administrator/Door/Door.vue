@@ -128,9 +128,7 @@
                         </div>
                     </section>
                     <footer class="modal-card-foot">
-                        <b-button
-                            label="Close"
-                            @click="isModalCreate=false"/>
+
                         <button
                             :class="btnClass"
                             label="Save"

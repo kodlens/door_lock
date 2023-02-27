@@ -5,7 +5,7 @@
             <div class="columns is-centered">
                 <div class="column is-8">
                     <div class="box">
-                        <div class="is-flex is-justify-content-center mb-2" style="font-size: 20px; font-weight: bold;">DOORS</div>
+                        <div class="is-flex is-justify-content-center mb-2" style="font-size: 20px; font-weight: bold;">SCHEDULES</div>
 
                         <div class="level">
                             <div class="level-left">
@@ -28,7 +28,7 @@
                                 <div class="level-item">
                                     <b-field label="Search">
                                         <b-input type="text"
-                                                 v-model="search.door" placeholder="Search Door"
+                                                 v-model="search.door" placeholder="Search"
                                                  @keyup.native.enter="loadAsyncData"/>
                                         <p class="control">
                                             <b-tooltip label="Search" type="is-success">
@@ -81,7 +81,10 @@
                         </b-table>
 
                         <div class="buttons mt-3">
-                            <b-button @click="openModal" icon-right="account-arrow-up-outline" class="is-success">ADD DOOR</b-button>
+                            <b-button tag="a" 
+                                icon-right="calendar"
+                                href="/schedules/create"
+                                class="is-success">NEW SCHEDULE</b-button>
                         </div>
 
                     </div>

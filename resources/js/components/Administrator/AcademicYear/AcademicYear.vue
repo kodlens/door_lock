@@ -140,7 +140,7 @@
                                         <b-select v-model="fields.semester" placeholder="Semester" required>
                                             <option v-for="(item, index) in semesters"
                                                 :key="index"
-                                                :value="item.semester">{{ item.semester }} - {{ item.semester }}</option>
+                                                :value="item.semester">{{ item.semester }}</option>
                                         </b-select>
                                     </b-field>
 

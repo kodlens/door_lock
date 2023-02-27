@@ -18,6 +18,10 @@ class AcademicYearController extends Controller
         return view('administrator.academic-year');
     }
 
+    public function show($id){
+        return AcademicYear::find($id);
+    }
+
     public function getAcademicYears(Request $req){
         $sort = explode('.', $req->sort_by);
 
@@ -32,7 +36,9 @@ class AcademicYearController extends Controller
         
         $req->validate([
             'ay_code' => ['required', 'unique:academic_years'],
-            'ay_desc' => ['required']
+            'ay_desc' => ['required'],
+            'semester' => ['required'],
+
         ]);
         AcademicYear::create([
             'ay_code' => $req->ay_code,
@@ -43,6 +49,36 @@ class AcademicYearController extends Controller
 
         return response()->json([
             'status' => 'saved'
+        ], 200);
+    }
+
+
+    public function update(Request $req, $id){
+        
+        $req->validate([
+            'ay_code' => ['required', 'unique:academic_years,ay_code,' . $id . ',ay_id'],
+            'ay_desc' => ['required'],
+            'semester' => ['required'],
+
+        ]);
+
+        AcademicYear::where('ay_id', $id)
+            ->update([
+                'ay_code' => $req->ay_code,
+                'ay_desc' => $req->ay_desc,
+                'semester' => $req->semester,
+            ]);
+
+        return response()->json([
+            'status' => 'updated'
+        ], 200);
+    }
+
+    public function destroy($id){
+        AcademicYear::destroy($id);
+
+        return response()->json([
+            'status' => 'deleted'
         ], 200);
     }
 

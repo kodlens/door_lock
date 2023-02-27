@@ -25,7 +25,7 @@
                     Door
                 </b-navbar-item>
 
-                <b-navbar-item href="/schedule">
+                <b-navbar-item href="/schedules">
                     Schedules
                 </b-navbar-item>
                 
