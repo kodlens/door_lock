@@ -26913,6 +26913,12 @@ fieldset[disabled] .file-name, fieldset[disabled] .select select, .select fields
   border-bottom: 1px solid #3490dc;
 }
 
+.navbar-end > .active {
+  font-weight: bolder !important;
+  color: white;
+  background-color: #1d37ac;
+}
+
 /*! bulma.io v0.9.3 | MIT License | github.com/jgthms/bulma */
 /* Bulma Utilities */
 .pagination-previous,

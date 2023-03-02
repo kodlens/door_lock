@@ -246,6 +246,14 @@ $navbar-item-img-max-height: 4rem;
 //}
 
 
+
+.navbar-end > .active{
+    font-weight: bolder !important;
+    color: white;
+    background-color: #1d37ac;
+}
+
+
 // Import Bulma and Buefy styles
 
 @import "~bulma";

@@ -29,8 +29,8 @@
                     Users
                 </b-navbar-item>
 
-                <b-navbar-item href="/schedules">
-                    Schedules
+                <b-navbar-item href="/schedules" class="active">
+                    Schedule
                 </b-navbar-item>
                 
                 <!-- <b-navbar-item href="/about">

@@ -36192,9 +36192,11 @@ var render = function () {
                   _vm._v("\n                Users\n            "),
                 ]),
                 _vm._v(" "),
-                _c("b-navbar-item", { attrs: { href: "/schedules" } }, [
-                  _vm._v("\n                Schedules\n            "),
-                ]),
+                _c(
+                  "b-navbar-item",
+                  { staticClass: "active", attrs: { href: "/schedules" } },
+                  [_vm._v("\n                Schedule\n            ")]
+                ),
                 _vm._v(" "),
                 _c("b-navbar-item", { attrs: { tag: "div" } }, [
                   _c(

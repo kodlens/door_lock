@@ -46,7 +46,7 @@ Route::get('/load-user', function(){
 
 Route::post('/cpanel/login', [App\Http\Controllers\Auth\LoginController::class, 'login']);
 
-Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout']);
+// Route::post('/logout', [App\Http\Controllers\Auth\LoginController::class, 'logout'])->name('logout');
 
 Route::get('/sample',[App\Http\Controllers\SampleController::class,'index']);
 
@@ -64,33 +64,35 @@ Route::get('/load-barangays', [App\Http\Controllers\AddressController::class, 'l
 Route::get('/load-semesters', [App\Http\Controllers\AddressController::class, 'loadSemesters']);
 
 
-/*     ADMINISTRATOR
-      */
-Route::resource('/cpanel/home', App\Http\Controllers\Administrator\AdminHomeController::class);
+
+//ADMINISTRATOR
+
+Route::middleware(['auth'])->group(function() {
+
+    Route::resource('/cpanel/home', App\Http\Controllers\Administrator\AdminHomeController::class);
+
+    Route::resource('/users', App\Http\Controllers\Administrator\UserController::class);
+    Route::get('/get-users',[App\Http\Controllers\Administrator\UserController::class, 'getUsers']);
 
 
-Route::resource('/users', App\Http\Controllers\Administrator\UserController::class);
-Route::get('/get-users',[App\Http\Controllers\Administrator\UserController::class, 'getUsers']);
+    Route::resource('/admin-home', App\Http\Controllers\Administrator\AdminHomeController::class);
 
-
-Route::resource('/admin-home', App\Http\Controllers\Administrator\AdminHomeController::class);
-
-Route::resource('/doors', App\Http\Controllers\Administrator\DoorController::class);
-Route::get('/get-doors', [App\Http\Controllers\Administrator\DoorController::class, 'getDoors']);
-
-
-
-Route::resource('/schedules', App\Http\Controllers\Administrator\ScheduleleController::class);
-Route::get('/get-schedules',[App\Http\Controllers\Administrator\ScheduleleController::class, 'getSchedules']);
-
-
-Route::resource('/academic-years', App\Http\Controllers\Administrator\AcademicYearController::class);
-Route::get('/get-academic-years', [App\Http\Controllers\Administrator\AcademicYearController::class, 'getAcademicYears']);
+    Route::resource('/doors', App\Http\Controllers\Administrator\DoorController::class);
+    Route::get('/get-doors', [App\Http\Controllers\Administrator\DoorController::class, 'getDoors']);
 
 
 
-/*     ADMINSITRATOR
-      */
+    Route::resource('/schedules', App\Http\Controllers\Administrator\ScheduleleController::class);
+    Route::get('/get-schedules',[App\Http\Controllers\Administrator\ScheduleleController::class, 'getSchedules']);
+
+
+    Route::resource('/academic-years', App\Http\Controllers\Administrator\AcademicYearController::class);
+    Route::get('/get-academic-years', [App\Http\Controllers\Administrator\AcademicYearController::class, 'getAcademicYears']);
+
+
+}); //ADMINISTRATOR
+
+
 
 
 Route::get('/session', function(){

@@ -21,67 +21,79 @@
 </head>
 <body>
     <div id="app">
-        {{-- <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
-                <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
-                </a>
-..                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
+        
+        <b-navbar>
+            <template #brand>
+                <b-navbar-item>
+                    <h1 class="title is-4">ADMINISTRATOR</h1>
+                </b-navbar-item>
+            </template>
 
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <!-- Left Side Of Navbar -->
-                    <ul class="navbar-nav mr-auto">
+            <template #start>
 
-                    </ul>
 
-                    <!-- Right Side Of Navbar -->
-                    <ul class="navbar-nav ml-auto">
-                        <!-- Authentication Links -->
-                        @guest
-                            @if (Route::has('login'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
-                                </li>
-                            @endif
+            </template>
 
-                            @if (Route::has('register'))
-                                <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                </li>
-                            @endif
-                        @else
-                            <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                    {{ Auth::user()->name }}
-                                </a>
+            <template #end>
+                <b-navbar-item href="/home" 
+                    class="{{ (request()->is('home*')) ? 'active' : '' }}">
+                    Home
+                </b-navbar-item>
 
-                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        {{ __('Logout') }}
-                                    </a>
+                <b-navbar-item href="/academic-years"
+                    class="{{ (request()->is('academic-years*')) ? 'active' : '' }}">
+                    Academic Year
+                </b-navbar-item>
 
-                                    <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                        @csrf
-                                    </form>
-                                </div>
-                            </li>
-                        @endguest
-                    </ul>
-                </div>
-            </div>
-        </nav> --}}
+                <b-navbar-item href="/doors"
+                    class="{{ (request()->is('doors*')) ? 'active' : '' }}">
+                    Door
+                </b-navbar-item>
 
-        <navbar-component></navbar-component>
+                <b-navbar-item href="/users"
+                    class="{{ (request()->is('users*')) ? 'active' : '' }}">
+                    Users
+                </b-navbar-item>
+
+                <b-navbar-item href="/schedules"
+                    class="{{ (request()->is('schedules*')) ? 'active' : '' }}">
+                    Schedule
+                </b-navbar-item>
+                
+                <!-- <b-navbar-item href="/about">
+                    ABOUT
+                </b-navbar-item> -->
+
+                
+
+                <b-navbar-item tag="div">
+                    <div class="buttons">
+                        <form id="logout" method="POST" action="{{ route('logout') }}">
+                            @csrf
+                            <button class="button has-text-weight-bold is-danger">
+                                <b-icon icon="logout"></b-icon> &nbsp; LOG OUT
+                            </button>
+                        </form>
+                    </div>
+                </b-navbar-item>
+            </template>
+        </b-navbar>
+
+        
 
         <div>
             @yield('content')
-
+    
         </div>
 
+
     </div>
+
+
+    <script>
+        
+    </script>
+
+
 </body>
 </html>
