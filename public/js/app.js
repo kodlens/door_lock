@@ -8910,7 +8910,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  props: ['propAcademicYears'],
   data: function data() {
     return {
       data: [],
@@ -8921,140 +8943,114 @@ __webpack_require__.r(__webpack_exports__);
       page: 1,
       perPage: 5,
       defaultSortDirection: 'asc',
+      hourFormat: undefined,
+      // Browser locale
+      enableSeconds: false,
+      locale: undefined,
+      // Browser locale
+      employee: {},
+      employeeFullname: '',
+      door: {},
+      doorName: '',
       global_id: 0,
-      search: {
-        lname: ''
-      },
       isModalCreate: false,
       modalResetPassword: false,
-      fields: {
-        rfid: '',
-        username: '',
-        lname: '',
-        fname: '',
-        mname: '',
-        password: '',
-        password_confirmation: '',
-        sex: '',
-        role: '',
-        contact_no: ''
-      },
+      fields: {},
       errors: {},
       btnClass: {
         'is-success': true,
         'button': true,
         'is-loading': false
-      }
+      },
+      academic_years: []
     };
   },
   methods: {
-    /*
-    * Load async data
-    */
-    loadAsyncData: function loadAsyncData() {
+    submit: function submit() {
       var _this = this;
 
-      var params = ["sort_by=".concat(this.sortField, ".").concat(this.sortOrder), "lname=".concat(this.search.lname), "perpage=".concat(this.perPage), "page=".concat(this.page)].join('&');
-      this.loading = true;
-      axios.get("/get-users?".concat(params)).then(function (_ref) {
-        var data = _ref.data;
-        _this.data = [];
-        var currentTotal = data.total;
-
-        if (data.total / _this.perPage > 1000) {
-          currentTotal = _this.perPage * 1000;
-        }
-
-        _this.total = currentTotal;
-        data.data.forEach(function (item) {
-          //item.release_date = item.release_date ? item.release_date.replace(/-/g, '/') : null
-          _this.data.push(item);
-        });
-        _this.loading = false;
-      })["catch"](function (error) {
-        _this.data = [];
-        _this.total = 0;
-        _this.loading = false;
-        throw error;
-      });
-    },
-
-    /*
-    * Handle page-change event
-    */
-    onPageChange: function onPageChange(page) {
-      this.page = page;
-      this.loadAsyncData();
-    },
-    onSort: function onSort(field, order) {
-      this.sortField = field;
-      this.sortOrder = order;
-      this.loadAsyncData();
-    },
-    setPerPage: function setPerPage() {
-      this.loadAsyncData();
-    },
-    openModal: function openModal() {
-      this.isModalCreate = true;
-      this.clearFields();
-      this.errors = {};
-    },
-    submit: function submit() {
-      var _this2 = this;
+      var inputs = {
+        door_id: 0,
+        ay_id: 0,
+        user_id: 0,
+        time_from: null,
+        time_to: null,
+        mon: 0,
+        tue: 0,
+        wed: 0,
+        thu: 0,
+        fri: 0,
+        sat: 0,
+        sun: 0
+      };
+      inputs.door_id = this.door.door_id;
+      inputs.user_id = this.employee.user_id;
+      inputs.ay_id = this.fields.ay_id;
+      var time_from = new Date(this.fields.time_from);
+      var time_to = new Date(this.fields.time_to);
+      inputs.mon = this.fields.mon;
+      inputs.tue = this.fields.tue;
+      inputs.wed = this.fields.wed;
+      inputs.thu = this.fields.thu;
+      inputs.fri = this.fields.fri;
+      inputs.sat = this.fields.sat;
+      inputs.sun = this.fields.sun;
+      inputs.time_from = '2023-01-01 ' + time_from.getHours().toString().padStart(2, "0") + ':' + time_from.getMinutes().toString().padStart(2, "0");
+      inputs.time_to = '2023-01-01 ' + time_to.getHours().toString().padStart(2, "0") + ':' + time_to.getMinutes().toString().padStart(2, "0");
 
       if (this.global_id > 0) {
         //update
-        axios.put('/users/' + this.global_id, this.fields).then(function (res) {
+        axios.put('/users/' + this.global_id, inputs).then(function (res) {
           if (res.data.status === 'updated') {
-            _this2.$buefy.dialog.alert({
+            _this.$buefy.dialog.alert({
               title: 'UPDATED!',
               message: 'Successfully updated.',
               type: 'is-success',
               onConfirm: function onConfirm() {
-                _this2.loadAsyncData();
+                _this.loadAsyncData();
 
-                _this2.clearFields();
+                _this.clearFields();
 
-                _this2.global_id = 0;
-                _this2.isModalCreate = false;
+                _this.global_id = 0;
+                _this.isModalCreate = false;
               }
             });
           }
         })["catch"](function (err) {
           if (err.response.status === 422) {
-            _this2.errors = err.response.data.errors;
+            _this.errors = err.response.data.errors;
           }
         });
       } else {
         //INSERT HERE
-        axios.post('/users', this.fields).then(function (res) {
+        axios.post('/schedules', inputs).then(function (res) {
           if (res.data.status === 'saved') {
-            _this2.$buefy.dialog.alert({
+            _this.$buefy.dialog.alert({
               title: 'SAVED!',
               message: 'Successfully saved.',
               type: 'is-success',
               confirmText: 'OK',
               onConfirm: function onConfirm() {
-                _this2.isModalCreate = false;
+                _this.isModalCreate = false;
 
-                _this2.loadAsyncData();
+                _this.loadAsyncData();
 
-                _this2.clearFields();
+                _this.clearFields();
 
-                _this2.global_id = 0;
+                _this.global_id = 0;
               }
             });
           }
         })["catch"](function (err) {
           if (err.response.status === 422) {
-            _this2.errors = err.response.data.errors;
+            _this.errors = err.response.data.errors;
           }
         });
       }
     },
     //alert box ask for deletion
     confirmDelete: function confirmDelete(delete_id) {
-      var _this3 = this;
+      var _this2 = this;
 
       this.$buefy.dialog.confirm({
         title: 'DELETE!',
@@ -9063,19 +9059,19 @@ __webpack_require__.r(__webpack_exports__);
         cancelText: 'Cancel',
         confirmText: 'Delete user account?',
         onConfirm: function onConfirm() {
-          return _this3.deleteSubmit(delete_id);
+          return _this2.deleteSubmit(delete_id);
         }
       });
     },
     //execute delete after confirming
     deleteSubmit: function deleteSubmit(delete_id) {
-      var _this4 = this;
+      var _this3 = this;
 
       axios["delete"]('/users/' + delete_id).then(function (res) {
-        _this4.loadAsyncData();
+        _this3.loadAsyncData();
       })["catch"](function (err) {
         if (err.response.status === 422) {
-          _this4.errors = err.response.data.errors;
+          _this3.errors = err.response.data.errors;
         }
       });
     },
@@ -9093,56 +9089,34 @@ __webpack_require__.r(__webpack_exports__);
     },
     //update code here
     getData: function getData(data_id) {
-      var _this5 = this;
+      var _this4 = this;
 
       this.clearFields();
       this.global_id = data_id;
       this.isModalCreate = true; //nested axios for getting the address 1 by 1 or request by request
 
       axios.get('/users/' + data_id).then(function (res) {
-        _this5.fields = res.data;
-        _this5.fields.office = res.data.office_id;
+        _this4.fields = res.data;
+        _this4.fields.office = res.data.office_id;
         var tempData = res.data; //load city first
 
-        axios.get('/load-cities?prov=' + _this5.fields.province).then(function (res) {
+        axios.get('/load-cities?prov=' + _this4.fields.province).then(function (res) {
           //load barangay
-          _this5.cities = res.data;
-          axios.get('/load-barangays?prov=' + _this5.fields.province + '&city_code=' + _this5.fields.city).then(function (res) {
-            _this5.barangays = res.data;
-            _this5.fields = tempData;
+          _this4.cities = res.data;
+          axios.get('/load-barangays?prov=' + _this4.fields.province + '&city_code=' + _this4.fields.city).then(function (res) {
+            _this4.barangays = res.data;
+            _this4.fields = tempData;
           });
         });
       });
     },
-    //CHANGE PASSWORD
-    openModalResetPassword: function openModalResetPassword(dataId) {
-      this.modalResetPassword = true;
-      this.fields = {};
-      this.errors = {};
-      this.global_id = dataId;
+    emitBrowseEmployee: function emitBrowseEmployee(row) {
+      this.employee = row;
+      this.employeeFullname = row.lname + ', ' + row.fname + ' ' + row.mname;
     },
-    resetPassword: function resetPassword() {
-      var _this6 = this;
-
-      axios.post('/user-reset-password/' + this.global_id, this.fields).then(function (res) {
-        if (res.data.status === 'changed') {
-          _this6.$buefy.dialog.alert({
-            title: 'PASSWORD CHANGED',
-            type: 'is-success',
-            message: 'Password changed successfully.',
-            confirmText: 'OK',
-            onConfirm: function onConfirm() {
-              _this6.modalResetPassword = false;
-              _this6.fields = {};
-              _this6.errors = {};
-
-              _this6.loadAsyncData();
-            }
-          });
-        }
-      })["catch"](function (err) {
-        _this6.errors = err.response.data.errors;
-      });
+    emitBrowseDoor: function emitBrowseDoor(row) {
+      this.door = row;
+      this.doorName = row.door_name;
     },
     scanQR: function scanQR() {
       this.fields.rfid = "1234";
@@ -9156,11 +9130,13 @@ __webpack_require__.r(__webpack_exports__);
       this.fields.password = "a";
       this.fields.password_confirmation = "a";
       this.fields.contact_no = "03287238";
+    },
+    loadAcademicYears: function loadAcademicYears() {
+      this.academic_years = JSON.parse(this.propAcademicYears);
     }
   },
   mounted: function mounted() {
-    //this.loadOffices();
-    this.loadAsyncData();
+    this.loadAcademicYears();
   }
 });
 
@@ -10492,9 +10468,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
-    propEmployee: {
+    propDoorName: {
       type: String,
       "default": ''
     }
@@ -10504,7 +10488,7 @@ __webpack_require__.r(__webpack_exports__);
       data: [],
       total: 0,
       loading: false,
-      sortfield: 'user_id',
+      sortfield: 'door_id',
       sortOrder: 'desc',
       page: 1,
       perPage: 5,
@@ -10526,7 +10510,7 @@ __webpack_require__.r(__webpack_exports__);
 
       var params = ["sort_by=".concat(this.sortfield, ".").concat(this.sortOrder), "perpage=".concat(this.perPage), "page=".concat(this.page), "lname=".concat(this.search.lname)].join('&');
       this.loading = true;
-      axios.get("/get-browse-employees?".concat(params)).then(function (_ref) {
+      axios.get("/get-browse-doors?".concat(params)).then(function (_ref) {
         var data = _ref.data;
         _this.data = [];
         var currentTotal = data.total;
@@ -10565,12 +10549,12 @@ __webpack_require__.r(__webpack_exports__);
     },
     selectData: function selectData(dataRow) {
       this.isModalActive = false;
-      this.$emit('browseEmployees', dataRow);
+      this.$emit('browseDoor', dataRow);
     }
   },
   computed: {
-    valueFullname: function valueFullname() {
-      return this.propEmployee;
+    valueDoorName: function valueDoorName() {
+      return this.propDoorName;
     }
   }
 });
@@ -10775,6 +10759,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+//
+//
+//
 //
 //
 //
@@ -37544,11 +37531,20 @@ var render = function () {
                               expression: "fields.ay",
                             },
                           },
-                          [
-                            _c("option", { attrs: { value: "fields.ay" } }, [
-                              _vm._v(_vm._s(_vm.fields.ay)),
-                            ]),
-                          ]
+                          _vm._l(_vm.academic_years, function (item, index) {
+                            return _c(
+                              "option",
+                              { key: index, domProps: { value: item.ay_id } },
+                              [
+                                _vm._v(
+                                  _vm._s(item.ay_code) +
+                                    " - " +
+                                    _vm._s(item.ay_desc)
+                                ),
+                              ]
+                            )
+                          }),
+                          0
                         ),
                       ],
                       1
@@ -37559,9 +37555,29 @@ var render = function () {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "columns" }, [
-                _c("div", { staticClass: "column" }, [_c("modal-user")], 1),
+                _c(
+                  "div",
+                  { staticClass: "column" },
+                  [
+                    _c("modal-user", {
+                      attrs: { "prop-employee": this.employeeFullname },
+                      on: { browseEmployees: _vm.emitBrowseEmployee },
+                    }),
+                  ],
+                  1
+                ),
                 _vm._v(" "),
-                _c("div", { staticClass: "column" }, [_c("modal-door")], 1),
+                _c(
+                  "div",
+                  { staticClass: "column" },
+                  [
+                    _c("modal-door", {
+                      attrs: { "prop-door-name": this.doorName },
+                      on: { browseDoor: _vm.emitBrowseDoor },
+                    }),
+                  ],
+                  1
+                ),
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "columns" }, [
@@ -37585,6 +37601,13 @@ var render = function () {
                             "enable-seconds": _vm.enableSeconds,
                             "hour-format": _vm.hourFormat,
                             locale: _vm.locale,
+                          },
+                          model: {
+                            value: _vm.fields.time_from,
+                            callback: function ($$v) {
+                              _vm.$set(_vm.fields, "time_from", $$v)
+                            },
+                            expression: "fields.time_from",
                           },
                         }),
                       ],
@@ -37615,6 +37638,13 @@ var render = function () {
                             "hour-format": _vm.hourFormat,
                             locale: _vm.locale,
                           },
+                          model: {
+                            value: _vm.fields.time_to,
+                            callback: function ($$v) {
+                              _vm.$set(_vm.fields, "time_to", $$v)
+                            },
+                            expression: "fields.time_to",
+                          },
                         }),
                       ],
                       1
@@ -37634,52 +37664,211 @@ var render = function () {
                 _c(
                   "div",
                   { staticClass: "column" },
-                  [_c("b-field", [_c("b-checkbox", [_vm._v("Mon")])], 1)],
+                  [
+                    _c(
+                      "b-field",
+                      [
+                        _c(
+                          "b-checkbox",
+                          {
+                            attrs: { "true-value": 1, "false-value": 0 },
+                            model: {
+                              value: _vm.fields.mon,
+                              callback: function ($$v) {
+                                _vm.$set(_vm.fields, "mon", $$v)
+                              },
+                              expression: "fields.mon",
+                            },
+                          },
+                          [_vm._v("Mon")]
+                        ),
+                      ],
+                      1
+                    ),
+                  ],
                   1
                 ),
                 _vm._v(" "),
                 _c(
                   "div",
                   { staticClass: "column" },
-                  [_c("b-field", [_c("b-checkbox", [_vm._v("Tue")])], 1)],
+                  [
+                    _c(
+                      "b-field",
+                      [
+                        _c(
+                          "b-checkbox",
+                          {
+                            attrs: { "true-value": 1, "false-value": 0 },
+                            model: {
+                              value: _vm.fields.tue,
+                              callback: function ($$v) {
+                                _vm.$set(_vm.fields, "tue", $$v)
+                              },
+                              expression: "fields.tue",
+                            },
+                          },
+                          [_vm._v("Tue")]
+                        ),
+                      ],
+                      1
+                    ),
+                  ],
                   1
                 ),
                 _vm._v(" "),
                 _c(
                   "div",
                   { staticClass: "column" },
-                  [_c("b-field", [_c("b-checkbox", [_vm._v("Wed")])], 1)],
+                  [
+                    _c(
+                      "b-field",
+                      [
+                        _c(
+                          "b-checkbox",
+                          {
+                            attrs: { "true-value": 1, "false-value": 0 },
+                            model: {
+                              value: _vm.fields.wed,
+                              callback: function ($$v) {
+                                _vm.$set(_vm.fields, "wed", $$v)
+                              },
+                              expression: "fields.wed",
+                            },
+                          },
+                          [_vm._v("Wed")]
+                        ),
+                      ],
+                      1
+                    ),
+                  ],
                   1
                 ),
                 _vm._v(" "),
                 _c(
                   "div",
                   { staticClass: "column" },
-                  [_c("b-field", [_c("b-checkbox", [_vm._v("Thu")])], 1)],
+                  [
+                    _c(
+                      "b-field",
+                      [
+                        _c(
+                          "b-checkbox",
+                          {
+                            attrs: { "true-value": 1, "false-value": 0 },
+                            model: {
+                              value: _vm.fields.thu,
+                              callback: function ($$v) {
+                                _vm.$set(_vm.fields, "thu", $$v)
+                              },
+                              expression: "fields.thu",
+                            },
+                          },
+                          [_vm._v("Thu")]
+                        ),
+                      ],
+                      1
+                    ),
+                  ],
                   1
                 ),
                 _vm._v(" "),
                 _c(
                   "div",
                   { staticClass: "column" },
-                  [_c("b-field", [_c("b-checkbox", [_vm._v("Fri")])], 1)],
+                  [
+                    _c(
+                      "b-field",
+                      [
+                        _c(
+                          "b-checkbox",
+                          {
+                            attrs: { "true-value": 1, "false-value": 0 },
+                            model: {
+                              value: _vm.fields.fri,
+                              callback: function ($$v) {
+                                _vm.$set(_vm.fields, "fri", $$v)
+                              },
+                              expression: "fields.fri",
+                            },
+                          },
+                          [_vm._v("Fri")]
+                        ),
+                      ],
+                      1
+                    ),
+                  ],
                   1
                 ),
                 _vm._v(" "),
                 _c(
                   "div",
                   { staticClass: "column" },
-                  [_c("b-field", [_c("b-checkbox", [_vm._v("Sat")])], 1)],
+                  [
+                    _c(
+                      "b-field",
+                      [
+                        _c(
+                          "b-checkbox",
+                          {
+                            attrs: { "true-value": 1, "false-value": 0 },
+                            model: {
+                              value: _vm.fields.sat,
+                              callback: function ($$v) {
+                                _vm.$set(_vm.fields, "sat", $$v)
+                              },
+                              expression: "fields.sat",
+                            },
+                          },
+                          [_vm._v("Sat")]
+                        ),
+                      ],
+                      1
+                    ),
+                  ],
                   1
                 ),
                 _vm._v(" "),
                 _c(
                   "div",
                   { staticClass: "column" },
-                  [_c("b-field", [_c("b-checkbox", [_vm._v("Sun")])], 1)],
+                  [
+                    _c(
+                      "b-field",
+                      [
+                        _c(
+                          "b-checkbox",
+                          {
+                            attrs: { "true-value": 1, "false-value": 0 },
+                            model: {
+                              value: _vm.fields.sun,
+                              callback: function ($$v) {
+                                _vm.$set(_vm.fields, "sun", $$v)
+                              },
+                              expression: "fields.sun",
+                            },
+                          },
+                          [_vm._v("Sun")]
+                        ),
+                      ],
+                      1
+                    ),
+                  ],
                   1
                 ),
               ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "buttons is-right" },
+                [
+                  _c("b-button", {
+                    attrs: { label: "Save Schedule", type: "is-primary" },
+                    on: { click: _vm.submit },
+                  }),
+                ],
+                1
+              ),
             ]),
           ]),
         ]),
@@ -39891,19 +40080,19 @@ var render = function () {
         "b-field",
         {
           attrs: {
-            label: "Door",
+            label: "Select Door",
             "label-position": "on-border",
-            type: this.errors.user_id ? "is-danger" : "",
-            message: this.errors.user_id ? this.errors.user_id[0] : "",
+            type: this.errors.door_id ? "is-danger" : "",
+            message: this.errors.door_id ? this.errors.door_id[0] : "",
           },
         },
         [
           _c("b-input", {
             attrs: {
-              value: _vm.valueFullname,
+              value: _vm.valueDoorName,
               expanded: "",
               icon: "account-outline",
-              placeholder: "SELECT DOOR",
+              placeholder: "Select Door",
               required: "",
               readonly: "",
             },
@@ -40063,6 +40252,43 @@ var render = function () {
                                       "\n                                " +
                                         _vm._s(props.row.door_name) +
                                         "\n                            "
+                                    ),
+                                  ]
+                                },
+                              },
+                            ]),
+                          }),
+                          _vm._v(" "),
+                          _c("b-table-column", {
+                            attrs: { field: "", label: "Action" },
+                            scopedSlots: _vm._u([
+                              {
+                                key: "default",
+                                fn: function (props) {
+                                  return [
+                                    _c(
+                                      "div",
+                                      { staticClass: "buttons" },
+                                      [
+                                        _c(
+                                          "b-button",
+                                          {
+                                            staticClass: "is-small is-warning",
+                                            on: {
+                                              click: function ($event) {
+                                                return _vm.selectData(props.row)
+                                              },
+                                            },
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass: "fa fa-pencil",
+                                            }),
+                                            _vm._v("  SELECT"),
+                                          ]
+                                        ),
+                                      ],
+                                      1
                                     ),
                                   ]
                                 },
@@ -40451,7 +40677,7 @@ var render = function () {
               value: _vm.valueFullname,
               expanded: "",
               icon: "account-outline",
-              placeholder: "SELECT USER",
+              placeholder: "Select user",
               required: "",
               readonly: "",
             },
@@ -40655,16 +40881,35 @@ var render = function () {
                           }),
                           _vm._v(" "),
                           _c("b-table-column", {
-                            attrs: { field: "role", label: "Role" },
+                            attrs: { field: "", label: "Action" },
                             scopedSlots: _vm._u([
                               {
                                 key: "default",
                                 fn: function (props) {
                                   return [
-                                    _vm._v(
-                                      "\n                                " +
-                                        _vm._s(props.row.role) +
-                                        "\n                            "
+                                    _c(
+                                      "div",
+                                      { staticClass: "buttons" },
+                                      [
+                                        _c(
+                                          "b-button",
+                                          {
+                                            staticClass: "is-small is-warning",
+                                            on: {
+                                              click: function ($event) {
+                                                return _vm.selectData(props.row)
+                                              },
+                                            },
+                                          },
+                                          [
+                                            _c("i", {
+                                              staticClass: "fa fa-pencil",
+                                            }),
+                                            _vm._v("  SELECT"),
+                                          ]
+                                        ),
+                                      ],
+                                      1
                                     ),
                                   ]
                                 },

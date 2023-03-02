@@ -1,10 +1,10 @@
 <template>
     <div>
-        <b-field label="Door" label-position="on-border"
-            :type="this.errors.user_id ? 'is-danger':''"
-            :message="this.errors.user_id ? this.errors.user_id[0] : ''">
+        <b-field label="Select Door" label-position="on-border"
+            :type="this.errors.door_id ? 'is-danger':''"
+            :message="this.errors.door_id ? this.errors.door_id[0] : ''">
 
-            <b-input :value="valueFullname" expanded  icon="account-outline" placeholder="SELECT DOOR" required readonly>
+            <b-input :value="valueDoorName" expanded  icon="account-outline" placeholder="Select Door" required readonly>
             </b-input>
 
             <p class="control">
@@ -56,7 +56,15 @@
 
                                 <b-table-column field="door_name" label="Door Name" v-slot="props">
                                     {{props.row.door_name}}
-                                </b-table-column>            
+                                </b-table-column>   
+                                
+                                <b-table-column field="" label="Action" v-slot="props">
+                                    <div class="buttons">
+                                        <b-button class="is-small is-warning" @click="selectData(props.row)">
+                                            <i class="fa fa-pencil"></i>&nbsp;&nbsp;SELECT</b-button>
+                                    </div>
+                                </b-table-column>
+
                             </b-table>
                         </div>
 
@@ -78,7 +86,7 @@
 <script>
 export default {
     props: {
-        propEmployee: {
+        propDoorName: {
             type: String,
             default: '',
         },
@@ -89,7 +97,7 @@ export default {
             data: [],
             total: 0,
             loading: false,
-            sortfield: 'user_id',
+            sortfield: 'door_id',
             sortOrder:'desc',
             page: 1,
             perPage: 5,
@@ -119,7 +127,7 @@ export default {
             ].join('&');
 
             this.loading = true;
-            axios.get(`/get-browse-employees?${params}`).then(({data}) => {
+            axios.get(`/get-browse-doors?${params}`).then(({data}) => {
                 this.data = [];
                 let currentTotal = data.total;
                 if (data.total / this.perPage > 1000) {
@@ -163,15 +171,15 @@ export default {
 
         selectData(dataRow){
             this.isModalActive = false;
-            this.$emit('browseEmployees', dataRow);
+            this.$emit('browseDoor', dataRow);
         }
 
 
     },
 
     computed: {
-        valueFullname(){
-            return this.propEmployee;
+        valueDoorName(){
+            return this.propDoorName;
         }
     },
 

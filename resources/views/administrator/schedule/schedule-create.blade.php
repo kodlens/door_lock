@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <schedule-create></schedule-create>
+    <schedule-create prop-academic-years='@json($academicYears)'></schedule-create>
 @endsection
 

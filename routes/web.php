@@ -84,6 +84,8 @@ Route::middleware(['auth'])->group(function() {
 
     Route::resource('/schedules', App\Http\Controllers\Administrator\ScheduleController::class);
     Route::get('/get-schedules',[App\Http\Controllers\Administrator\ScheduleController::class, 'getSchedules']);
+    Route::get('/get-browse-employees',[App\Http\Controllers\Administrator\ScheduleController::class, 'getBrowseEmployees']);
+    Route::get('/get-browse-doors',[App\Http\Controllers\Administrator\ScheduleController::class, 'getBrowseDoors']);
 
 
     Route::resource('/academic-years', App\Http\Controllers\Administrator\AcademicYearController::class);

@@ -4,7 +4,7 @@
             :type="this.errors.user_id ? 'is-danger':''"
             :message="this.errors.user_id ? this.errors.user_id[0] : ''">
 
-            <b-input :value="valueFullname" expanded  icon="account-outline" placeholder="SELECT USER" required readonly>
+            <b-input :value="valueFullname" expanded  icon="account-outline" placeholder="Select user" required readonly>
             </b-input>
 
             <p class="control">
@@ -66,8 +66,11 @@
                                     {{props.row.mname}}
                                 </b-table-column>
 
-                                <b-table-column field="role" label="Role" v-slot="props">
-                                    {{props.row.role}}
+                                <b-table-column field="" label="Action" v-slot="props">
+                                    <div class="buttons">
+                                        <b-button class="is-small is-warning" @click="selectData(props.row)">
+                                            <i class="fa fa-pencil"></i>&nbsp;&nbsp;SELECT</b-button>
+                                    </div>
                                 </b-table-column>
 
                             </b-table>

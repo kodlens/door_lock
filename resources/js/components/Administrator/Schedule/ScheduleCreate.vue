@@ -8,26 +8,31 @@
                         <div class="is-flex mb-2" style="font-size: 20px; font-weight: bold;">Add New Schedule</div>
 
                         <div class="section">
+
                             <div class="columns">
                                 <div class="column">
                                     <b-field label="Academic Year" label-position="on-border"
                                              :type="errors.ay ? 'is-danger':''"
                                              :message="errors.ay ? errors.ay[0] : ''">
                                         <b-select v-model="fields.ay" expanded>
-                                            <option value="fields.ay">{{fields.ay}}</option>
+                                            <option v-for="(item, index) in academic_years"
+                                                :key="index" 
+                                                :value="item.ay_id">{{ item.ay_code }} - {{ item.ay_desc }}</option>
                                         </b-select>
                                     </b-field>
                                 </div>
-
                             </div>
-
 
                             <div class="columns">
                                 <div class="column">
-                                    <modal-user></modal-user>
+                                    <modal-user
+                                        @browseEmployees="emitBrowseEmployee"
+                                        :prop-employee="this.employeeFullname"></modal-user>
                                 </div>
                                 <div class="column">
-                                    <modal-door></modal-door>
+                                    <modal-door 
+                                        @browseDoor="emitBrowseDoor"
+                                        :prop-door-name="this.doorName"></modal-door>
                                 </div>                                
                             </div>
 
@@ -38,6 +43,7 @@
                                     <b-timepicker
                                         placeholder="Click to select..."
                                         icon="clock"
+                                        v-model="fields.time_from"
                                         :enable-seconds="enableSeconds"
                                         :hour-format="hourFormat"
                                         :locale="locale">
@@ -50,6 +56,7 @@
                                     <b-timepicker
                                         placeholder="Click to select..."
                                         icon="clock"
+                                        v-model="fields.time_to"
                                         :enable-seconds="enableSeconds"
                                         :hour-format="hourFormat"
                                         :locale="locale">
@@ -59,73 +66,90 @@
                                 </div>
                             </div>
 
-                    <!--  Days -->
+                            <!--  Days -->
                             <div class="m-5 has-text-centered has-text-weight-bold">Select Day</div>
 
                             <div class="columns">
                                 <div class="column">
                                      <b-field>
-                                        <b-checkbox>Mon</b-checkbox>
+                                        <b-checkbox 
+                                            :true-value="1"
+                                            :false-value="0"
+                                            v-model="fields.mon">Mon</b-checkbox>
                                     </b-field>
                                 </div>
                                 <div class="column">
                                      <b-field>
-                                        <b-checkbox>Tue</b-checkbox>
+                                        <b-checkbox
+                                            :true-value="1"
+                                            :false-value="0"
+                                            v-model="fields.tue">Tue</b-checkbox>
                                     </b-field>
                                 </div>
                                 <div class="column">
                                      <b-field>
-                                        <b-checkbox>Wed</b-checkbox>
+                                        <b-checkbox 
+                                            :true-value="1"
+                                            :false-value="0"
+                                            v-model="fields.wed">Wed</b-checkbox>
                                     </b-field>
                                 </div>
                                 <div class="column">
                                      <b-field>
-                                        <b-checkbox>Thu</b-checkbox>
+                                        <b-checkbox
+                                            :true-value="1"
+                                            :false-value="0"
+                                            v-model="fields.thu">Thu</b-checkbox>
                                     </b-field>
                                 </div>
                                 <div class="column">
                                      <b-field>
-                                        <b-checkbox>Fri</b-checkbox>
+                                        <b-checkbox 
+                                            :true-value="1"
+                                            :false-value="0"
+                                            v-model="fields.fri">Fri</b-checkbox>
                                     </b-field>
                                 </div>
                                 <div class="column">
                                      <b-field>
-                                        <b-checkbox>Sat</b-checkbox>
+                                        <b-checkbox 
+                                            :true-value="1"
+                                            :false-value="0"
+                                            v-model="fields.sat">Sat</b-checkbox>
                                     </b-field>
                                 </div>
                                 <div class="column">
                                      <b-field>
-                                        <b-checkbox>Sun</b-checkbox>
+                                        <b-checkbox 
+                                            :true-value="1"
+                                            :false-value="0"
+                                            v-model="fields.sun">Sun</b-checkbox>
                                     </b-field>
                                 </div>
+                            </div> <!--cols-->
+
+                            <div class="buttons is-right">
+                                <b-button @click="submit"
+                                    label="Save Schedule"
+                                    type="is-primary"></b-button>
                             </div>
-                        </div>
-                        <!-- End of Days -->
+                        </div> <!--sections-->
+                    </div> <!--box-->
 
-
-
-
-
-
-                    </div>
                 </div><!--col -->
             </div><!-- cols -->
         </div><!--section div-->
 
+    </div> <!--root-->
 
-
-
-
-
-
-
-
-    </div>
 </template>
 
 <script>
 
 export default{
+
+    props: ['propAcademicYears'],
+
     data() {
         return{
             data: [],
@@ -137,23 +161,23 @@ export default{
             perPage: 5,
             defaultSortDirection: 'asc',
 
+            hourFormat: undefined, // Browser locale
+            enableSeconds: false,
+            locale: undefined, // Browser locale
 
-            global_id : 0,
 
-            search: {
-                lname: '',
-            },
+            employee: {},
+            employeeFullname: '',
+            door: {},
+            doorName: '',
+
+
+            global_id: 0,
 
             isModalCreate: false,
             modalResetPassword: false,
 
-            fields: {
-                rfid: '',
-                username: '',
-                lname: '', fname: '', mname: '',
-                password: '', password_confirmation : '',
-                sex : '', role: '', contact_no : '',
-            },
+            fields: {},
             errors: {},
 
             btnClass: {
@@ -162,74 +186,52 @@ export default{
                 'is-loading':false,
             },
 
+            academic_years: [],
+
         }
 
     },
 
     methods: {
-        /*
-        * Load async data
-        */
-        loadAsyncData() {
-            const params = [
-                `sort_by=${this.sortField}.${this.sortOrder}`,
-                `lname=${this.search.lname}`,
-                `perpage=${this.perPage}`,
-                `page=${this.page}`
-            ].join('&')
-
-            this.loading = true
-            axios.get(`/get-users?${params}`)
-                .then(({ data }) => {
-                    this.data = [];
-                    let currentTotal = data.total
-                    if (data.total / this.perPage > 1000) {
-                        currentTotal = this.perPage * 1000
-                    }
-
-                    this.total = currentTotal
-                    data.data.forEach((item) => {
-                        //item.release_date = item.release_date ? item.release_date.replace(/-/g, '/') : null
-                        this.data.push(item)
-                    })
-                    this.loading = false
-                })
-                .catch((error) => {
-                    this.data = []
-                    this.total = 0
-                    this.loading = false
-                    throw error
-                })
-        },
-        /*
-        * Handle page-change event
-        */
-        onPageChange(page) {
-            this.page = page
-            this.loadAsyncData()
-        },
-
-        onSort(field, order) {
-            this.sortField = field
-            this.sortOrder = order
-            this.loadAsyncData()
-        },
-
-        setPerPage(){
-            this.loadAsyncData()
-        },
-
-        openModal(){
-            this.isModalCreate=true;
-            this.clearFields()
-            this.errors = {};
-        },
-
-
+       
         submit: function(){
+
+            let inputs = {
+                door_id: 0,
+                ay_id: 0,
+                user_id: 0,
+                time_from: null,
+                time_to: null,
+                mon: 0,
+                tue: 0,
+                wed: 0,
+                thu: 0,
+                fri: 0,
+                sat: 0,
+                sun: 0,
+            }
+
+            inputs.door_id = this.door.door_id
+            inputs.user_id = this.employee.user_id
+            inputs.ay_id = this.fields.ay_id
+            let time_from = new Date(this.fields.time_from);
+            let time_to = new Date(this.fields.time_to);
+
+            inputs.mon = this.fields.mon
+            inputs.tue = this.fields.tue
+            inputs.wed = this.fields.wed
+            inputs.thu = this.fields.thu
+            inputs.fri = this.fields.fri
+            inputs.sat = this.fields.sat
+            inputs.sun = this.fields.sun
+
+
+            inputs.time_from = '2023-01-01 ' + time_from.getHours().toString().padStart(2, "0") + ':' + time_from.getMinutes().toString().padStart(2, "0")
+            inputs.time_to = '2023-01-01 ' + time_to.getHours().toString().padStart(2, "0") + ':' + time_to.getMinutes().toString().padStart(2, "0")
+
             if(this.global_id > 0){
                 //update
-                axios.put('/users/'+this.global_id, this.fields).then(res=>{
+                axios.put('/users/'+this.global_id, inputs).then(res=>{
                     if(res.data.status === 'updated'){
                         this.$buefy.dialog.alert({
                             title: 'UPDATED!',
@@ -250,7 +252,7 @@ export default{
                 })
             }else{
                 //INSERT HERE
-                axios.post('/users', this.fields).then(res=>{
+                axios.post('/schedules', inputs).then(res=>{
                     if(res.data.status === 'saved'){
                         this.$buefy.dialog.alert({
                             title: 'SAVED!',
@@ -337,42 +339,20 @@ export default{
             });
         },
 
-
-
-
-        //CHANGE PASSWORD
-        openModalResetPassword(dataId){
-            this.modalResetPassword = true;
-            this.fields = {};
-            this.errors = {};
-            this.global_id = dataId;
+        emitBrowseEmployee(row){
+            this.employee = row
+            this.employeeFullname = row.lname + ', ' + row.fname + ' ' + row.mname
         },
-        resetPassword(){
-            axios.post('/user-reset-password/' + this.global_id, this.fields).then(res=>{
 
-                if(res.data.status === 'changed'){
-                    this.$buefy.dialog.alert({
-                        title: 'PASSWORD CHANGED',
-                        type: 'is-success',
-                        message: 'Password changed successfully.',
-                        confirmText: 'OK',
-                        onConfirm: () => {
-                            this.modalResetPassword = false;
-                            this.fields = {};
-                            this.errors = {};
-                            this.loadAsyncData()
-                        }
-                    });
-                }
-
-            }).catch(err=>{
-                this.errors = err.response.data.errors;
-            })
+        emitBrowseDoor(row){
+            this.door = row
+            this.doorName = row.door_name
         },
         
         scanQR(){
             this.fields.rfid = "1234";        
         },
+
         debug(){          
             this.fields.mname = "1234";        
             this.fields.fname = "1234";        
@@ -382,13 +362,18 @@ export default{
             this.fields.password = "a";  
             this.fields.password_confirmation = "a";  
             this.fields.contact_no = "03287238";
+        },
+
+
+        loadAcademicYears(){
+            this.academic_years = JSON.parse(this.propAcademicYears);
         }
         
     },
 
     mounted() {
-        //this.loadOffices();
-        this.loadAsyncData();
+        this.loadAcademicYears();
+        
     }
 }
 </script>

@@ -18,6 +18,7 @@ class CreateAcademicYearsTable extends Migration
             $table->string('ay_code')->nullable();
             $table->string('ay_desc')->nullable();
             $table->string('semester')->nullable();
+            $table->tinyInteger('active')->default(0);
             $table->timestamps();
         });
     }
