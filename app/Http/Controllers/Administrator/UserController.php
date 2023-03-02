@@ -48,7 +48,6 @@ class UserController extends Controller
             'lname' => ['required', 'string', 'max:100'],
             'fname' => ['required', 'string', 'max:100'],
             'sex' => ['required', 'string', 'max:20'],
-            'email' => ['required', 'unique:users'],
             'password' => ['required', 'string', 'confirmed'],
             'role' => ['required', 'string'],
         ]);
@@ -72,29 +71,28 @@ class UserController extends Controller
 
     public function update(Request $req, $id){
         $validate = $req->validate([
+
+            'rfid' => ['required', 'max:50', 'unique:users,rfid,'.$id.',user_id'],
             'username' => ['required', 'max:50', 'unique:users,username,'.$id.',user_id'],
             'lname' => ['required', 'string', 'max:100'],
             'fname' => ['required', 'string', 'max:100'],
             'sex' => ['required', 'string', 'max:20'],
-            'email' => ['required', 'unique:users,email,'.$id.',user_id'],
+            'contact_no' => ['required', 'string', 'max:20'],
             'role' => ['required', 'string'],
-            'province' => ['required', 'string'],
-            'city' => ['required', 'string'],
-            'barangay' => ['required', 'string'],
+
         ]);
 
         $data = User::find($id);
+        $data->rfid = $req->rfid;
         $data->username = $req->username;
         $data->lname = strtoupper($req->lname);
         $data->fname = strtoupper($req->fname);
         $data->mname = strtoupper($req->mname);
+        $data->contact_no = $req->contact_no;
         $data->sex = $req->sex;
-        $data->email = $req->email;
+
         $data->role = $req->role;
-        $data->province = $req->province;
-        $data->city = $req->city;
-        $data->barangay = $req->barangay;
-        $data->street = strtoupper($req->street);
+
         $data->save();
 
         return response()->json([

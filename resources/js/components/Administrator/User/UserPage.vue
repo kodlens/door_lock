@@ -113,6 +113,9 @@
                 <div class="modal-card">
                     <header class="modal-card-head">
                         <p class="modal-card-title">User Information</p>
+                        <!-- <b-button type="is-primary" @click="debug">
+                            debug
+                        </b-button> -->
                         <button
                             type="button"
                             class="delete"
@@ -570,6 +573,16 @@ export default{
         
         scanQR(){
             this.fields.rfid = "1234";        
+        },
+        debug(){          
+            this.fields.mname = "1234";        
+            this.fields.fname = "1234";        
+            this.fields.lname = "1234";        
+            this.fields.role = "EMPLOYEE";        
+            this.fields.sex = "MALE";        
+            this.fields.password = "a";  
+            this.fields.password_confirmation = "a";  
+            this.fields.contact_no = "03287238";
         }
         
     },

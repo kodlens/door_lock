@@ -50,14 +50,14 @@
                     Door
                 </b-navbar-item>
 
-                <b-navbar-item href="/users"
-                    class="{{ (request()->is('users*')) ? 'active' : '' }}">
-                    Users
-                </b-navbar-item>
-
                 <b-navbar-item href="/schedules"
                     class="{{ (request()->is('schedules*')) ? 'active' : '' }}">
                     Schedule
+                </b-navbar-item>
+
+                <b-navbar-item href="/users"
+                    class="{{ (request()->is('users*')) ? 'active' : '' }}">
+                    Users
                 </b-navbar-item>
                 
                 <!-- <b-navbar-item href="/about">

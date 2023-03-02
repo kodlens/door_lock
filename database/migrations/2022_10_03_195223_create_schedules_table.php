@@ -30,6 +30,7 @@ class CreateSchedulesTable extends Migration
             $table->foreign('ay_id')->references('ay_id')->on('academic_years')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
+            
 
             $table->time('time_start');
             $table->time('time_end');
