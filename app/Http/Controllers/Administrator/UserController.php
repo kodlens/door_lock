@@ -43,6 +43,7 @@ class UserController extends Controller
         $qr_code = substr(md5(time() . $req->lname . $req->fname), -8);
 
         $validate = $req->validate([
+            'rfid' => ['required', 'max:50', 'unique:users'],
             'username' => ['required', 'max:50', 'unique:users'],
             'lname' => ['required', 'string', 'max:100'],
             'fname' => ['required', 'string', 'max:100'],
@@ -50,26 +51,18 @@ class UserController extends Controller
             'email' => ['required', 'unique:users'],
             'password' => ['required', 'string', 'confirmed'],
             'role' => ['required', 'string'],
-            'province' => ['required', 'string'],
-            'city' => ['required', 'string'],
-            'barangay' => ['required', 'string'],
         ]);
 
         User::create([
-            'qr_ref' => $qr_code,
+            'rfid' => $req->rfid,
             'username' => $req->username,
             'password' => Hash::make($req->password),
             'lname' => strtoupper($req->lname),
             'fname' => strtoupper($req->fname),
             'mname' => strtoupper($req->mname),
             'sex' => $req->sex,
-            'email' => $req->email,
             'contact_no' => $req->contact_no,
             'role' => $req->role,
-            'province' => $req->province,
-            'city' => $req->city,
-            'barangay' => $req->barangay,
-            'street' => strtoupper($req->street)
         ]);
 
         return response()->json([
