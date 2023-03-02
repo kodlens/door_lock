@@ -25,6 +25,10 @@
                     Door
                 </b-navbar-item>
 
+                <b-navbar-item href="/users">
+                    Users
+                </b-navbar-item>
+
                 <b-navbar-item href="/schedules">
                     Schedules
                 </b-navbar-item>

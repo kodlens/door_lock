@@ -64,9 +64,13 @@ Route::get('/load-barangays', [App\Http\Controllers\AddressController::class, 'l
 Route::get('/load-semesters', [App\Http\Controllers\AddressController::class, 'loadSemesters']);
 
 
-/*     ADMINSITRATOR
+/*     ADMINISTRATOR
       */
 Route::resource('/cpanel/home', App\Http\Controllers\Administrator\AdminHomeController::class);
+
+
+Route::resource('/users', App\Http\Controllers\Administrator\UserController::class);
+Route::get('/get-users',[App\Http\Controllers\Administrator\UserController::class, 'getUsers']);
 
 
 Route::resource('/admin-home', App\Http\Controllers\Administrator\AdminHomeController::class);

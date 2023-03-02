@@ -17,6 +17,7 @@ class UserSeeder extends Seeder
         //
         $data = [
             [
+                'rfid' => '',
                 'username' => 'admin',
                 'lname' => 'GERONA',
                 'fname' => 'XIAN',
@@ -27,12 +28,13 @@ class UserSeeder extends Seeder
             ],
 
             [
+                'rfid' => 'abcd123',
                 'username' => 'user01',
                 'lname' => 'DELA CRUZ',
                 'fname' => 'JUAN',
                 'mname' => '',
                 'sex' => 'MALE',
-                'role' => 'USER',
+                'role' => 'EMPLOYEE',
                 'password' => Hash::make('a')
             ],
 
