@@ -3,7 +3,7 @@
         <div class="section">
 
             <div class="columns is-centered">
-                <div class="column is-8">
+                <div class="column is-6-fullhd is-10-tablet">
                     <div class="box">
                         <div class="is-flex is-justify-content-center mb-2" style="font-size: 20px; font-weight: bold;">DOORS</div>
 
@@ -19,7 +19,6 @@
                                     <b-select v-model="sortOrder" @input="loadAsyncData">
                                         <option value="asc">ASC</option>
                                         <option value="desc">DESC</option>
-
                                     </b-select>
                                 </b-field>
                             </div>
