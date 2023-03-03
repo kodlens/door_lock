@@ -53,8 +53,8 @@ class ScheduleController extends Controller
     public function store(Request $req){
         return $req;
 
-        $timeFrom = date("Y-m-d H:i:s", strtotime($req->time_from)); //convert to date format UNIX
-        $timeTo = date("Y-m-d H:i:s", strtotime($req->time_to)); //convert to date format UNIX
+        $timeFrom = date("H:i:s", strtotime($req->time_from)); //convert to date format UNIX
+        $timeTo = date("H:i:s", strtotime($req->time_to)); //convert to date format UNIX
 
         //store data
     }
