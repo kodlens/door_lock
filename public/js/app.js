@@ -8589,6 +8589,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "AppointmentType",
   data: function data() {
@@ -8596,14 +8602,15 @@ __webpack_require__.r(__webpack_exports__);
       data: [],
       total: 0,
       loading: false,
-      sortField: 'door_id',
+      sortField: 'schedule_id',
       sortOrder: 'desc',
       page: 1,
       perPage: 5,
       defaultSortDirection: 'asc',
       global_id: 0,
       search: {
-        door: ''
+        door: '',
+        lname: ''
       },
       isModalCreate: false,
       fields: {
@@ -8624,7 +8631,7 @@ __webpack_require__.r(__webpack_exports__);
     loadAsyncData: function loadAsyncData() {
       var _this = this;
 
-      var params = ["sort_by=".concat(this.sortField, ".").concat(this.sortOrder), "door=".concat(this.search.door), "perpage=".concat(this.perPage), "page=".concat(this.page)].join('&');
+      var params = ["sort_by=".concat(this.sortField, ".").concat(this.sortOrder), "door=".concat(this.search.door), "lname=".concat(this.search.lname), "perpage=".concat(this.perPage), "page=".concat(this.page)].join('&');
       this.loading = true;
       axios.get("/get-schedules?".concat(params)).then(function (_ref) {
         var data = _ref.data;
@@ -8688,7 +8695,7 @@ __webpack_require__.r(__webpack_exports__);
     deleteSubmit: function deleteSubmit(delete_id) {
       var _this3 = this;
 
-      axios["delete"]('/doors/' + delete_id).then(function (res) {
+      axios["delete"]('/schedules/' + delete_id).then(function (res) {
         _this3.loadAsyncData();
       })["catch"](function (err) {
         if (err.response.status === 422) {
@@ -8988,13 +8995,13 @@ __webpack_require__.r(__webpack_exports__);
       inputs.ay_id = this.fields.ay_id;
       var time_from = new Date(this.fields.time_from);
       var time_to = new Date(this.fields.time_to);
-      inputs.mon = this.fields.mon;
-      inputs.tue = this.fields.tue;
-      inputs.wed = this.fields.wed;
-      inputs.thu = this.fields.thu;
-      inputs.fri = this.fields.fri;
-      inputs.sat = this.fields.sat;
-      inputs.sun = this.fields.sun;
+      inputs.mon = this.fields.mon ? 1 : 0;
+      inputs.tue = this.fields.tue ? 1 : 0;
+      inputs.wed = this.fields.wed ? 1 : 0;
+      inputs.thu = this.fields.thu ? 1 : 0;
+      inputs.fri = this.fields.fri ? 1 : 0;
+      inputs.sat = this.fields.sat ? 1 : 0;
+      inputs.sun = this.fields.sun ? 1 : 0;
       inputs.time_from = '2023-01-01 ' + time_from.getHours().toString().padStart(2, "0") + ':' + time_from.getMinutes().toString().padStart(2, "0");
       inputs.time_to = '2023-01-01 ' + time_to.getHours().toString().padStart(2, "0") + ':' + time_to.getMinutes().toString().padStart(2, "0");
 
@@ -9031,13 +9038,7 @@ __webpack_require__.r(__webpack_exports__);
               type: 'is-success',
               confirmText: 'OK',
               onConfirm: function onConfirm() {
-                _this.isModalCreate = false;
-
-                _this.loadAsyncData();
-
-                _this.clearFields();
-
-                _this.global_id = 0;
+                window.location = '/schedules';
               }
             });
           }
@@ -37151,7 +37152,7 @@ var render = function () {
                         { attrs: { label: "Search" } },
                         [
                           _c("b-input", {
-                            attrs: { type: "text", placeholder: "Search" },
+                            attrs: { type: "text", placeholder: "Door" },
                             nativeOn: {
                               keyup: function ($event) {
                                 if (
@@ -37175,6 +37176,34 @@ var render = function () {
                                 _vm.$set(_vm.search, "door", $$v)
                               },
                               expression: "search.door",
+                            },
+                          }),
+                          _vm._v(" "),
+                          _c("b-input", {
+                            attrs: { type: "text", placeholder: "Lastname" },
+                            nativeOn: {
+                              keyup: function ($event) {
+                                if (
+                                  !$event.type.indexOf("key") &&
+                                  _vm._k(
+                                    $event.keyCode,
+                                    "enter",
+                                    13,
+                                    $event.key,
+                                    "Enter"
+                                  )
+                                ) {
+                                  return null
+                                }
+                                return _vm.loadAsyncData.apply(null, arguments)
+                              },
+                            },
+                            model: {
+                              value: _vm.search.lname,
+                              callback: function ($$v) {
+                                _vm.$set(_vm.search, "lname", $$v)
+                              },
+                              expression: "search.lname",
                             },
                           }),
                           _vm._v(" "),
@@ -37236,8 +37265,8 @@ var render = function () {
                 [
                   _c("b-table-column", {
                     attrs: {
-                      field: "ay",
-                      label: "AY",
+                      field: "schedule_id",
+                      label: "ID",
                       sortable: "",
                       centered: "",
                     },
@@ -37248,7 +37277,7 @@ var render = function () {
                           return [
                             _vm._v(
                               "\n                            " +
-                                _vm._s(props.row.ay) +
+                                _vm._s(props.row.schedule_id) +
                                 "\n                        "
                             ),
                           ]
@@ -37259,8 +37288,8 @@ var render = function () {
                   _vm._v(" "),
                   _c("b-table-column", {
                     attrs: {
-                      field: "user_id",
-                      label: "UserID",
+                      field: "user",
+                      label: "Name",
                       sortable: "",
                       centered: "",
                     },
@@ -37271,7 +37300,11 @@ var render = function () {
                           return [
                             _vm._v(
                               "\n                            " +
-                                _vm._s(props.row.user_id) +
+                                _vm._s(props.row.user.lname) +
+                                ", " +
+                                _vm._s(props.row.user.fname) +
+                                " " +
+                                _vm._s(props.row.user.mname) +
                                 "\n                        "
                             ),
                           ]
@@ -37294,7 +37327,36 @@ var render = function () {
                           return [
                             _vm._v(
                               "\n                            " +
-                                _vm._s(props.row.door) +
+                                _vm._s(props.row.door.door_name) +
+                                "\n                        "
+                            ),
+                          ]
+                        },
+                      },
+                    ]),
+                  }),
+                  _vm._v(" "),
+                  _c("b-table-column", {
+                    attrs: {
+                      field: "door",
+                      label: "Time",
+                      sortable: "",
+                      centered: "",
+                    },
+                    scopedSlots: _vm._u([
+                      {
+                        key: "default",
+                        fn: function (props) {
+                          return [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(
+                                  _vm._f("formatTime")(props.row.time_start)
+                                ) +
+                                " - " +
+                                _vm._s(
+                                  _vm._f("formatTime")(props.row.time_end)
+                                ) +
                                 "\n                        "
                             ),
                           ]
@@ -37371,7 +37433,9 @@ var render = function () {
                                       },
                                       on: {
                                         click: function ($event) {
-                                          return _vm.getData(props.row.user_id)
+                                          return _vm.getData(
+                                            props.row.schedule_id
+                                          )
                                         },
                                       },
                                     }),
@@ -37394,31 +37458,7 @@ var render = function () {
                                       on: {
                                         click: function ($event) {
                                           return _vm.confirmDelete(
-                                            props.row.user_id
-                                          )
-                                        },
-                                      },
-                                    }),
-                                  ],
-                                  1
-                                ),
-                                _vm._v(" "),
-                                _c(
-                                  "b-tooltip",
-                                  {
-                                    attrs: {
-                                      label: "Reset Password",
-                                      type: "is-info",
-                                    },
-                                  },
-                                  [
-                                    _c("b-button", {
-                                      staticClass: "button is-small mr-1",
-                                      attrs: { "icon-right": "lock" },
-                                      on: {
-                                        click: function ($event) {
-                                          return _vm.openModalResetPassword(
-                                            props.row.user_id
+                                            props.row.schedule_id
                                           )
                                         },
                                       },
@@ -37524,11 +37564,11 @@ var render = function () {
                           {
                             attrs: { expanded: "" },
                             model: {
-                              value: _vm.fields.ay,
+                              value: _vm.fields.ay_id,
                               callback: function ($$v) {
-                                _vm.$set(_vm.fields, "ay", $$v)
+                                _vm.$set(_vm.fields, "ay_id", $$v)
                               },
-                              expression: "fields.ay",
+                              expression: "fields.ay_id",
                             },
                           },
                           _vm._l(_vm.academic_years, function (item, index) {

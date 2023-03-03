@@ -19,7 +19,9 @@ class DatabaseSeeder extends Seeder
             AcademicYearSeeder::class,
             UserSeeder::class,
             SemesterSeeder::class,
-            DoorSeeder::class
+            DoorSeeder::class,
+            ScheduleSeeder::class,
+
         ]);
     }
 }

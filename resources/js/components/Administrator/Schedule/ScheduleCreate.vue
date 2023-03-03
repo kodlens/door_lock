@@ -14,7 +14,7 @@
                                     <b-field label="Academic Year" label-position="on-border"
                                              :type="errors.ay ? 'is-danger':''"
                                              :message="errors.ay ? errors.ay[0] : ''">
-                                        <b-select v-model="fields.ay" expanded>
+                                        <b-select v-model="fields.ay_id" expanded>
                                             <option v-for="(item, index) in academic_years"
                                                 :key="index" 
                                                 :value="item.ay_id">{{ item.ay_code }} - {{ item.ay_desc }}</option>
@@ -217,13 +217,13 @@ export default{
             let time_from = new Date(this.fields.time_from);
             let time_to = new Date(this.fields.time_to);
 
-            inputs.mon = this.fields.mon
-            inputs.tue = this.fields.tue
-            inputs.wed = this.fields.wed
-            inputs.thu = this.fields.thu
-            inputs.fri = this.fields.fri
-            inputs.sat = this.fields.sat
-            inputs.sun = this.fields.sun
+            inputs.mon = this.fields.mon ? 1 : 0
+            inputs.tue = this.fields.tue ? 1 : 0
+            inputs.wed = this.fields.wed ? 1 : 0
+            inputs.thu = this.fields.thu ? 1 : 0
+            inputs.fri = this.fields.fri ? 1 : 0
+            inputs.sat = this.fields.sat ? 1 : 0
+            inputs.sun = this.fields.sun ? 1 : 0 
 
 
             inputs.time_from = '2023-01-01 ' + time_from.getHours().toString().padStart(2, "0") + ':' + time_from.getMinutes().toString().padStart(2, "0")
@@ -260,10 +260,7 @@ export default{
                             type: 'is-success',
                             confirmText: 'OK',
                             onConfirm: () => {
-                                this.isModalCreate = false;
-                                this.loadAsyncData();
-                                this.clearFields();
-                                this.global_id = 0;
+                                window.location = '/schedules'
                             }
                         })
                     }

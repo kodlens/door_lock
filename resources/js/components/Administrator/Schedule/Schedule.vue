@@ -28,8 +28,12 @@
                                 <div class="level-item">
                                     <b-field label="Search">
                                         <b-input type="text"
-                                                 v-model="search.door" placeholder="Search"
-                                                 @keyup.native.enter="loadAsyncData"/>
+                                            v-model="search.door" placeholder="Door"
+                                            @keyup.native.enter="loadAsyncData"/>
+
+                                        <b-input type="text"
+                                            v-model="search.lname" placeholder="Lastname"
+                                            @keyup.native.enter="loadAsyncData"/>
                                         <p class="control">
                                             <b-tooltip label="Search" type="is-success">
                                                 <b-button type="is-primary" icon-right="account-filter" @click="loadAsyncData"/>
@@ -59,17 +63,22 @@
                             :default-sort-direction="defaultSortDirection"
                             @sort="onSort">
 
-                            <b-table-column field="ay" label="AY" sortable v-slot="props" centered>
-                                {{ props.row.ay }}
+                            <b-table-column field="schedule_id" label="ID" sortable v-slot="props" centered>
+                                {{ props.row.schedule_id }}
                             </b-table-column>
 
-                            <b-table-column field="user_id" label="UserID" sortable v-slot="props" centered>
-                                {{ props.row.user_id }}
+                            <b-table-column field="user" label="Name" sortable v-slot="props" centered>
+                                {{ props.row.user.lname }}, {{ props.row.user.fname}} {{ props.row.user.mname}}
                             </b-table-column>
 
                             <b-table-column field="door" label="Door" sortable v-slot="props" centered>
-                                {{ props.row.door }}
+                                {{ props.row.door.door_name }}
                             </b-table-column>
+
+                            <b-table-column field="door" label="Time" sortable v-slot="props" centered>
+                                {{ props.row.time_start | formatTime }} - {{ props.row.time_end | formatTime }}
+                            </b-table-column>
+                          
                             
                             <b-table-column label="Day" sortable v-slot="props" centered>
                                 <span v-if=" props.row.mon == 1">M</span>
@@ -87,13 +96,10 @@
                             <b-table-column label="Action" v-slot="props">
                                 <div class="is-flex">
                                     <b-tooltip label="Edit" type="is-warning">
-                                        <b-button class="button is-small mr-1" tag="a" icon-right="pencil" @click="getData(props.row.user_id)"></b-button>
+                                        <b-button class="button is-small mr-1" tag="a" icon-right="pencil" @click="getData(props.row.schedule_id)"></b-button>
                                     </b-tooltip>
                                     <b-tooltip label="Delete" type="is-danger">
-                                        <b-button class="button is-small mr-1" icon-right="delete" @click="confirmDelete(props.row.user_id)"></b-button>
-                                    </b-tooltip>
-                                    <b-tooltip label="Reset Password" type="is-info">
-                                        <b-button class="button is-small mr-1" icon-right="lock" @click="openModalResetPassword(props.row.user_id)"></b-button>
+                                        <b-button class="button is-small mr-1" icon-right="delete" @click="confirmDelete(props.row.schedule_id)"></b-button>
                                     </b-tooltip>
                                 </div>
                             </b-table-column>
@@ -125,7 +131,7 @@ export default {
             data: [],
             total: 0,
             loading: false,
-            sortField: 'door_id',
+            sortField: 'schedule_id',
             sortOrder: 'desc',
             page: 1,
             perPage: 5,
@@ -136,6 +142,7 @@ export default {
 
             search: {
                 door: '',
+                lname: '',
             },
 
             isModalCreate: false,
@@ -162,6 +169,7 @@ export default {
             const params = [
                 `sort_by=${this.sortField}.${this.sortOrder}`,
                 `door=${this.search.door}`,
+                `lname=${this.search.lname}`,
                 `perpage=${this.perPage}`,
                 `page=${this.page}`
             ].join('&')
@@ -230,7 +238,7 @@ export default {
         },
         //execute delete after confirming
         deleteSubmit(delete_id) {
-            axios.delete('/doors/' + delete_id).then(res => {
+            axios.delete('/schedules/' + delete_id).then(res => {
                 this.loadAsyncData();
             }).catch(err => {
                 if (err.response.status === 422) {

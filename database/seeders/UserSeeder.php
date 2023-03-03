@@ -37,6 +37,37 @@ class UserSeeder extends Seeder
                 'role' => 'EMPLOYEE',
                 'password' => Hash::make('a')
             ],
+            [
+                'rfid' => '31254',
+                'username' => 'dale',
+                'lname' => 'Dale',
+                'fname' => 'Nevitt',
+                'mname' => '',
+                'sex' => 'MALE',
+                'role' => 'EMPLOYEE',
+                'password' => Hash::make('a')
+            ],
+
+            [
+                'rfid' => '3214',
+                'username' => 'norma',
+                'lname' => 'norma',
+                'fname' => 'faichid',
+                'mname' => '',
+                'sex' => 'MALE',
+                'role' => 'EMPLOYEE',
+                'password' => Hash::make('a')
+            ],
+            [
+                'rfid' => '316asdm',
+                'username' => 'user236',
+                'lname' => 'Barber',
+                'fname' => 'Phillip',
+                'mname' => '',
+                'sex' => 'MALE',
+                'role' => 'EMPLOYEE',
+                'password' => Hash::make('a')
+            ],
 
 
         ];
