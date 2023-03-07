@@ -12,8 +12,8 @@
                             <div class="columns">
                                 <div class="column">
                                     <b-field label="Academic Year" label-position="on-border"
-                                             :type="errors.ay ? 'is-danger':''"
-                                             :message="errors.ay ? errors.ay[0] : ''">
+                                            :type="errors.ay_id ? 'is-danger':''"
+                                            :message="errors.ay_id ? errors.ay_id[0] : ''">
                                         <b-select v-model="fields.ay_id" expanded>
                                             <option v-for="(item, index) in academic_years"
                                                 :key="index" 
@@ -25,44 +25,56 @@
 
                             <div class="columns">
                                 <div class="column">
-                                    <modal-user
-                                        @browseEmployees="emitBrowseEmployee"
-                                        :prop-employee="this.employeeFullname"></modal-user>
+                                    <b-field 
+                                        :type="errors.user_id ? 'is-danger':''"
+                                        :message="errors.user_id ? errors.user_id[0] : ''">
+                                        <modal-user
+                                            @browseEmployees="emitBrowseEmployee"
+                                            :prop-employee="this.employeeFullname"></modal-user>
+                                    </b-field>
+                                    
                                 </div>
                                 <div class="column">
+                                    <b-field 
+                                        :type="errors.door_id ? 'is-danger':''"
+                                        :message="errors.door_id ? errors.door_id[0] : ''">
                                     <modal-door 
                                         @browseDoor="emitBrowseDoor"
                                         :prop-door-name="this.doorName"></modal-door>
+                                    </b-field>
                                 </div>                                
                             </div>
 
 
                             <div class="columns">
                                 <div class="column">
-                                    <b-field label="Time Start" label-position="on-border">
-                                    <b-timepicker
-                                        placeholder="Click to select..."
-                                        icon="clock"
-                                        v-model="fields.time_from"
-                                        :enable-seconds="enableSeconds"
-                                        :hour-format="hourFormat"
-                                        :locale="locale">
-                                    </b-timepicker>
-                                </b-field>
+                                    <b-field label="Time Start" label-position="on-border"
+                                        :type="errors.time_from ? 'is-danger':''"
+                                        :message="errors.time_from ? errors.time_from[0] : ''">
+                                        <b-timepicker
+                                            placeholder="Click to select..."
+                                            icon="clock"
+                                            v-model="fields.time_from"
+                                            :enable-seconds="enableSeconds"
+                                            :hour-format="hourFormat"
+                                            :locale="locale">
+                                        </b-timepicker>
+                                    </b-field>
 
                                 </div>
                                 <div class="column">
-                                    <b-field label="Time End " label-position="on-border">
-                                    <b-timepicker
-                                        placeholder="Click to select..."
-                                        icon="clock"
-                                        v-model="fields.time_to"
-                                        :enable-seconds="enableSeconds"
-                                        :hour-format="hourFormat"
-                                        :locale="locale">
-                                    </b-timepicker>
-                                </b-field>
-
+                                    <b-field label="Time End " label-position="on-border"
+                                        :type="errors.time_end ? 'is-danger':''"
+                                        :message="errors.time_end ? errors.time_end[0] : ''">
+                                        <b-timepicker
+                                            placeholder="Click to select..."
+                                            icon="clock"
+                                            v-model="fields.time_to"
+                                            :enable-seconds="enableSeconds"
+                                            :hour-format="hourFormat"
+                                            :locale="locale">
+                                        </b-timepicker>
+                                    </b-field>
                                 </div>
                             </div>
 
@@ -148,7 +160,20 @@
 
 export default{
 
-    props: ['propAcademicYears'],
+    props: {
+        propAcademicYears:{
+            type: String,
+            default: '',
+        },
+        propId:{
+            type: Number,
+            default: 0
+        },
+        propSchedule: {
+            type: String,
+            default: '',
+        }
+    },
 
     data() {
         return{
@@ -171,8 +196,7 @@ export default{
             door: {},
             doorName: '',
 
-
-            global_id: 0,
+            schedule: {},
 
             isModalCreate: false,
             modalResetPassword: false,
@@ -211,8 +235,8 @@ export default{
                 sun: 0,
             }
 
-            inputs.door_id = this.door.door_id
-            inputs.user_id = this.employee.user_id
+            inputs.door_id = this.fields.door_id
+            inputs.user_id = this.fields.user_id
             inputs.ay_id = this.fields.ay_id
             let time_from = new Date(this.fields.time_from);
             let time_to = new Date(this.fields.time_to);
@@ -229,24 +253,23 @@ export default{
             inputs.time_from = '2023-01-01 ' + time_from.getHours().toString().padStart(2, "0") + ':' + time_from.getMinutes().toString().padStart(2, "0")
             inputs.time_to = '2023-01-01 ' + time_to.getHours().toString().padStart(2, "0") + ':' + time_to.getMinutes().toString().padStart(2, "0")
 
-            if(this.global_id > 0){
+            if(this.propId > 0){
                 //update
-                axios.put('/users/'+this.global_id, inputs).then(res=>{
+                axios.put('/schedules/'+this.propId, inputs).then(res=>{
                     if(res.data.status === 'updated'){
                         this.$buefy.dialog.alert({
                             title: 'UPDATED!',
                             message: 'Successfully updated.',
                             type: 'is-success',
                             onConfirm: () => {
-                                this.loadAsyncData();
-                                this.clearFields();
-                                this.global_id = 0;
-                                this.isModalCreate = false;
+                                window.location = '/schedules'
                             }
                         })
                     }
                 }).catch(err=>{
                     if(err.response.status === 422){
+
+                        
                         this.errors = err.response.data.errors;
                     }
                 })
@@ -297,52 +320,38 @@ export default{
             });
         },
 
-        clearFields(){
-            this.fields.rfid = ''
-            this.fields.username = ''
-            this.fields.lname = ''
-            this.fields.fname = ''
-            this.fields.mname = ''
-            this.fields.sex = ''
-            this.fields.password = ''
-            this.fields.password_confirmation = ''
-            this.fields.contact_no = ''
-            this.fields.role = ''
- 
-        },
 
 
         //update code here
-        getData: function(data_id){
-            this.clearFields();
-            this.global_id = data_id;
-            this.isModalCreate = true;
+        getData: function(){
+    
+            this.fields.ay_id = this.schedule.ay_id;
+            this.employeeFullname = this.schedule.user.lname + ', ' + this.schedule.user.fname + ' ' + this.schedule.user.mname;
+            this.fields.user_id = this.schedule.user_id;
+            
+            this.fields.door_id = this.schedule.door_id;
+            this.doorName = this.schedule.door.door_name;
+
+            this.fields.time_from = new Date('2023-01-01 ' + this.schedule.time_start)
+            this.fields.time_to = new Date('2023-01-01 ' + this.schedule.time_end)
 
 
-            //nested axios for getting the address 1 by 1 or request by request
-            axios.get('/users/'+data_id).then(res=>{
-                this.fields = res.data;
-                this.fields.office = res.data.office_id;
-                let tempData = res.data;
-                //load city first
-                axios.get('/load-cities?prov=' + this.fields.province).then(res=>{
-                    //load barangay
-                    this.cities = res.data;
-                    axios.get('/load-barangays?prov=' + this.fields.province + '&city_code='+this.fields.city).then(res=>{
-                        this.barangays = res.data;
-                        this.fields = tempData;
-                    });
-                });
-            });
+            this.fields.mon = this.schedule.mon;
+            this.fields.tue = this.schedule.tue;
+            this.fields.wed = this.schedule.wed;
+            this.fields.thu = this.schedule.thu;
+            this.fields.fri = this.schedule.fri;
+            this.fields.sat = this.schedule.sat;
+            this.fields.sun = this.schedule.sun;
         },
 
         emitBrowseEmployee(row){
-            this.employee = row
+            this.fields.user_id = row.user_id
             this.employeeFullname = row.lname + ', ' + row.fname + ' ' + row.mname
         },
 
         emitBrowseDoor(row){
-            this.door = row
+            this.fields.door_id = row.door_id
             this.doorName = row.door_name
         },
         
@@ -364,12 +373,22 @@ export default{
 
         loadAcademicYears(){
             this.academic_years = JSON.parse(this.propAcademicYears);
+        },
+
+        initData(){
+            if(this.propId > 0){
+                this.schedule = JSON.parse(this.propSchedule);
+                this.getData();
+            }
+
+            console.log(this.schedule)
         }
         
     },
 
     mounted() {
         this.loadAcademicYears();
+        this.initData();
         
     }
 }

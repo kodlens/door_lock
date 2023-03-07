@@ -8938,8 +8938,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['propAcademicYears'],
+  props: {
+    propAcademicYears: {
+      type: String,
+      "default": ''
+    },
+    propId: {
+      type: Number,
+      "default": 0
+    },
+    propSchedule: {
+      type: String,
+      "default": ''
+    }
+  },
   data: function data() {
     return {
       data: [],
@@ -8959,7 +8984,7 @@ __webpack_require__.r(__webpack_exports__);
       employeeFullname: '',
       door: {},
       doorName: '',
-      global_id: 0,
+      schedule: {},
       isModalCreate: false,
       modalResetPassword: false,
       fields: {},
@@ -8990,8 +9015,8 @@ __webpack_require__.r(__webpack_exports__);
         sat: 0,
         sun: 0
       };
-      inputs.door_id = this.door.door_id;
-      inputs.user_id = this.employee.user_id;
+      inputs.door_id = this.fields.door_id;
+      inputs.user_id = this.fields.user_id;
       inputs.ay_id = this.fields.ay_id;
       var time_from = new Date(this.fields.time_from);
       var time_to = new Date(this.fields.time_to);
@@ -9005,21 +9030,16 @@ __webpack_require__.r(__webpack_exports__);
       inputs.time_from = '2023-01-01 ' + time_from.getHours().toString().padStart(2, "0") + ':' + time_from.getMinutes().toString().padStart(2, "0");
       inputs.time_to = '2023-01-01 ' + time_to.getHours().toString().padStart(2, "0") + ':' + time_to.getMinutes().toString().padStart(2, "0");
 
-      if (this.global_id > 0) {
+      if (this.propId > 0) {
         //update
-        axios.put('/users/' + this.global_id, inputs).then(function (res) {
+        axios.put('/schedules/' + this.propId, inputs).then(function (res) {
           if (res.data.status === 'updated') {
             _this.$buefy.dialog.alert({
               title: 'UPDATED!',
               message: 'Successfully updated.',
               type: 'is-success',
               onConfirm: function onConfirm() {
-                _this.loadAsyncData();
-
-                _this.clearFields();
-
-                _this.global_id = 0;
-                _this.isModalCreate = false;
+                window.location = '/schedules';
               }
             });
           }
@@ -9076,47 +9096,29 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    clearFields: function clearFields() {
-      this.fields.rfid = '';
-      this.fields.username = '';
-      this.fields.lname = '';
-      this.fields.fname = '';
-      this.fields.mname = '';
-      this.fields.sex = '';
-      this.fields.password = '';
-      this.fields.password_confirmation = '';
-      this.fields.contact_no = '';
-      this.fields.role = '';
-    },
     //update code here
-    getData: function getData(data_id) {
-      var _this4 = this;
-
-      this.clearFields();
-      this.global_id = data_id;
-      this.isModalCreate = true; //nested axios for getting the address 1 by 1 or request by request
-
-      axios.get('/users/' + data_id).then(function (res) {
-        _this4.fields = res.data;
-        _this4.fields.office = res.data.office_id;
-        var tempData = res.data; //load city first
-
-        axios.get('/load-cities?prov=' + _this4.fields.province).then(function (res) {
-          //load barangay
-          _this4.cities = res.data;
-          axios.get('/load-barangays?prov=' + _this4.fields.province + '&city_code=' + _this4.fields.city).then(function (res) {
-            _this4.barangays = res.data;
-            _this4.fields = tempData;
-          });
-        });
-      });
+    getData: function getData() {
+      this.fields.ay_id = this.schedule.ay_id;
+      this.employeeFullname = this.schedule.user.lname + ', ' + this.schedule.user.fname + ' ' + this.schedule.user.mname;
+      this.fields.user_id = this.schedule.user_id;
+      this.fields.door_id = this.schedule.door_id;
+      this.doorName = this.schedule.door.door_name;
+      this.fields.time_from = new Date('2023-01-01 ' + this.schedule.time_start);
+      this.fields.time_to = new Date('2023-01-01 ' + this.schedule.time_end);
+      this.fields.mon = this.schedule.mon;
+      this.fields.tue = this.schedule.tue;
+      this.fields.wed = this.schedule.wed;
+      this.fields.thu = this.schedule.thu;
+      this.fields.fri = this.schedule.fri;
+      this.fields.sat = this.schedule.sat;
+      this.fields.sun = this.schedule.sun;
     },
     emitBrowseEmployee: function emitBrowseEmployee(row) {
-      this.employee = row;
+      this.fields.user_id = row.user_id;
       this.employeeFullname = row.lname + ', ' + row.fname + ' ' + row.mname;
     },
     emitBrowseDoor: function emitBrowseDoor(row) {
-      this.door = row;
+      this.fields.door_id = row.door_id;
       this.doorName = row.door_name;
     },
     scanQR: function scanQR() {
@@ -9134,10 +9136,19 @@ __webpack_require__.r(__webpack_exports__);
     },
     loadAcademicYears: function loadAcademicYears() {
       this.academic_years = JSON.parse(this.propAcademicYears);
+    },
+    initData: function initData() {
+      if (this.propId > 0) {
+        this.schedule = JSON.parse(this.propSchedule);
+        this.getData();
+      }
+
+      console.log(this.schedule);
     }
   },
   mounted: function mounted() {
     this.loadAcademicYears();
+    this.initData();
   }
 });
 
@@ -37430,13 +37441,10 @@ var render = function () {
                                       attrs: {
                                         tag: "a",
                                         "icon-right": "pencil",
-                                      },
-                                      on: {
-                                        click: function ($event) {
-                                          return _vm.getData(
-                                            props.row.schedule_id
-                                          )
-                                        },
+                                        href:
+                                          "/schedules/" +
+                                          props.row.schedule_id +
+                                          "/edit",
                                       },
                                     }),
                                   ],
@@ -37554,8 +37562,8 @@ var render = function () {
                         attrs: {
                           label: "Academic Year",
                           "label-position": "on-border",
-                          type: _vm.errors.ay ? "is-danger" : "",
-                          message: _vm.errors.ay ? _vm.errors.ay[0] : "",
+                          type: _vm.errors.ay_id ? "is-danger" : "",
+                          message: _vm.errors.ay_id ? _vm.errors.ay_id[0] : "",
                         },
                       },
                       [
@@ -37599,10 +37607,24 @@ var render = function () {
                   "div",
                   { staticClass: "column" },
                   [
-                    _c("modal-user", {
-                      attrs: { "prop-employee": this.employeeFullname },
-                      on: { browseEmployees: _vm.emitBrowseEmployee },
-                    }),
+                    _c(
+                      "b-field",
+                      {
+                        attrs: {
+                          type: _vm.errors.user_id ? "is-danger" : "",
+                          message: _vm.errors.user_id
+                            ? _vm.errors.user_id[0]
+                            : "",
+                        },
+                      },
+                      [
+                        _c("modal-user", {
+                          attrs: { "prop-employee": this.employeeFullname },
+                          on: { browseEmployees: _vm.emitBrowseEmployee },
+                        }),
+                      ],
+                      1
+                    ),
                   ],
                   1
                 ),
@@ -37611,10 +37633,24 @@ var render = function () {
                   "div",
                   { staticClass: "column" },
                   [
-                    _c("modal-door", {
-                      attrs: { "prop-door-name": this.doorName },
-                      on: { browseDoor: _vm.emitBrowseDoor },
-                    }),
+                    _c(
+                      "b-field",
+                      {
+                        attrs: {
+                          type: _vm.errors.door_id ? "is-danger" : "",
+                          message: _vm.errors.door_id
+                            ? _vm.errors.door_id[0]
+                            : "",
+                        },
+                      },
+                      [
+                        _c("modal-door", {
+                          attrs: { "prop-door-name": this.doorName },
+                          on: { browseDoor: _vm.emitBrowseDoor },
+                        }),
+                      ],
+                      1
+                    ),
                   ],
                   1
                 ),
@@ -37631,6 +37667,10 @@ var render = function () {
                         attrs: {
                           label: "Time Start",
                           "label-position": "on-border",
+                          type: _vm.errors.time_from ? "is-danger" : "",
+                          message: _vm.errors.time_from
+                            ? _vm.errors.time_from[0]
+                            : "",
                         },
                       },
                       [
@@ -37667,6 +37707,10 @@ var render = function () {
                         attrs: {
                           label: "Time End ",
                           "label-position": "on-border",
+                          type: _vm.errors.time_end ? "is-danger" : "",
+                          message: _vm.errors.time_end
+                            ? _vm.errors.time_end[0]
+                            : "",
                         },
                       },
                       [
