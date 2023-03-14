@@ -9,6 +9,7 @@ use App\Models\AcademicYear;
 use App\Models\User;
 use App\Models\Door;
 use App\Models\Schedule;
+use App\Models\Faculty;
 
 
 
@@ -25,11 +26,10 @@ class ScheduleController extends Controller
     }
 
 
-    public function getBrowseEmployees(Request $req){
+    public function getBrowseFaculty(Request $req){
         $sort = explode('.', $req->sort_by);
 
-        $data = User::where('lname', 'like', $req->lname . '%')
-            ->where('role', 'EMPLOYEE')
+        $data = Faculty::where('lname', 'like', $req->lname . '%')
             ->orderBy($sort[0], $sort[1])
             ->paginate($req->perpage);
 

@@ -16,8 +16,8 @@ class CreateAttendancesTable extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id('attendance_id');
 
-            $table->unsignedBigInteger('user_id');
-            $table->foreign('user_id')->references('user_id')->on('users')
+            $table->unsignedBigInteger('faculty_id');
+            $table->foreign('faculty_id')->references('faculty_id')->on('faculty')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 

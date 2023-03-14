@@ -5,7 +5,7 @@
             <form @submit.prevent="submit">
                 <div class="box">
                     <div class="title is-4">
-                        SECURITY CHECK
+                        PLEASE LOGIN FIRST
                     </div>
                     <hr>
 
