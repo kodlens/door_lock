@@ -13,5 +13,5 @@ class Door extends Model
     protected $primaryKey = 'door_id';
 
 
-    protected $fillable = ['door_name'];
+    protected $fillable = ['door_name', 'mac_add'];
 }

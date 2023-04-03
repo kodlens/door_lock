@@ -39,8 +39,9 @@ class UserController extends Controller
     }
 
     public function store(Request $req){
+        //return $req;
         //this will create random unique QR code
-        $qr_code = substr(md5(time() . $req->lname . $req->fname), -8);
+        //$qr_code = substr(md5(time() . $req->lname . $req->fname), -8);
 
         $validate = $req->validate([
             'rfid' => ['required', 'max:50', 'unique:users'],
@@ -50,10 +51,11 @@ class UserController extends Controller
             'sex' => ['required', 'string', 'max:20'],
             'password' => ['required', 'string', 'confirmed'],
             'role' => ['required', 'string'],
+            'card_type' => ['required'],
         ]);
 
         User::create([
-            'rfid' => $req->rfid,
+            'rfid' => strtoupper($req->rfid),
             'username' => $req->username,
             'password' => Hash::make($req->password),
             'lname' => strtoupper($req->lname),
@@ -62,6 +64,7 @@ class UserController extends Controller
             'sex' => $req->sex,
             'contact_no' => $req->contact_no,
             'role' => $req->role,
+            'card_type' => strtoupper($req->card_type),
         ]);
 
         return response()->json([
@@ -71,7 +74,6 @@ class UserController extends Controller
 
     public function update(Request $req, $id){
         $validate = $req->validate([
-
             'rfid' => ['required', 'max:50', 'unique:users,rfid,'.$id.',user_id'],
             'username' => ['required', 'max:50', 'unique:users,username,'.$id.',user_id'],
             'lname' => ['required', 'string', 'max:100'],
@@ -79,7 +81,7 @@ class UserController extends Controller
             'sex' => ['required', 'string', 'max:20'],
             'contact_no' => ['required', 'string', 'max:20'],
             'role' => ['required', 'string'],
-
+            'card_type' => ['required'],
         ]);
 
         $data = User::find($id);
@@ -92,6 +94,7 @@ class UserController extends Controller
         $data->sex = $req->sex;
 
         $data->role = $req->role;
+        $data->card_type = $req->card_type;
 
         $data->save();
 
@@ -101,14 +104,6 @@ class UserController extends Controller
     }
 
 
-    public function getBrowseDentist(Request $req){
-
-        $data = User::where('lname', 'like', $req->lname . '%')
-            ->where('fname', 'like', $req->fname . '%')
-            ->where('role', 'DENTIST')
-            ->paginate($req->perpage);
-        return $data;
-    }
 
     public function resetPassword(Request $req, $id){
 

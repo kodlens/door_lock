@@ -65,6 +65,10 @@
                                 {{ props.row.door_name }}
                             </b-table-column>
 
+                            <b-table-column field="mac_add" label="MAC Address" v-slot="props">
+                                {{ props.row.mac_add }}
+                            </b-table-column>
+
 
                             <b-table-column label="Action" v-slot="props">
                                 <div class="is-flex">
@@ -117,9 +121,19 @@
                             <div class="columns">
                                 <div class="column">
                                     <b-field label="Door"
-                                             :type="this.errors.door_name ? 'is-danger':''"
-                                             :message="this.errors.door_name ? this.errors.door_name[0] : ''">
-                                        <b-input type="text" v-model="fields.door_name" placeholder="Service" required />
+                                        :type="this.errors.door_name ? 'is-danger':''"
+                                        :message="this.errors.door_name ? this.errors.door_name[0] : ''">
+                                        <b-input type="text" v-model="fields.door_name" placeholder="Door" required />
+                                    </b-field>
+                                </div>
+                            </div>
+
+                            <div class="columns">
+                                <div class="column">
+                                    <b-field label="Mac Address"
+                                        :type="this.errors.mac_add ? 'is-danger':''"
+                                        :message="this.errors.mac_add ? this.errors.mac_add[0] : ''">
+                                        <b-input type="text" v-model="fields.mac_add" placeholder="Mac Address" required />
                                     </b-field>
                                 </div>
                             </div>

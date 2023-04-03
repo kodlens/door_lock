@@ -3,7 +3,7 @@
         <div class="section">
 
             <div class="columns is-centered">
-                <div class="column is-8">
+                <div class="column is-10 is-8-tablet">
                     <div class="box">
                         <div class="is-flex is-justify-content-center mb-2" style="font-size: 20px; font-weight: bold;">SCHEDULES</div>
 
@@ -65,6 +65,10 @@
 
                             <b-table-column field="schedule_id" label="ID" sortable v-slot="props" centered>
                                 {{ props.row.schedule_id }}
+                            </b-table-column>
+
+                            <b-table-column field="rfid" label="RFID" sortable v-slot="props" centered>
+                                {{ props.row.user.rfid }}
                             </b-table-column>
 
                             <b-table-column field="user" label="Name" sortable v-slot="props" centered>

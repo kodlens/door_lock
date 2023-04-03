@@ -2,7 +2,7 @@
     <b-navbar>
         <template #brand>
             <b-navbar-item>
-                <h1 class="title is-4">DENTAL CLINIC</h1>
+                <h1 class="title is-4"></h1>
             </b-navbar-item>
         </template>
 

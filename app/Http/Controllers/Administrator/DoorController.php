@@ -31,20 +31,20 @@ class DoorController extends Controller
         return $data;
     }
 
-
     public function show($id){
         return Door::find($id);
     }
 
 
-
     public function store(Request $req){
         $req->validate([
             'door_name' => ['required', 'unique:doors'],
+            'mac_add' => ['required', 'unique:doors'],
         ]);
 
         Door::create([
-            'door_name' => strtoupper($req->door_name)
+            'door_name' => strtoupper($req->door_name),
+            'mac_add' => strtoupper($req->mac_add)
         ]);
 
         return response()->json([
@@ -56,11 +56,14 @@ class DoorController extends Controller
 
         $validate = $req->validate([
             'door_name' => ['required', 'string', 'unique:doors,door_name,' .$id .',door_id'],
+            'mac_add' => ['required', 'string', 'unique:doors,mac_add,' .$id .',door_id'],
         ]);
 
 
         $data = Door::find($id);
         $data->door_name = $req->door_name;
+        $data->mac_add = $req->mac_add;
+
         $data->save();
 
         return response()->json([

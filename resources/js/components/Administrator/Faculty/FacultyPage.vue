@@ -124,8 +124,8 @@
                                 <div class="column">
                                     <b-field label="RFID" label-position="on-border" 
                                         expanded
-                                        :type="errors.rfid ? 'is-danger':''"
-                                        :message="errors.rfid ? errors.rfid[0] : ''">
+                                        :type="rfid.type"
+                                        :message="rfid.msg">
                                         <b-input v-model="fields.rfid" 
                                             expanded
                                             placeholder="RFID">
@@ -251,6 +251,11 @@ export default{
             isModalCreate: false,
             modalResetPassword: false,
 
+            rfid: {
+                type:'',
+                msg: '',
+            },
+
             fields: {
                 rfid: '',
                 lname: '', 
@@ -351,6 +356,11 @@ export default{
                 }).catch(err=>{
                     if(err.response.status === 422){
                         this.errors = err.response.data.errors;
+                        
+                        if(this.errors.rfid){
+                            this.rfid.type = 'is-danger'
+                            this.rfid.msg = this.errors.rfid[0]
+                        }
                     }
                 })
             }else{
@@ -373,6 +383,11 @@ export default{
                 }).catch(err=>{
                     if(err.response.status === 422){
                         this.errors = err.response.data.errors;
+
+                        if(this.errors.rfid){
+                            this.rfid.type = 'is-danger'
+                            this.rfid.msg = this.errors.rfid[0]
+                        }
                     }
                 });
 
@@ -404,6 +419,9 @@ export default{
         },
 
         clearFields(){
+            this.rfid.type = '';
+            this.rfid.msg = '';
+
             this.fields.rfid = ''
             this.fields.username = ''
             this.fields.lname = ''
@@ -428,17 +446,6 @@ export default{
             //nested axios for getting the address 1 by 1 or request by request
             axios.get('/faculty/'+data_id).then(res=>{
                 this.fields = res.data;
-                this.fields.office = res.data.office_id;
-                let tempData = res.data;
-                //load city first
-                axios.get('/load-cities?prov=' + this.fields.province).then(res=>{
-                    //load barangay
-                    this.cities = res.data;
-                    axios.get('/load-barangays?prov=' + this.fields.province + '&city_code='+this.fields.city).then(res=>{
-                        this.barangays = res.data;
-                        this.fields = tempData;
-                    });
-                });
             });
         },
 
@@ -454,7 +461,23 @@ export default{
         },
         
         scanRFID(){
-            this.fields.rfid = "1234";        
+            //scan rfid via request
+            //nodemcu
+            this.rfid.type = '';
+            this.rfid.msg = '';
+            this.fields.rfid = '';
+
+            axios.get('http://192.168.0.45/scan').then(res=>{
+                console.log(res.data);
+                this.fields.rfid = res.data;
+                this.rfid.type = 'is-success'
+                this.rfid.msg = 'Scanned successfully.'
+            }).catch(err=>{
+                this.rfid.type = 'is-danger'
+                this.rfid.msg = 'Error reading rfid.'
+            })
+
+            //this.fields.rfid = "1234";        
         },
         debug(){          
             this.fields.mname = "1234";        

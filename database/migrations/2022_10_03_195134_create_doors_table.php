@@ -16,6 +16,7 @@ class CreateDoorsTable extends Migration
         Schema::create('doors', function (Blueprint $table) {
             $table->id('door_id');
             $table->string('door_name')->nullable();
+            $table->string('mac_add')->nullable();
             $table->timestamps();
         });
     }

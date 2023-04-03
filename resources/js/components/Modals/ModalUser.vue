@@ -94,7 +94,7 @@
 <script>
 export default {
     props: {
-        propEmployee: {
+        propUser: {
             type: String,
             default: '',
         },
@@ -135,7 +135,7 @@ export default {
             ].join('&');
 
             this.loading = true;
-            axios.get(`/get-browse-employees?${params}`).then(({data}) => {
+            axios.get(`/get-browse-users?${params}`).then(({data}) => {
                 this.data = [];
                 let currentTotal = data.total;
                 if (data.total / this.perPage > 1000) {
@@ -179,7 +179,7 @@ export default {
 
         selectData(dataRow){
             this.isModalActive = false;
-            this.$emit('browseEmployees', dataRow);
+            this.$emit('browseUser', dataRow);
         }
 
 
@@ -187,7 +187,7 @@ export default {
 
     computed: {
         valueFullname(){
-            return this.propEmployee;
+            return this.propUser;
         }
     },
 

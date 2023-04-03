@@ -88,17 +88,27 @@ Route::middleware(['auth'])->group(function() {
 
     Route::resource('/schedules', App\Http\Controllers\Administrator\ScheduleController::class);
     Route::get('/get-schedules',[App\Http\Controllers\Administrator\ScheduleController::class, 'getSchedules']);
-    Route::get('/get-browse-faculty',[App\Http\Controllers\Administrator\ScheduleController::class, 'getBrowseFaculty']);
+    Route::get('/get-browse-users',[App\Http\Controllers\Administrator\ScheduleController::class, 'getBrowseUsers']);
     Route::get('/get-browse-doors',[App\Http\Controllers\Administrator\ScheduleController::class, 'getBrowseDoors']);
 
 
     Route::resource('/academic-years', App\Http\Controllers\Administrator\AcademicYearController::class);
     Route::get('/get-academic-years', [App\Http\Controllers\Administrator\AcademicYearController::class, 'getAcademicYears']);
 
-
 }); //ADMINISTRATOR
 
 
+
+
+Route::middleware(['auth', 'faculty'])->group(function() {
+
+    Route::resource('/faculty-home', App\Http\Controllers\Faculty\FacultyHomeController::class);
+
+}); //FACULTY
+
+
+
+Route::get('/rfid', [App\Http\Controllers\RFIDApiController::class, 'validateRFID']);
 
 
 Route::get('/session', function(){

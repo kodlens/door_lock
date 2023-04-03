@@ -25,11 +25,10 @@ class ScheduleController extends Controller
         return view('administrator.schedule.schedule');
     }
 
-
-    public function getBrowseFaculty(Request $req){
+    public function getBrowseUsers(Request $req){
         $sort = explode('.', $req->sort_by);
 
-        $data = Faculty::where('lname', 'like', $req->lname . '%')
+        $data = User::where('lname', 'like', $req->lname . '%')
             ->orderBy($sort[0], $sort[1])
             ->paginate($req->perpage);
 
@@ -46,16 +45,16 @@ class ScheduleController extends Controller
         return $data;
     }
 
-
-
     public function getSchedules(Request $req){
         //return $req;
-
         $sort = explode('.', $req->sort_by);
 
         $data = Schedule::with(['user','door','ay'])->orderBy($sort[0], $sort[1])
             ->whereHas('user', function($q) use ($req){
                 $q->where('lname', 'like', $req->lname . '%'); //-> select * from users where users.lname like "DELA CRUZ%"
+            })
+            ->whereHas('door', function($q) use ($req){
+                $q->where('door_name', 'like', $req->door . '%'); //-> select * from doors where doors.door_name like "%"
             })
             ->paginate($req->perpage);
 

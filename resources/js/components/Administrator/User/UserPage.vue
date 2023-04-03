@@ -61,6 +61,10 @@
                                 {{ props.row.user_id }}
                             </b-table-column>
 
+                            <b-table-column field="rfid" label="RFID" sortable v-slot="props">
+                                {{ props.row.rfid }}
+                            </b-table-column>
+
                             <b-table-column field="username" label="Username" sortable v-slot="props">
                                 {{ props.row.username }}
                             </b-table-column>
@@ -71,6 +75,10 @@
 
                             <b-table-column field="sex" label="Sex" v-slot="props">
                                 {{ props.row.sex }}
+                            </b-table-column>
+
+                            <b-table-column field="card_type" label="Card Type" v-slot="props">
+                                {{ props.row.card_type }}
                             </b-table-column>
 
                             <b-table-column field="role" label="Role" v-slot="props">
@@ -129,8 +137,8 @@
                                 <div class="column">
                                     <b-field label="RFID" label-position="on-border" 
                                         expanded
-                                        :type="errors.rfid ? 'is-danger':''"
-                                        :message="errors.rfid ? errors.rfid[0] : ''">
+                                        :type="rfid.type"
+                                        :message="rfid.msg">
                                         <b-input v-model="fields.rfid" 
                                             expanded
                                             placeholder="RFID">
@@ -138,7 +146,7 @@
                                         <p class="controls">
                                             <b-button class="is-primary" 
                                                 icon-left="barcode-scan" 
-                                                @click="scanQR"></b-button>
+                                                @click="scanRFID"></b-button>
                                         </p>
                                     </b-field>
                                 </div>
@@ -147,10 +155,10 @@
                             <div class="columns">
                                 <div class="column">
                                     <b-field label="Username" label-position="on-border"
-                                             :type="errors.username ? 'is-danger':''"
-                                             :message="errors.username ? errors.username[0] : ''">
+                                        :type="errors.username ? 'is-danger':''"
+                                        :message="errors.username ? errors.username[0] : ''">
                                         <b-input v-model="fields.username"
-                                                 placeholder="Username" required>
+                                            placeholder="Username" required>
                                         </b-input>
                                     </b-field>
                                 </div>
@@ -159,19 +167,19 @@
                             <div class="columns">
                                 <div class="column">
                                     <b-field label="Last Name" label-position="on-border"
-                                             :type="errors.lname ? 'is-danger':''"
-                                             :message="errors.lname ? errors.lname[0] : ''">
+                                        :type="errors.lname ? 'is-danger':''"
+                                        :message="errors.lname ? errors.lname[0] : ''">
                                         <b-input v-model="fields.lname"
-                                                 placeholder="Last Name" required>
+                                            placeholder="Last Name" required>
                                         </b-input>
                                     </b-field>
                                 </div>
                                 <div class="column">
                                     <b-field label="First Name" label-position="on-border"
-                                             :type="errors.fname ? 'is-danger':''"
-                                             :message="errors.fname ? errors.fname[0] : ''">
+                                        :type="errors.fname ? 'is-danger':''"
+                                        :message="errors.fname ? errors.fname[0] : ''">
                                         <b-input v-model="fields.fname"
-                                                 placeholder="First Name" required>
+                                            placeholder="First Name" required>
                                         </b-input>
                                     </b-field>
                                 </div>
@@ -217,12 +225,24 @@
                                              :message="errors.role ? errors.role[0] : ''">
                                         <b-select v-model="fields.role" expanded>
                                             <option value="ADMIN">ADMINISTRATOR</option>
-                                            <option value="EMPLOYEE">EMPLOYEE</option>
-
+                                            <option value="FACULTY">FACULTY</option>
+                                            <option value="DEAN">DEAN</option>
                                         </b-select>
                                     </b-field>
                                 </div>
+                            </div>
 
+                            <div class="columns">
+                                <div class="column">
+                                    <b-field label="Card Type" label-position="on-border" expanded
+                                             :type="errors.card_type ? 'is-danger':''"
+                                             :message="errors.card_type ? errors.card_type[0] : ''">
+                                        <b-select v-model="fields.card_type" expanded>
+                                            <option value="USER CARD">USER CARD</option>
+                                            <option value="MASTER CARD">MASTER CARD</option>
+                                        </b-select>
+                                    </b-field>
+                                </div>
                             </div>
 
                             <div class="columns" v-if="global_id < 1">
@@ -363,6 +383,11 @@ export default{
                 'is-loading':false,
             },
 
+            rfid: {
+                type:'',
+                msg: '',
+            },
+
         }
 
     },
@@ -427,6 +452,27 @@ export default{
         },
 
 
+        scanRFID(){
+            //scan rfid via request
+            //nodemcu
+            this.rfid.type = '';
+            this.rfid.msg = '';
+            this.fields.rfid = '';
+
+            axios.get('http://192.168.0.45/scan').then(res=>{
+                console.log(res.data);
+                this.fields.rfid = res.data;
+                this.rfid.type = 'is-success'
+                this.rfid.msg = 'Scanned successfully.'
+            }).catch(err=>{
+                this.rfid.type = 'is-danger'
+                this.rfid.msg = 'Error reading rfid.'
+            })
+
+            //this.fields.rfid = "1234";        
+        },
+
+
         submit: function(){
             if(this.global_id > 0){
                 //update
@@ -447,6 +493,11 @@ export default{
                 }).catch(err=>{
                     if(err.response.status === 422){
                         this.errors = err.response.data.errors;
+
+                        if(this.errors.rfid){
+                            this.rfid.type = 'is-danger'
+                            this.rfid.msg = this.errors.rfid[0]
+                        }
                     }
                 })
             }else{
@@ -469,10 +520,13 @@ export default{
                 }).catch(err=>{
                     if(err.response.status === 422){
                         this.errors = err.response.data.errors;
+
+                        if(this.errors.rfid){
+                            this.rfid.type = 'is-danger'
+                            this.rfid.msg = this.errors.rfid[0]
+                        }
                     }
                 });
-
-
             }
         },
 
@@ -500,6 +554,9 @@ export default{
         },
 
         clearFields(){
+            this.rfid.type = '';
+            this.rfid.msg = '';
+
             this.fields.rfid = ''
             this.fields.username = ''
             this.fields.lname = ''
@@ -524,17 +581,6 @@ export default{
             //nested axios for getting the address 1 by 1 or request by request
             axios.get('/users/'+data_id).then(res=>{
                 this.fields = res.data;
-                this.fields.office = res.data.office_id;
-                let tempData = res.data;
-                //load city first
-                axios.get('/load-cities?prov=' + this.fields.province).then(res=>{
-                    //load barangay
-                    this.cities = res.data;
-                    axios.get('/load-barangays?prov=' + this.fields.province + '&city_code='+this.fields.city).then(res=>{
-                        this.barangays = res.data;
-                        this.fields = tempData;
-                    });
-                });
             });
         },
 

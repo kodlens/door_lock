@@ -55,8 +55,12 @@
                                 </b-table-column>
 
                                 <b-table-column field="door_name" label="Door Name" v-slot="props">
-                                    {{props.row.door_name}}
-                                </b-table-column>   
+                                    {{ props.row.door_name }}
+                                </b-table-column>
+                                
+                                <b-table-column field="mac_add" label="Mac Address" v-slot="props">
+                                    {{props.row.mac_add}}
+                                </b-table-column>     
                                 
                                 <b-table-column field="" label="Action" v-slot="props">
                                     <div class="buttons">

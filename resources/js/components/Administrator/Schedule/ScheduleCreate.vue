@@ -29,8 +29,8 @@
                                         :type="errors.user_id ? 'is-danger':''"
                                         :message="errors.user_id ? errors.user_id[0] : ''">
                                         <modal-user
-                                            @browseEmployees="emitBrowseEmployee"
-                                            :prop-employee="this.employeeFullname"></modal-user>
+                                            @browseUser="emitBrowseUser"
+                                            :prop-user="this.userFullname"></modal-user>
                                     </b-field>
                                     
                                 </div>
@@ -192,7 +192,7 @@ export default{
 
 
             employee: {},
-            employeeFullname: '',
+            userFullname: '',
             door: {},
             doorName: '',
 
@@ -326,7 +326,7 @@ export default{
         getData: function(){
     
             this.fields.ay_id = this.schedule.ay_id;
-            this.employeeFullname = this.schedule.user.lname + ', ' + this.schedule.user.fname + ' ' + this.schedule.user.mname;
+            this.userFullname = this.schedule.user.lname + ', ' + this.schedule.user.fname + ' ' + this.schedule.user.mname;
             this.fields.user_id = this.schedule.user_id;
             
             this.fields.door_id = this.schedule.door_id;
@@ -345,9 +345,9 @@ export default{
             this.fields.sun = this.schedule.sun;
         },
 
-        emitBrowseEmployee(row){
+        emitBrowseUser(row){
             this.fields.user_id = row.user_id
-            this.employeeFullname = row.lname + ', ' + row.fname + ' ' + row.mname
+            this.userFullname = row.lname + ', ' + row.fname + ' ' + row.mname
         },
 
         emitBrowseDoor(row){

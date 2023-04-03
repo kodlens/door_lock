@@ -18,15 +18,16 @@ class DoorSeeder extends Seeder
         $data = [
             [
                 'door_name' => 'DOOR 1',
+                'mac_add' => '48:55:19:C8:C2:B9'
             ],
             [
                 'door_name' => 'DOOR 2',
+                'mac_add' => ''
             ],
             [
                 'door_name' => 'DOOR 3',
+                'mac_add' => ''
             ],
-            
-
         ];
 
         \App\Models\Door::insertOrIgnore($data);
