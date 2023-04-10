@@ -59,7 +59,7 @@
                     class="{{ (request()->is('faculty*')) ? 'active' : '' }}">
                     Faculty
                 </b-navbar-item> --}}
-                .
+                
                 <b-navbar-item href="/users"
                     class="{{ (request()->is('users*')) ? 'active' : '' }}">
                     Users

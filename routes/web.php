@@ -98,11 +98,28 @@ Route::middleware(['auth'])->group(function() {
 }); //ADMINISTRATOR
 
 
+//Open AcadYear
+Route::get('/get-open-academic-years', 
+    [App\Http\Controllers\OpenAcademicYearController::class, 'getOpenAcademicYear']);
+
 
 
 Route::middleware(['auth', 'faculty'])->group(function() {
 
-    Route::resource('/faculty-home', App\Http\Controllers\Faculty\FacultyHomeController::class);
+    Route::resource('/faculty-home', 
+        App\Http\Controllers\Faculty\FacultyHomeController::class);
+    
+    Route::resource('/my-schedules', 
+        App\Http\Controllers\Faculty\MyScheduleController::class);
+    Route::get('/get-my-schedules', 
+        [App\Http\Controllers\Faculty\MyScheduleController::class, 'getAll']);
+
+
+    Route::resource('/my-students', App\Http\Controllers\Faculty\MyStudentController::class);
+    Route::get('/get-faculty-students', [App\Http\Controllers\Faculty\MyStudentController::class, 'getAll']);
+
+    Route::resource('/my-profile', App\Http\Controllers\Faculty\MyProfileController::class);
+
 
 }); //FACULTY
 

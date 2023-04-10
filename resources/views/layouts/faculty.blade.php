@@ -40,11 +40,28 @@
                     Home
                 </b-navbar-item>
 
+                <b-navbar-item href="/my-schedules"
+                    class="{{ (request()->is('my-schedules*')) ? 'active' : '' }}">
+                    My Schedules
+                </b-navbar-item>
+
+                <b-navbar-item href="/my-students"
+                    class="{{ (request()->is('my-students*')) ? 'active' : '' }}">
+                    My Students
+                </b-navbar-item>
+
+
                 <b-navbar-item href="/attendances"
                     class="{{ (request()->is('attendances*')) ? 'active' : '' }}">
                     Attendance
                 </b-navbar-item>
                 
+
+
+                <b-navbar-item href="/my-profile"
+                    class="{{ (request()->is('user-profile*')) ? 'active' : '' }}">
+                    {{ Auth::user()->fname }}
+                </b-navbar-item>
 
                 <b-navbar-item tag="div">
                     <div class="buttons">
