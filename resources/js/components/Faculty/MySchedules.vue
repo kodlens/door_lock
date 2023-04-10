@@ -34,7 +34,7 @@
                                             <b-field label="Academic Year" 
                                                 label-position="on-border">
                                                 <b-select v-model="search.ay"
-                                                    placeholder="Academic Year" required>
+                                                    placeholder="Academic Year">
                                                     <option value="">--ALL--</option>
                                                     <option 
                                                         v-for="(item, index) in academicYears"

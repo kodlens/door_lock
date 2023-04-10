@@ -40155,10 +40155,7 @@ var render = function () {
                               _c(
                                 "b-select",
                                 {
-                                  attrs: {
-                                    placeholder: "Academic Year",
-                                    required: "",
-                                  },
+                                  attrs: { placeholder: "Academic Year" },
                                   model: {
                                     value: _vm.search.ay,
                                     callback: function ($$v) {
