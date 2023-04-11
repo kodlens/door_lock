@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
+use App\Models\AppLog;
+
 class LoginController extends Controller
 {
     /*
@@ -53,10 +55,17 @@ class LoginController extends Controller
 
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
+            $user = Auth::user();
+            
+            AppLog::create([
+                'user' => $user->lname . ', ' . $user->lname . ' ' . $user->mname,
+                'activity' => 'Login to the system.'
+            ]);
 
-            return Auth::user();
+            return $user;
             // return redirect()->intended('dashboard');
         }
+
         return response()->json([
             'errors' => [
                 'username' => ['Username and password error. Access denied.']
@@ -65,9 +74,17 @@ class LoginController extends Controller
     }
 
     public function logout(Request $req){
+        $user = Auth::user();
+        AppLog::create([
+            'user' => $user->lname . ', ' . $user->lname . ' ' . $user->mname,
+            'activity' => 'Logout to the system.'
+        ]);
+
+
         Auth::logout();
         $req->session()->invalidate();
         $req->session()->regenerateToken();
+       
         return redirect('/');
     }
 

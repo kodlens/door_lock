@@ -11199,16 +11199,8 @@ __webpack_require__.r(__webpack_exports__);
       this.fields.role = '';
     },
     //update code here
-    getData: function getData(data_id) {
-      var _this6 = this;
-
-      this.clearFields();
-      this.global_id = data_id;
-      this.isModalCreate = true; //nested axios for getting the address 1 by 1 or request by request
-
-      axios.get('/users/' + data_id).then(function (res) {
-        _this6.fields = res.data;
-      });
+    studentList: function studentList(data_id) {
+      window.location = '/schedule-student-lists/' + data_id;
     },
     //CHANGE PASSWORD
     openModalResetPassword: function openModalResetPassword(dataId) {
@@ -11218,26 +11210,26 @@ __webpack_require__.r(__webpack_exports__);
       this.global_id = dataId;
     },
     resetPassword: function resetPassword() {
-      var _this7 = this;
+      var _this6 = this;
 
       axios.post('/user-reset-password/' + this.global_id, this.fields).then(function (res) {
         if (res.data.status === 'changed') {
-          _this7.$buefy.dialog.alert({
+          _this6.$buefy.dialog.alert({
             title: 'PASSWORD CHANGED',
             type: 'is-success',
             message: 'Password changed successfully.',
             confirmText: 'OK',
             onConfirm: function onConfirm() {
-              _this7.modalResetPassword = false;
-              _this7.fields = {};
-              _this7.errors = {};
+              _this6.modalResetPassword = false;
+              _this6.fields = {};
+              _this6.errors = {};
 
-              _this7.loadAsyncData();
+              _this6.loadAsyncData();
             }
           });
         }
       })["catch"](function (err) {
-        _this7.errors = err.response.data.errors;
+        _this6.errors = err.response.data.errors;
       });
     },
     scanQR: function scanQR() {
@@ -40147,51 +40139,70 @@ var render = function () {
                             "b-field",
                             {
                               attrs: {
-                                label: "Academic Year",
+                                label: "Search",
                                 "label-position": "on-border",
                               },
                             },
                             [
-                              _c(
-                                "b-select",
-                                {
-                                  attrs: { placeholder: "Academic Year" },
-                                  model: {
-                                    value: _vm.search.ay,
-                                    callback: function ($$v) {
-                                      _vm.$set(_vm.search, "ay", $$v)
-                                    },
-                                    expression: "search.ay",
+                              _c("b-input", {
+                                attrs: {
+                                  type: "text",
+                                  placeholder: "Search Door",
+                                },
+                                nativeOn: {
+                                  keyup: function ($event) {
+                                    if (
+                                      !$event.type.indexOf("key") &&
+                                      _vm._k(
+                                        $event.keyCode,
+                                        "enter",
+                                        13,
+                                        $event.key,
+                                        "Enter"
+                                      )
+                                    ) {
+                                      return null
+                                    }
+                                    return _vm.loadAsyncData.apply(
+                                      null,
+                                      arguments
+                                    )
                                   },
                                 },
+                                model: {
+                                  value: _vm.search.door,
+                                  callback: function ($$v) {
+                                    _vm.$set(_vm.search, "door", $$v)
+                                  },
+                                  expression: "search.door",
+                                },
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "p",
+                                { staticClass: "control" },
                                 [
-                                  _c("option", { attrs: { value: "" } }, [
-                                    _vm._v("--ALL--"),
-                                  ]),
-                                  _vm._v(" "),
-                                  _vm._l(
-                                    _vm.academicYears,
-                                    function (item, index) {
-                                      return _c(
-                                        "option",
-                                        {
-                                          key: index,
-                                          domProps: { value: item.ay_id },
+                                  _c(
+                                    "b-tooltip",
+                                    {
+                                      attrs: {
+                                        label: "Search",
+                                        type: "is-success",
+                                      },
+                                    },
+                                    [
+                                      _c("b-button", {
+                                        attrs: {
+                                          type: "is-primary",
+                                          "icon-right": "account-filter",
                                         },
-                                        [
-                                          _vm._v(
-                                            "\n                                                        " +
-                                              _vm._s(item.ay_code) +
-                                              " - " +
-                                              _vm._s(item.ay_desc) +
-                                              "\n                                                    "
-                                          ),
-                                        ]
-                                      )
-                                    }
+                                        on: { click: _vm.loadAsyncData },
+                                      }),
+                                    ],
+                                    1
                                   ),
                                 ],
-                                2
+                                1
                               ),
                             ],
                             1
@@ -40210,64 +40221,48 @@ var render = function () {
                         "b-field",
                         {
                           attrs: {
-                            label: "Search",
+                            label: "Academic Year",
                             "label-position": "on-border",
                           },
                         },
                         [
-                          _c("b-input", {
-                            attrs: { type: "text", placeholder: "Search Door" },
-                            nativeOn: {
-                              keyup: function ($event) {
-                                if (
-                                  !$event.type.indexOf("key") &&
-                                  _vm._k(
-                                    $event.keyCode,
-                                    "enter",
-                                    13,
-                                    $event.key,
-                                    "Enter"
-                                  )
-                                ) {
-                                  return null
-                                }
-                                return _vm.loadAsyncData.apply(null, arguments)
-                              },
-                            },
-                            model: {
-                              value: _vm.search.door,
-                              callback: function ($$v) {
-                                _vm.$set(_vm.search, "door", $$v)
-                              },
-                              expression: "search.door",
-                            },
-                          }),
-                          _vm._v(" "),
                           _c(
-                            "p",
-                            { staticClass: "control" },
-                            [
-                              _c(
-                                "b-tooltip",
-                                {
-                                  attrs: {
-                                    label: "Search",
-                                    type: "is-success",
-                                  },
+                            "b-select",
+                            {
+                              attrs: { placeholder: "Academic Year" },
+                              model: {
+                                value: _vm.search.ay,
+                                callback: function ($$v) {
+                                  _vm.$set(_vm.search, "ay", $$v)
                                 },
-                                [
-                                  _c("b-button", {
-                                    attrs: {
-                                      type: "is-primary",
-                                      "icon-right": "account-filter",
-                                    },
-                                    on: { click: _vm.loadAsyncData },
-                                  }),
-                                ],
-                                1
-                              ),
+                                expression: "search.ay",
+                              },
+                            },
+                            [
+                              _c("option", { attrs: { value: "" } }, [
+                                _vm._v("--ALL--"),
+                              ]),
+                              _vm._v(" "),
+                              _vm._l(_vm.academicYears, function (item, index) {
+                                return _c(
+                                  "option",
+                                  {
+                                    key: index,
+                                    domProps: { value: item.ay_id },
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                                " +
+                                        _vm._s(item.ay_code) +
+                                        " - " +
+                                        _vm._s(item.ay_desc) +
+                                        "\n                                            "
+                                    ),
+                                  ]
+                                )
+                              }),
                             ],
-                            1
+                            2
                           ),
                         ],
                         1
@@ -40382,6 +40377,52 @@ var render = function () {
                               props.row.sun == 1
                                 ? _c("span", [_vm._v("SU")])
                                 : _vm._e(),
+                            ]
+                          },
+                        },
+                      ]),
+                    }),
+                    _vm._v(" "),
+                    _c("b-table-column", {
+                      attrs: { label: "Action" },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function (props) {
+                            return [
+                              _c(
+                                "div",
+                                { staticClass: "is-flex" },
+                                [
+                                  _c(
+                                    "b-tooltip",
+                                    {
+                                      attrs: {
+                                        label: "Student List",
+                                        type: "is-warning",
+                                      },
+                                    },
+                                    [
+                                      _c("b-button", {
+                                        staticClass: "button is-small mr-1",
+                                        attrs: {
+                                          tag: "a",
+                                          "icon-right": "account",
+                                        },
+                                        on: {
+                                          click: function ($event) {
+                                            return _vm.studentList(
+                                              props.row.schedule_id
+                                            )
+                                          },
+                                        },
+                                      }),
+                                    ],
+                                    1
+                                  ),
+                                ],
+                                1
+                              ),
                             ]
                           },
                         },

@@ -31,43 +31,41 @@
 
                                     <div class="columns">
                                         <div class="column">
-                                            <b-field label="Academic Year" 
-                                                label-position="on-border">
-                                                <b-select v-model="search.ay"
-                                                    placeholder="Academic Year">
-                                                    <option value="">--ALL--</option>
-                                                    <option 
-                                                        v-for="(item, index) in academicYears"
-                                                        :key="index"
-                                                        :value="item.ay_id">
-                                                            {{  item.ay_code }} - {{ item.ay_desc }}
-                                                        </option>
-                                                </b-select>
+                                            <b-field label="Search" label-position="on-border">
+                                                <b-input type="text"
+                                                    v-model="search.door" 
+                                                    placeholder="Search Door"
+                                                    @keyup.native.enter="loadAsyncData"/>
+                                                <p class="control">
+                                                    <b-tooltip label="Search" type="is-success">
+                                                        <b-button type="is-primary" 
+                                                            icon-right="account-filter" 
+                                                            @click="loadAsyncData"/>
+                                                    </b-tooltip>
+                                                </p>
                                             </b-field>
                                         </div>
                                     </div>
                                 </div>
 
                                 <div class="column">
-                                    <b-field label="Search" label-position="on-border">
-                                        <b-input type="text"
-                                            v-model="search.door" 
-                                            placeholder="Search Door"
-                                            @keyup.native.enter="loadAsyncData"/>
-                                        <p class="control">
-                                            <b-tooltip label="Search" type="is-success">
-                                                <b-button type="is-primary" 
-                                                    icon-right="account-filter" 
-                                                    @click="loadAsyncData"/>
-                                            </b-tooltip>
-                                        </p>
+                                    <b-field label="Academic Year" 
+                                        label-position="on-border">
+                                        <b-select v-model="search.ay"
+                                            placeholder="Academic Year">
+                                            <option value="">--ALL--</option>
+                                            <option 
+                                                v-for="(item, index) in academicYears"
+                                                :key="index"
+                                                :value="item.ay_id">
+                                                    {{  item.ay_code }} - {{ item.ay_desc }}
+                                                </option>
+                                        </b-select>
                                     </b-field>
                                 </div>
+                                
                             </div>
 
-                            
-
-                            
 
                         <!-- <div class="buttons mt-3">
                             <b-button @click="openModal" icon-left="plus" class="is-success">NEW</b-button>
@@ -109,19 +107,21 @@
                                 <span v-if=" props.row.sun == 1">SU</span>
                             </b-table-column>
 
-                            <!-- <b-table-column label="Action" v-slot="props">
+                            <b-table-column label="Action" v-slot="props">
                                 <div class="is-flex">
-                                    <b-tooltip label="Edit" type="is-warning">
-                                        <b-button class="button is-small mr-1" tag="a" icon-right="pencil" @click="getData(props.row.user_id)"></b-button>
+                                    <b-tooltip label="Student List" type="is-warning">
+                                        <b-button class="button is-small mr-1" tag="a" icon-right="account" 
+                                            @click="studentList(props.row.schedule_id)">
+                                        </b-button>
                                     </b-tooltip>
-                                    <b-tooltip label="Delete" type="is-danger">
+                                    <!-- <b-tooltip label="Delete" type="is-danger">
                                         <b-button class="button is-small mr-1" icon-right="delete" @click="confirmDelete(props.row.user_id)"></b-button>
                                     </b-tooltip>
                                     <b-tooltip label="Reset Password" type="is-info">
                                         <b-button class="button is-small mr-1" icon-right="lock" @click="openModalResetPassword(props.row.user_id)"></b-button>
-                                    </b-tooltip>
+                                    </b-tooltip> -->
                                 </div>
-                            </b-table-column> -->
+                            </b-table-column>
                         </b-table>
 
 
@@ -480,16 +480,8 @@ export default{
 
 
         //update code here
-        getData: function(data_id){
-            this.clearFields();
-            this.global_id = data_id;
-            this.isModalCreate = true;
-
-
-            //nested axios for getting the address 1 by 1 or request by request
-            axios.get('/users/'+data_id).then(res=>{
-                this.fields = res.data;
-            });
+        studentList: function(data_id){
+            window.location = '/schedule-student-lists/' + data_id
         },
 
 

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\AcademicYear;
 use App\Models\User;
+use App\Models\AppLog;
 
 class RFIDApiController extends Controller
 {
@@ -39,10 +40,23 @@ class RFIDApiController extends Controller
             ->where($day, 1);
 
         //return $data;
+        $name = $user->lname . ', ' . $user->lname . ' ' . $user->mname;
 
         if($data->count() > 0){
+
+            AppLog::create([
+                'user' => $name,
+                'activity' => $rfid . ' of ' . $name . ' was swiped and accepted. Door is unlock.'
+            ]);
+
             return 1;
         }else{
+
+            AppLog::create([
+                'user' => $name,
+                'activity' => $rfid . ' of ' . $name . ' was swiped and rejected.'
+            ]);
+
             return 0;
         }
     }
