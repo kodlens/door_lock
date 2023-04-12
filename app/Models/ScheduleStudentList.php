@@ -14,7 +14,7 @@ class ScheduleStudentList extends Model
     protected $primaryKey = 'schedule_student_list_id';
 
 
-    protected $fillable = ['student_id', 'faculty_id', 'ay_id', 'student_lname', 'student_fname',
+    protected $fillable = ['student_id', 'schedule_id', 'student_lname', 'student_fname',
         'student_suffix', 'student_sex', 'student_contact_no'
     ];
 

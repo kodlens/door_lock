@@ -18,15 +18,11 @@ class CreateScheduleStudentLists extends Migration
 
             $table->string('student_id')->nullable();
 
-            $table->unsignedBigInteger('faculty_id');
-            $table->foreign('faculty_id')->references('faculty_id')->on('faculty')
+            $table->unsignedBigInteger('schedule_id');
+            $table->foreign('schedule_id')->references('schedule_id')->on('schedules')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->unsignedBigInteger('ay_id');
-            $table->foreign('ay_id')->references('ay_id')->on('academic_years')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
 
             $table->string('student_lname')->nullable();
             $table->string('student_fname')->nullable();

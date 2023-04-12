@@ -10969,78 +10969,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     propSchedule: {
@@ -11053,7 +10981,7 @@ __webpack_require__.r(__webpack_exports__);
       data: [],
       total: 0,
       loading: false,
-      sortField: 'user_id',
+      sortField: 'schedule_student_list_id',
       sortOrder: 'desc',
       page: 1,
       perPage: 5,
@@ -11081,7 +11009,7 @@ __webpack_require__.r(__webpack_exports__);
     loadAsyncData: function loadAsyncData() {
       var _this = this;
 
-      var params = ["sort_by=".concat(this.sortField, ".").concat(this.sortOrder), "lname=".concat(this.search.lname), "perpage=".concat(this.perPage), "page=".concat(this.page)].join('&');
+      var params = ["sort_by=".concat(this.sortField, ".").concat(this.sortOrder), "scheduleid=".concat(this.schedule.schedule_id), "lname=".concat(this.search.lname), "perpage=".concat(this.perPage), "page=".concat(this.page)].join('&');
       this.loading = true;
       axios.get("/get-my-schedule-student-list?".concat(params)).then(function (_ref) {
         var data = _ref.data;
@@ -11129,9 +11057,11 @@ __webpack_require__.r(__webpack_exports__);
     submit: function submit() {
       var _this2 = this;
 
+      this.fields.schedule_id = this.schedule.schedule_id;
+
       if (this.global_id > 0) {
         //update
-        axios.put('/users/' + this.global_id, this.fields).then(function (res) {
+        axios.put('/my-schedule-student-list-update/' + this.global_id, this.fields).then(function (res) {
           if (res.data.status === 'updated') {
             _this2.$buefy.dialog.alert({
               title: 'UPDATED!',
@@ -11159,7 +11089,7 @@ __webpack_require__.r(__webpack_exports__);
         });
       } else {
         //INSERT HERE
-        axios.post('/users', this.fields).then(function (res) {
+        axios.post('/my-schedule-student-list', this.fields).then(function (res) {
           if (res.data.status === 'saved') {
             _this2.$buefy.dialog.alert({
               title: 'SAVED!',
@@ -11198,7 +11128,7 @@ __webpack_require__.r(__webpack_exports__);
         type: 'is-danger',
         message: 'Are you sure you want to delete this data?',
         cancelText: 'Cancel',
-        confirmText: 'Delete user account?',
+        confirmText: 'Delete?',
         onConfirm: function onConfirm() {
           return _this3.deleteSubmit(delete_id);
         }
@@ -11208,7 +11138,7 @@ __webpack_require__.r(__webpack_exports__);
     deleteSubmit: function deleteSubmit(delete_id) {
       var _this4 = this;
 
-      axios["delete"]('/users/' + delete_id).then(function (res) {
+      axios["delete"]('/my-schedule-student-list-delete/' + delete_id).then(function (res) {
         _this4.loadAsyncData();
       })["catch"](function (err) {
         if (err.response.status === 422) {
@@ -11216,7 +11146,16 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    clearFields: function clearFields() {},
+    clearFields: function clearFields() {
+      this.global_id = 0;
+      this.fields.student_id = '';
+      this.fields.student_lname = '';
+      this.fields.student_fname = '';
+      this.fields.student_mname = '';
+      this.fields.student_suffix = '';
+      this.fields.student_sex = '';
+      this.fields.student_contact_no = '';
+    },
     //update code here
     getData: function getData(data_id) {
       var _this5 = this;
@@ -11225,7 +11164,7 @@ __webpack_require__.r(__webpack_exports__);
       this.global_id = data_id;
       this.isModalCreate = true; //nested axios for getting the address 1 by 1 or request by request
 
-      axios.get('/users/' + data_id).then(function (res) {
+      axios.get('/my-schedule-student-list-edit/' + data_id).then(function (res) {
         _this5.fields = res.data;
       });
     },
@@ -40945,7 +40884,11 @@ var render = function () {
                   },
                   [
                     _c("b-table-column", {
-                      attrs: { field: "user_id", label: "ID", sortable: "" },
+                      attrs: {
+                        field: "schedule_student_list_id",
+                        label: "ID",
+                        sortable: "",
+                      },
                       scopedSlots: _vm._u([
                         {
                           key: "default",
@@ -40953,25 +40896,7 @@ var render = function () {
                             return [
                               _vm._v(
                                 "\n                            " +
-                                  _vm._s(props.row.user_id) +
-                                  "\n                        "
-                              ),
-                            ]
-                          },
-                        },
-                      ]),
-                    }),
-                    _vm._v(" "),
-                    _c("b-table-column", {
-                      attrs: { field: "rfid", label: "RFID", sortable: "" },
-                      scopedSlots: _vm._u([
-                        {
-                          key: "default",
-                          fn: function (props) {
-                            return [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(props.row.rfid) +
+                                  _vm._s(props.row.schedule_student_list_id) +
                                   "\n                        "
                               ),
                             ]
@@ -40982,8 +40907,8 @@ var render = function () {
                     _vm._v(" "),
                     _c("b-table-column", {
                       attrs: {
-                        field: "username",
-                        label: "Username",
+                        field: "student_name",
+                        label: "Name",
                         sortable: "",
                       },
                       scopedSlots: _vm._u([
@@ -40993,29 +40918,11 @@ var render = function () {
                             return [
                               _vm._v(
                                 "\n                            " +
-                                  _vm._s(props.row.username) +
-                                  "\n                        "
-                              ),
-                            ]
-                          },
-                        },
-                      ]),
-                    }),
-                    _vm._v(" "),
-                    _c("b-table-column", {
-                      attrs: { field: "lname", label: "Name", sortable: "" },
-                      scopedSlots: _vm._u([
-                        {
-                          key: "default",
-                          fn: function (props) {
-                            return [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(props.row.lname) +
-                                  ", " +
-                                  _vm._s(props.row.fname) +
+                                  _vm._s(props.row.student_fname) +
                                   " " +
-                                  _vm._s(props.row.mname) +
+                                  _vm._s(props.row.student_mname) +
+                                  " " +
+                                  _vm._s(props.row.student_lname) +
                                   "\n                        "
                               ),
                             ]
@@ -41025,7 +40932,11 @@ var render = function () {
                     }),
                     _vm._v(" "),
                     _c("b-table-column", {
-                      attrs: { field: "sex", label: "Sex" },
+                      attrs: {
+                        field: "student_sex",
+                        label: "Sex",
+                        sortable: "",
+                      },
                       scopedSlots: _vm._u([
                         {
                           key: "default",
@@ -41033,7 +40944,7 @@ var render = function () {
                             return [
                               _vm._v(
                                 "\n                            " +
-                                  _vm._s(props.row.sex) +
+                                  _vm._s(props.row.student_sex) +
                                   "\n                        "
                               ),
                             ]
@@ -41043,7 +40954,11 @@ var render = function () {
                     }),
                     _vm._v(" "),
                     _c("b-table-column", {
-                      attrs: { field: "card_type", label: "Card Type" },
+                      attrs: {
+                        field: "student_contact_no",
+                        label: "Contact No.",
+                        sortable: "",
+                      },
                       scopedSlots: _vm._u([
                         {
                           key: "default",
@@ -41051,26 +40966,8 @@ var render = function () {
                             return [
                               _vm._v(
                                 "\n                            " +
-                                  _vm._s(props.row.card_type) +
-                                  "\n                        "
-                              ),
-                            ]
-                          },
-                        },
-                      ]),
-                    }),
-                    _vm._v(" "),
-                    _c("b-table-column", {
-                      attrs: { field: "role", label: "Role" },
-                      scopedSlots: _vm._u([
-                        {
-                          key: "default",
-                          fn: function (props) {
-                            return [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(props.row.role) +
-                                  "\n                        "
+                                  _vm._s(props.row.student_contact_no) +
+                                  ",\n                        "
                               ),
                             ]
                           },
@@ -41107,7 +41004,7 @@ var render = function () {
                                         on: {
                                           click: function ($event) {
                                             return _vm.getData(
-                                              props.row.user_id
+                                              props.row.schedule_student_list_id
                                             )
                                           },
                                         },
@@ -41131,31 +41028,7 @@ var render = function () {
                                         on: {
                                           click: function ($event) {
                                             return _vm.confirmDelete(
-                                              props.row.user_id
-                                            )
-                                          },
-                                        },
-                                      }),
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "b-tooltip",
-                                    {
-                                      attrs: {
-                                        label: "Reset Password",
-                                        type: "is-info",
-                                      },
-                                    },
-                                    [
-                                      _c("b-button", {
-                                        staticClass: "button is-small mr-1",
-                                        attrs: { "icon-right": "lock" },
-                                        on: {
-                                          click: function ($event) {
-                                            return _vm.openModalResetPassword(
-                                              props.row.user_id
+                                              props.row.schedule_student_list_id
                                             )
                                           },
                                         },
@@ -41436,9 +41309,9 @@ var render = function () {
                                 label: "Sex",
                                 "label-position": "on-border",
                                 expanded: "",
-                                type: _vm.errors.sex ? "is-danger" : "",
-                                message: _vm.errors.sex
-                                  ? _vm.errors.sex[0]
+                                type: _vm.errors.student_sex ? "is-danger" : "",
+                                message: _vm.errors.student_sex
+                                  ? _vm.errors.student_sex[0]
                                   : "",
                               },
                             },
@@ -41448,11 +41321,11 @@ var render = function () {
                                 {
                                   attrs: { expanded: "" },
                                   model: {
-                                    value: _vm.fields.sex,
+                                    value: _vm.fields.student_sex,
                                     callback: function ($$v) {
-                                      _vm.$set(_vm.fields, "sex", $$v)
+                                      _vm.$set(_vm.fields, "student_sex", $$v)
                                     },
-                                    expression: "fields.sex",
+                                    expression: "fields.student_sex",
                                   },
                                 },
                                 [
@@ -41482,9 +41355,11 @@ var render = function () {
                               attrs: {
                                 label: "Contact No",
                                 "label-position": "on-border",
-                                type: _vm.errors.contact_no ? "is-danger" : "",
-                                message: _vm.errors.contact_no
-                                  ? _vm.errors.contact_no[0]
+                                type: _vm.errors.student_contact_no
+                                  ? "is-danger"
+                                  : "",
+                                message: _vm.errors.student_contact_no
+                                  ? _vm.errors.student_contact_no[0]
                                   : "",
                               },
                             },
@@ -41493,14 +41368,17 @@ var render = function () {
                                 attrs: {
                                   type: "number",
                                   placeholder: "Contact No",
-                                  required: "",
                                 },
                                 model: {
-                                  value: _vm.fields.contact_no,
+                                  value: _vm.fields.student_contact_no,
                                   callback: function ($$v) {
-                                    _vm.$set(_vm.fields, "contact_no", $$v)
+                                    _vm.$set(
+                                      _vm.fields,
+                                      "student_contact_no",
+                                      $$v
+                                    )
                                   },
-                                  expression: "fields.contact_no",
+                                  expression: "fields.student_contact_no",
                                 },
                               }),
                             ],
@@ -41522,167 +41400,6 @@ var render = function () {
                       on: {
                         click: function ($event) {
                           _vm.isModalCreate = false
-                        },
-                      },
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        class: _vm.btnClass,
-                        attrs: { label: "Save", type: "is-success" },
-                      },
-                      [_vm._v("SAVE")]
-                    ),
-                  ],
-                  1
-                ),
-              ]),
-            ]
-          ),
-        ]
-      ),
-      _vm._v(" "),
-      _c(
-        "b-modal",
-        {
-          attrs: {
-            "has-modal-card": "",
-            "trap-focus": "",
-            width: 640,
-            "aria-role": "dialog",
-            "aria-label": "Modal",
-            "aria-modal": "",
-          },
-          model: {
-            value: _vm.modalResetPassword,
-            callback: function ($$v) {
-              _vm.modalResetPassword = $$v
-            },
-            expression: "modalResetPassword",
-          },
-        },
-        [
-          _c(
-            "form",
-            {
-              on: {
-                submit: function ($event) {
-                  $event.preventDefault()
-                  return _vm.resetPassword.apply(null, arguments)
-                },
-              },
-            },
-            [
-              _c("div", { staticClass: "modal-card" }, [
-                _c("header", { staticClass: "modal-card-head" }, [
-                  _c("p", { staticClass: "modal-card-title" }, [
-                    _vm._v("Change Password"),
-                  ]),
-                  _vm._v(" "),
-                  _c("button", {
-                    staticClass: "delete",
-                    attrs: { type: "button" },
-                    on: {
-                      click: function ($event) {
-                        _vm.modalResetPassword = false
-                      },
-                    },
-                  }),
-                ]),
-                _vm._v(" "),
-                _c("section", { staticClass: "modal-card-body" }, [
-                  _c("div", {}, [
-                    _c("div", { staticClass: "columns" }, [
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "Password",
-                                "label-position": "on-border",
-                                type: _vm.errors.password ? "is-danger" : "",
-                                message: _vm.errors.password
-                                  ? _vm.errors.password[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c("b-input", {
-                                attrs: {
-                                  type: "password",
-                                  "password-reveal": "",
-                                  placeholder: "Password",
-                                  required: "",
-                                },
-                                model: {
-                                  value: _vm.fields.password,
-                                  callback: function ($$v) {
-                                    _vm.$set(_vm.fields, "password", $$v)
-                                  },
-                                  expression: "fields.password",
-                                },
-                              }),
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "Confirm Password",
-                                "label-position": "on-border",
-                                type: _vm.errors.password_confirmation
-                                  ? "is-danger"
-                                  : "",
-                                message: _vm.errors.password_confirmation
-                                  ? _vm.errors.password_confirmation[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c("b-input", {
-                                attrs: {
-                                  type: "password",
-                                  "password-reveal": "",
-                                  placeholder: "Confirm Password",
-                                  required: "",
-                                },
-                                model: {
-                                  value: _vm.fields.password_confirmation,
-                                  callback: function ($$v) {
-                                    _vm.$set(
-                                      _vm.fields,
-                                      "password_confirmation",
-                                      $$v
-                                    )
-                                  },
-                                  expression: "fields.password_confirmation",
-                                },
-                              }),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                    ]),
-                  ]),
-                ]),
-                _vm._v(" "),
-                _c(
-                  "footer",
-                  { staticClass: "modal-card-foot" },
-                  [
-                    _c("b-button", {
-                      attrs: { label: "Close" },
-                      on: {
-                        click: function ($event) {
-                          _vm.modalResetPassword = false
                         },
                       },
                     }),

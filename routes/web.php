@@ -109,13 +109,17 @@ Route::middleware(['auth', 'faculty'])->group(function() {
     Route::resource('/faculty-home', 
         App\Http\Controllers\Faculty\FacultyHomeController::class);
     
-    Route::resource('/my-schedules', 
-        App\Http\Controllers\Faculty\MyScheduleController::class);
-    Route::get('/get-my-schedules', 
-        [App\Http\Controllers\Faculty\MyScheduleController::class, 'getAll']);
+    Route::resource('/my-schedules', App\Http\Controllers\Faculty\MyScheduleController::class);
+    Route::get('/get-my-schedules', [App\Http\Controllers\Faculty\MyScheduleController::class, 'getAll']);
         
 
     Route::get('/my-schedule-student-list/{schedule_id}', [App\Http\Controllers\Faculty\MyScheduleStudentListController::class, 'index']);
+    Route::post('/my-schedule-student-list/{schedule_id}', [App\Http\Controllers\Faculty\MyScheduleStudentListController::class, 'store']);
+    Route::put('/my-schedule-student-list-update/{schedule_student_list_id}', [App\Http\Controllers\Faculty\MyScheduleStudentListController::class, 'update']);
+    Route::get('/my-schedule-student-list-edit/{schedule_student_list_id}', [App\Http\Controllers\Faculty\MyScheduleStudentListController::class, 'show']);
+    Route::delete('/my-schedule-student-list-delete/{schedule_student_list_id}', [App\Http\Controllers\Faculty\MyScheduleStudentListController::class, 'destroy']);
+
+    
     Route::get('/get-my-schedule-student-list', [App\Http\Controllers\Faculty\MyScheduleStudentListController::class, 'getAll']);
 
     Route::resource('/my-students', App\Http\Controllers\Faculty\MyStudentController::class);

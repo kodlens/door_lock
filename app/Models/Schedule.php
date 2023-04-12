@@ -38,4 +38,11 @@ class Schedule extends Model
     public function ay(){
         return $this->hasOne(AcademicYear::class,'ay_id','ay_id');
     }
+
+
+    public function student_list(){
+        return $this->hasMany(ScheduleStudentList::class,'schedule_id','schedule_id');
+    }
+
+
 }

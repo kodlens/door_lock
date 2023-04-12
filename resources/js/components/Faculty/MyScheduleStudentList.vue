@@ -77,44 +77,30 @@
                             :default-sort-direction="defaultSortDirection"
                             @sort="onSort">
 
-                            <b-table-column field="user_id" label="ID" sortable v-slot="props">
-                                {{ props.row.user_id }}
+                            <b-table-column field="schedule_student_list_id" label="ID" sortable v-slot="props">
+                                {{ props.row.schedule_student_list_id }}
                             </b-table-column>
 
-                            <b-table-column field="rfid" label="RFID" sortable v-slot="props">
-                                {{ props.row.rfid }}
+                            <b-table-column field="student_name" label="Name" sortable v-slot="props">
+                                {{ props.row.student_fname }} {{ props.row.student_mname}} {{ props.row.student_lname }}
                             </b-table-column>
 
-                            <b-table-column field="username" label="Username" sortable v-slot="props">
-                                {{ props.row.username }}
+                            <b-table-column field="student_sex" label="Sex" sortable v-slot="props">
+                                {{ props.row.student_sex }}
                             </b-table-column>
 
-                            <b-table-column field="lname" label="Name" sortable v-slot="props">
-                                {{ props.row.lname }}, {{ props.row.fname }} {{ props.row.mname }}
+                            <b-table-column field="student_contact_no" label="Contact No." sortable v-slot="props">
+                                {{ props.row.student_contact_no }},
                             </b-table-column>
 
-                            <b-table-column field="sex" label="Sex" v-slot="props">
-                                {{ props.row.sex }}
-                            </b-table-column>
-
-                            <b-table-column field="card_type" label="Card Type" v-slot="props">
-                                {{ props.row.card_type }}
-                            </b-table-column>
-
-                            <b-table-column field="role" label="Role" v-slot="props">
-                                {{ props.row.role }}
-                            </b-table-column>
 
                             <b-table-column label="Action" v-slot="props">
                                 <div class="is-flex">
                                     <b-tooltip label="Edit" type="is-warning">
-                                        <b-button class="button is-small mr-1" tag="a" icon-right="pencil" @click="getData(props.row.user_id)"></b-button>
+                                        <b-button class="button is-small mr-1" tag="a" icon-right="pencil" @click="getData(props.row.schedule_student_list_id)"></b-button>
                                     </b-tooltip>
                                     <b-tooltip label="Delete" type="is-danger">
-                                        <b-button class="button is-small mr-1" icon-right="delete" @click="confirmDelete(props.row.user_id)"></b-button>
-                                    </b-tooltip>
-                                    <b-tooltip label="Reset Password" type="is-info">
-                                        <b-button class="button is-small mr-1" icon-right="lock" @click="openModalResetPassword(props.row.user_id)"></b-button>
+                                        <b-button class="button is-small mr-1" icon-right="delete" @click="confirmDelete(props.row.schedule_student_list_id)"></b-button>
                                     </b-tooltip>
                                 </div>
                             </b-table-column>
@@ -211,10 +197,10 @@
                             <div class="columns">
                                 <div class="column">
                                     <b-field label="Sex" label-position="on-border" expanded
-                                        :type="errors.sex ? 'is-danger':''"
-                                        :message="errors.sex ? errors.sex[0] : ''"
+                                        :type="errors.student_sex ? 'is-danger':''"
+                                        :message="errors.student_sex ? errors.student_sex[0] : ''"
                                     >
-                                        <b-select v-model="fields.sex" expanded>
+                                        <b-select v-model="fields.student_sex" expanded>
                                             <option value="MALE">MALE</option>
                                             <option value="FEMALE">FEMALE</option>
                                         </b-select>
@@ -223,10 +209,10 @@
 
                                 <div class="column">
                                     <b-field label="Contact No" label-position="on-border"
-                                             :type="errors.contact_no ? 'is-danger':''"
-                                             :message="errors.contact_no ? errors.contact_no[0] : ''">
-                                        <b-input type="number" v-model="fields.contact_no"
-                                                 placeholder="Contact No" required>
+                                             :type="errors.student_contact_no ? 'is-danger':''"
+                                             :message="errors.student_contact_no ? errors.student_contact_no[0] : ''">
+                                        <b-input type="number" v-model="fields.student_contact_no"
+                                                 placeholder="Contact No">
                                         </b-input>
                                     </b-field>
                                 </div>
@@ -240,64 +226,6 @@
                         <b-button
                             label="Close"
                             @click="isModalCreate=false"/>
-                        <button
-                            :class="btnClass"
-                            label="Save"
-                            type="is-success">SAVE</button>
-                    </footer>
-                </div>
-            </form><!--close form-->
-        </b-modal>
-        <!--close modal-->
-
-
-
-
-        <!--modal reset password-->
-        <b-modal v-model="modalResetPassword" has-modal-card
-                 trap-focus
-                 :width="640"
-                 aria-role="dialog"
-                 aria-label="Modal"
-                 aria-modal>
-
-            <form @submit.prevent="resetPassword">
-                <div class="modal-card">
-                    <header class="modal-card-head">
-                        <p class="modal-card-title">Change Password</p>
-                        <button
-                            type="button"
-                            class="delete"
-                            @click="modalResetPassword = false"/>
-                    </header>
-
-                    <section class="modal-card-body">
-                        <div class="">
-                            <div class="columns">
-                                <div class="column">
-                                    <b-field label="Password" label-position="on-border"
-                                             :type="errors.password ? 'is-danger':''"
-                                             :message="errors.password ? errors.password[0] : ''">
-                                        <b-input type="password" v-model="fields.password" password-reveal
-                                                 placeholder="Password" required>
-                                        </b-input>
-                                    </b-field>
-                                    <b-field label="Confirm Password" label-position="on-border"
-                                             :type="errors.password_confirmation ? 'is-danger':''"
-                                             :message="errors.password_confirmation ? errors.password_confirmation[0] : ''">
-                                        <b-input type="password" v-model="fields.password_confirmation"
-                                                 password-reveal
-                                                 placeholder="Confirm Password" required>
-                                        </b-input>
-                                    </b-field>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    <footer class="modal-card-foot">
-                        <b-button
-                            label="Close"
-                            @click="modalResetPassword=false"/>
                         <button
                             :class="btnClass"
                             label="Save"
@@ -328,7 +256,7 @@ export default{
             data: [],
             total: 0,
             loading: false,
-            sortField: 'user_id',
+            sortField: 'schedule_student_list_id',
             sortOrder: 'desc',
             page: 1,
             perPage: 5,
@@ -366,6 +294,7 @@ export default{
         loadAsyncData() {
             const params = [
                 `sort_by=${this.sortField}.${this.sortOrder}`,
+                `scheduleid=${this.schedule.schedule_id}`,
                 `lname=${this.search.lname}`,
                 `perpage=${this.perPage}`,
                 `page=${this.page}`
@@ -421,9 +350,12 @@ export default{
 
 
         submit: function(){
+
+            this.fields.schedule_id = this.schedule.schedule_id;
+
             if(this.global_id > 0){
                 //update
-                axios.put('/users/'+this.global_id, this.fields).then(res=>{
+                axios.put('/my-schedule-student-list-update/'+this.global_id, this.fields).then(res=>{
                     if(res.data.status === 'updated'){
                         this.$buefy.dialog.alert({
                             title: 'UPDATED!',
@@ -449,7 +381,7 @@ export default{
                 })
             }else{
                 //INSERT HERE
-                axios.post('/users', this.fields).then(res=>{
+                axios.post('/my-schedule-student-list', this.fields).then(res=>{
                     if(res.data.status === 'saved'){
                         this.$buefy.dialog.alert({
                             title: 'SAVED!',
@@ -485,13 +417,13 @@ export default{
                 type: 'is-danger',
                 message: 'Are you sure you want to delete this data?',
                 cancelText: 'Cancel',
-                confirmText: 'Delete user account?',
+                confirmText: 'Delete?',
                 onConfirm: () => this.deleteSubmit(delete_id)
             });
         },
         //execute delete after confirming
         deleteSubmit(delete_id) {
-            axios.delete('/users/' + delete_id).then(res => {
+            axios.delete('/my-schedule-student-list-delete/' + delete_id).then(res => {
                 this.loadAsyncData();
             }).catch(err => {
                 if (err.response.status === 422) {
@@ -501,6 +433,16 @@ export default{
         },
 
         clearFields(){
+            this.global_id = 0
+
+            this.fields.student_id = ''
+            this.fields.student_lname = ''
+            this.fields.student_fname = ''
+            this.fields.student_mname = ''
+            this.fields.student_suffix = ''
+            this.fields.student_sex = ''
+            this.fields.student_contact_no = ''
+
         },
 
 
@@ -512,7 +454,7 @@ export default{
 
 
             //nested axios for getting the address 1 by 1 or request by request
-            axios.get('/users/'+data_id).then(res=>{
+            axios.get('/my-schedule-student-list-edit/'+data_id).then(res=>{
                 this.fields = res.data;
             });
         },
