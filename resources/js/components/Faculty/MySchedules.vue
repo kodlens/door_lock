@@ -481,7 +481,7 @@ export default{
 
         //update code here
         studentList: function(data_id){
-            window.location = '/schedule-student-lists/' + data_id
+            window.location = '/my-schedule-student-list/' + data_id
         },
 
 

@@ -113,11 +113,10 @@ Route::middleware(['auth', 'faculty'])->group(function() {
         App\Http\Controllers\Faculty\MyScheduleController::class);
     Route::get('/get-my-schedules', 
         [App\Http\Controllers\Faculty\MyScheduleController::class, 'getAll']);
-
-
-    Route::resource('/schedule-student-lists/{schedule_id}', 
-        App\Http\Controllers\Faculty\StudentListController::class);
         
+
+    Route::get('/my-schedule-student-list/{schedule_id}', [App\Http\Controllers\Faculty\MyScheduleStudentListController::class, 'index']);
+    Route::get('/get-my-schedule-student-list', [App\Http\Controllers\Faculty\MyScheduleStudentListController::class, 'getAll']);
 
     Route::resource('/my-students', App\Http\Controllers\Faculty\MyStudentController::class);
     Route::get('/get-faculty-students', [App\Http\Controllers\Faculty\MyStudentController::class, 'getAll']);

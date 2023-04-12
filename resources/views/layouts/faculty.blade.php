@@ -41,7 +41,7 @@
                 </b-navbar-item>
 
                 <b-navbar-item href="/my-schedules"
-                    class="{{ (request()->is('my-schedules*')) ? 'active' : '' }}">
+                    class="{{ (request()->is('my-schedules*') || request()->is('my-schedule-student-list*')) ? 'active' : '' }}">
                     My Schedules
                 </b-navbar-item>
 
@@ -75,8 +75,6 @@
                 </b-navbar-item>
             </template>
         </b-navbar>
-
-        
 
         <div>
             @yield('content')

@@ -15,7 +15,7 @@ class ScheduleSeeder extends Seeder
     {
         $data = [
             [
-                'user_id' => 3, 
+                'user_id' => 2, 
                 'door_id' => 2, 
                 'ay_id' => 1, 
                 'time_start'=>'02:04:00', 
