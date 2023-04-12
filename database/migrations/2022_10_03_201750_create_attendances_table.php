@@ -16,22 +16,12 @@ class CreateAttendancesTable extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->id('attendance_id');
 
-            $table->unsignedBigInteger('faculty_id');
-            $table->foreign('faculty_id')->references('faculty_id')->on('faculty')
+            $table->unsignedBigInteger('user_id');
+            $table->foreign('user_id')->references('user_id')->on('users')
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->unsignedBigInteger('faculty_student_id');
-            $table->foreign('faculty_student_id')->references('faculty_student_id')->on('faculty_students')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-
-            $table->unsignedBigInteger('schedule_id');
-            $table->foreign('schedule_id')->references('schedule_id')->on('schedules')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
-
-            $table->string('attendance_log')->nullable();
+            $table->dateTime('attendance_datetime')->nullable();
             $table->string('attendance_remark')->nullable();
 
             $table->timestamps();

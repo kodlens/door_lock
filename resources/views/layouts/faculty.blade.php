@@ -45,12 +45,6 @@
                     My Schedules
                 </b-navbar-item>
 
-                <b-navbar-item href="/my-students"
-                    class="{{ (request()->is('my-students*')) ? 'active' : '' }}">
-                    My Students
-                </b-navbar-item>
-
-
                 <b-navbar-item href="/attendances"
                     class="{{ (request()->is('attendances*')) ? 'active' : '' }}">
                     Attendance

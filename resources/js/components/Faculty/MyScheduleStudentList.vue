@@ -90,7 +90,7 @@
                             </b-table-column>
 
                             <b-table-column field="student_contact_no" label="Contact No." sortable v-slot="props">
-                                {{ props.row.student_contact_no }},
+                                {{ props.row.student_contact_no }}
                             </b-table-column>
 
 
