@@ -109,9 +109,15 @@
 
                             <b-table-column label="Action" v-slot="props">
                                 <div class="is-flex">
-                                    <b-tooltip label="Student List" type="is-warning">
+                                    <b-tooltip label="Student List" type="is-primary">
                                         <b-button class="button is-small mr-1" tag="a" icon-right="account" 
                                             @click="studentList(props.row.schedule_id)">
+                                        </b-button>
+                                    </b-tooltip>
+
+                                     <b-tooltip label="Attendance" type="is-primary">
+                                        <b-button class="button is-small mr-1" tag="a" icon-right="list-status" 
+                                            @click="studentAttendance(props.row.schedule_id)">
                                         </b-button>
                                     </b-tooltip>
                                     <!-- <b-tooltip label="Delete" type="is-danger">
@@ -485,7 +491,9 @@ export default{
         },
 
 
-
+        studentAttendance(data_id){
+            window.location = '/my-schedule-student-attendance/' + data_id
+        },
 
         //CHANGE PASSWORD
         openModalResetPassword(dataId){

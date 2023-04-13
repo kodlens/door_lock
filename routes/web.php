@@ -128,8 +128,8 @@ Route::middleware(['auth', 'faculty'])->group(function() {
     Route::resource('/my-profile', App\Http\Controllers\Faculty\MyProfileController::class);
 
 
-    Route::resource('/attendances', App\Http\Controllers\Faculty\AttendanceController::class);
-    Route::get('/get-attendances', [App\Http\Controllers\Faculty\AttendanceController::class, 'getAll']);
+    Route::get('/my-schedule-student-attendance/{sId}', [App\Http\Controllers\Faculty\MyScheduleStudentAttendanceController::class, 'index']);
+    //Route::get('/get-attendances', [App\Http\Controllers\Faculty\AttendanceController::class, 'getAll']);
 
 
 }); //FACULTY

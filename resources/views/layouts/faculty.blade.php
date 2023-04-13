@@ -41,16 +41,11 @@
                 </b-navbar-item>
 
                 <b-navbar-item href="/my-schedules"
-                    class="{{ (request()->is('my-schedules*') || request()->is('my-schedule-student-list*')) ? 'active' : '' }}">
+                    class="{{ (request()->is('my-schedules*') 
+                        || request()->is('my-schedule-student-list*') 
+                        || request()->is('my-schedule-student-attendance*')) ? 'active' : '' }}">
                     My Schedules
                 </b-navbar-item>
-
-                <b-navbar-item href="/attendances"
-                    class="{{ (request()->is('attendances*')) ? 'active' : '' }}">
-                    Attendance
-                </b-navbar-item>
-                
-
 
                 <b-navbar-item href="/my-profile"
                     class="{{ (request()->is('user-profile*')) ? 'active' : '' }}">
