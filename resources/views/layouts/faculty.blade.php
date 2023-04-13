@@ -47,6 +47,12 @@
                     My Schedules
                 </b-navbar-item>
 
+                <b-navbar-item href="/my-attendances"
+                    class="{{ (request()->is('my-attendances*')) ? 'active' : '' }}">
+                    My Attendances
+                </b-navbar-item>
+
+
                 <b-navbar-item href="/my-profile"
                     class="{{ (request()->is('user-profile*')) ? 'active' : '' }}">
                     {{ Auth::user()->fname }}

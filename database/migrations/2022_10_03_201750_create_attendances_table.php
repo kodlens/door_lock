@@ -21,6 +21,16 @@ class CreateAttendancesTable extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
+            $table->unsignedBigInteger('ay_id');
+            $table->foreign('ay_id')->references('ay_id')->on('academic_years')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
+            $table->unsignedBigInteger('schedule_id');
+            $table->foreign('schedule_id')->references('schedule_id')->on('schedules')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
             $table->dateTime('attendance_datetime')->nullable();
             $table->string('attendance_remark')->nullable();
 

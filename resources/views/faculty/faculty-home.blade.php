@@ -3,4 +3,3 @@
 @section('content')
     <faculty-home></faculty-home>
 @endsection
-
