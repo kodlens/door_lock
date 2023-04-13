@@ -128,7 +128,7 @@ void loop()
         delay(80);
         servo.detach();
     
-        delay(2000);
+        delay(2000); //delay until change state to lock
     
         servo.attach(MOTORPIN);
         servo.write(0); //Moving servo to 0 degree

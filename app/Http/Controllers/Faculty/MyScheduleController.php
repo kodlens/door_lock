@@ -22,7 +22,8 @@ class MyScheduleController extends Controller
 
         $user_id = Auth::user()->user_id;
 
-        $data = Schedule::where('user_id', $user_id)
+        $data = Schedule::with(['ay'])
+            ->where('user_id', $user_id)
             ->where('ay_id', 'like', $req->ay . '%')
             ->orderBy($sort[0], $sort[1])
             ->paginate($req->perpage);

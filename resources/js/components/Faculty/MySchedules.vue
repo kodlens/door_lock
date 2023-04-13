@@ -93,6 +93,10 @@
                                 {{ props.row.schedule_id }}
                             </b-table-column>
 
+                             <b-table-column field="academic_year" label="A.Y." sortable v-slot="props">
+                                {{ props.row.ay.ay_desc }} ({{props.row.ay.ay_code}})
+                            </b-table-column>
+
                             <b-table-column field="schedule_time" label="Schedule" sortable v-slot="props">
                                 {{ props.row.time_start | formatTime }} - {{ props.row.time_end | formatTime }}
                             </b-table-column>

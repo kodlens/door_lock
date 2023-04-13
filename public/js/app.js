@@ -10802,173 +10802,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     propSchedule: {
@@ -10979,19 +10812,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       data: [],
-      total: 0,
       loading: false,
-      sortField: 'schedule_student_list_id',
-      sortOrder: 'desc',
-      page: 1,
-      perPage: 5,
-      defaultSortDirection: 'asc',
-      global_id: 0,
-      search: {
-        lname: ''
-      },
-      isModalCreate: false,
-      modalResetPassword: false,
+      checkedRows: [],
       fields: {},
       errors: {},
       btnClass: {
@@ -11009,22 +10831,10 @@ __webpack_require__.r(__webpack_exports__);
     loadAsyncData: function loadAsyncData() {
       var _this = this;
 
-      var params = ["sort_by=".concat(this.sortField, ".").concat(this.sortOrder), "scheduleid=".concat(this.schedule.schedule_id), "lname=".concat(this.search.lname), "perpage=".concat(this.perPage), "page=".concat(this.page)].join('&');
+      var params = ["scheduleid=".concat(this.schedule.schedule_id)].join('&');
       this.loading = true;
-      axios.get("/get-my-schedule-student-list?".concat(params)).then(function (_ref) {
-        var data = _ref.data;
-        _this.data = [];
-        var currentTotal = data.total;
-
-        if (data.total / _this.perPage > 1000) {
-          currentTotal = _this.perPage * 1000;
-        }
-
-        _this.total = currentTotal;
-        data.data.forEach(function (item) {
-          //item.release_date = item.release_date ? item.release_date.replace(/-/g, '/') : null
-          _this.data.push(item);
-        });
+      axios.get("/get-my-schedule-student-list-for-attendance?".concat(params)).then(function (res) {
+        _this.data = res.data;
         _this.loading = false;
       })["catch"](function (error) {
         _this.data = [];
@@ -11032,27 +10842,6 @@ __webpack_require__.r(__webpack_exports__);
         _this.loading = false;
         throw error;
       });
-    },
-
-    /*
-    * Handle page-change event
-    */
-    onPageChange: function onPageChange(page) {
-      this.page = page;
-      this.loadAsyncData();
-    },
-    onSort: function onSort(field, order) {
-      this.sortField = field;
-      this.sortOrder = order;
-      this.loadAsyncData();
-    },
-    setPerPage: function setPerPage() {
-      this.loadAsyncData();
-    },
-    openModal: function openModal() {
-      this.isModalCreate = true;
-      this.clearFields();
-      this.errors = {};
     },
     submit: function submit() {
       var _this2 = this;
@@ -11118,55 +10907,6 @@ __webpack_require__.r(__webpack_exports__);
           }
         });
       }
-    },
-    //alert box ask for deletion
-    confirmDelete: function confirmDelete(delete_id) {
-      var _this3 = this;
-
-      this.$buefy.dialog.confirm({
-        title: 'DELETE!',
-        type: 'is-danger',
-        message: 'Are you sure you want to delete this data?',
-        cancelText: 'Cancel',
-        confirmText: 'Delete?',
-        onConfirm: function onConfirm() {
-          return _this3.deleteSubmit(delete_id);
-        }
-      });
-    },
-    //execute delete after confirming
-    deleteSubmit: function deleteSubmit(delete_id) {
-      var _this4 = this;
-
-      axios["delete"]('/my-schedule-student-list-delete/' + delete_id).then(function (res) {
-        _this4.loadAsyncData();
-      })["catch"](function (err) {
-        if (err.response.status === 422) {
-          _this4.errors = err.response.data.errors;
-        }
-      });
-    },
-    clearFields: function clearFields() {
-      this.global_id = 0;
-      this.fields.student_id = '';
-      this.fields.student_lname = '';
-      this.fields.student_fname = '';
-      this.fields.student_mname = '';
-      this.fields.student_suffix = '';
-      this.fields.student_sex = '';
-      this.fields.student_contact_no = '';
-    },
-    //update code here
-    getData: function getData(data_id) {
-      var _this5 = this;
-
-      this.clearFields();
-      this.global_id = data_id;
-      this.isModalCreate = true; //nested axios for getting the address 1 by 1 or request by request
-
-      axios.get('/my-schedule-student-list-edit/' + data_id).then(function (res) {
-        _this5.fields = res.data;
-      });
     },
     initData: function initData() {
       this.schedule = JSON.parse(this.propSchedule);
@@ -11657,6 +11397,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+//
+//
+//
+//
 //
 //
 //
@@ -41274,770 +41018,203 @@ var render = function () {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("div", { staticClass: "section" }, [
-        _c("div", { staticClass: "columns is-centered" }, [
-          _c("div", { staticClass: "column is-8" }, [
-            _c(
-              "div",
-              { staticClass: "box" },
-              [
-                _c(
-                  "div",
-                  {
-                    staticClass: "is-flex",
-                    staticStyle: { "font-size": "20px", "font-weight": "bold" },
-                  },
-                  [_vm._v("LIST OF STUDENT")]
+  return _c("div", [
+    _c("div", { staticClass: "section" }, [
+      _c("div", { staticClass: "columns is-centered" }, [
+        _c("div", { staticClass: "column is-8" }, [
+          _c(
+            "div",
+            { staticClass: "box" },
+            [
+              _c(
+                "div",
+                {
+                  staticClass: "is-flex",
+                  staticStyle: { "font-size": "20px", "font-weight": "bold" },
+                },
+                [_vm._v("LIST OF STUDENT")]
+              ),
+              _vm._v(" "),
+              _vm.schedule.ay
+                ? _c("div", { staticClass: "has-text-weight-bold" }, [
+                    _vm._v(
+                      "\n                        Academic Year: \n                        " +
+                        _vm._s(_vm.schedule.ay.ay_desc) +
+                        "\n                    "
+                    ),
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.schedule.time_start
+                ? _c("div", { staticClass: "has-text-weight-bold" }, [
+                    _vm._v(
+                      "\n                        Schedule: \n                        " +
+                        _vm._s(_vm._f("formatTime")(_vm.schedule.time_start)) +
+                        " -  " +
+                        _vm._s(_vm._f("formatTime")(_vm.schedule.time_end)) +
+                        "\n                    "
+                    ),
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "has-text-weight-bold mb-2" }, [
+                _vm._v(
+                  "\n                        Day: \n                        "
                 ),
+                _vm.schedule.mon == 1 ? _c("span", [_vm._v("M")]) : _vm._e(),
                 _vm._v(" "),
-                _vm.schedule.ay
-                  ? _c("div", { staticClass: "has-text-weight-bold" }, [
-                      _vm._v(
-                        "\n                        Academic Year: \n                        " +
-                          _vm._s(_vm.schedule.ay.ay_desc) +
-                          "\n                    "
-                      ),
-                    ])
-                  : _vm._e(),
+                _vm.schedule.tue == 1 ? _c("span", [_vm._v("T")]) : _vm._e(),
                 _vm._v(" "),
-                _vm.schedule.time_start
-                  ? _c("div", { staticClass: "has-text-weight-bold" }, [
-                      _vm._v(
-                        "\n                        Schedule: \n                        " +
-                          _vm._s(
-                            _vm._f("formatTime")(_vm.schedule.time_start)
-                          ) +
-                          " -  " +
-                          _vm._s(_vm._f("formatTime")(_vm.schedule.time_end)) +
-                          "\n                    "
-                      ),
-                    ])
-                  : _vm._e(),
+                _vm.schedule.wed == 1 ? _c("span", [_vm._v("W")]) : _vm._e(),
                 _vm._v(" "),
-                _c("div", { staticClass: "has-text-weight-bold mb-2" }, [
-                  _vm._v(
-                    "\n                        Day: \n                        "
-                  ),
-                  _vm.schedule.mon == 1 ? _c("span", [_vm._v("M")]) : _vm._e(),
-                  _vm._v(" "),
-                  _vm.schedule.tue == 1 ? _c("span", [_vm._v("T")]) : _vm._e(),
-                  _vm._v(" "),
-                  _vm.schedule.wed == 1 ? _c("span", [_vm._v("W")]) : _vm._e(),
-                  _vm._v(" "),
-                  _vm.schedule.thu == 1 ? _c("span", [_vm._v("TH")]) : _vm._e(),
-                  _vm._v(" "),
-                  _vm.schedule.fri == 1 ? _c("span", [_vm._v("F")]) : _vm._e(),
-                  _vm._v(" "),
-                  _vm.schedule.sat == 1 ? _c("span", [_vm._v("S")]) : _vm._e(),
-                  _vm._v(" "),
-                  _vm.schedule.sun == 1 ? _c("span", [_vm._v("SU")]) : _vm._e(),
-                ]),
+                _vm.schedule.thu == 1 ? _c("span", [_vm._v("TH")]) : _vm._e(),
                 _vm._v(" "),
-                _c("div", { staticClass: "level" }, [
-                  _c(
-                    "div",
-                    { staticClass: "level-left" },
-                    [
-                      _c(
-                        "b-field",
-                        { attrs: { label: "Page" } },
-                        [
-                          _c(
-                            "b-select",
-                            {
-                              on: { input: _vm.setPerPage },
-                              model: {
-                                value: _vm.perPage,
-                                callback: function ($$v) {
-                                  _vm.perPage = $$v
-                                },
-                                expression: "perPage",
-                              },
-                            },
-                            [
-                              _c("option", { attrs: { value: "5" } }, [
-                                _vm._v("5 per page"),
-                              ]),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "10" } }, [
-                                _vm._v("10 per page"),
-                              ]),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "15" } }, [
-                                _vm._v("15 per page"),
-                              ]),
-                              _vm._v(" "),
-                              _c("option", { attrs: { value: "20" } }, [
-                                _vm._v("20 per page"),
-                              ]),
-                            ]
-                          ),
-                        ],
-                        1
-                      ),
-                    ],
-                    1
-                  ),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "level-right" }, [
-                    _c(
-                      "div",
-                      { staticClass: "level-item" },
-                      [
-                        _c(
-                          "b-field",
-                          { attrs: { label: "Search" } },
-                          [
-                            _c("b-input", {
-                              attrs: {
-                                type: "text",
-                                placeholder: "Search Lastname",
-                              },
-                              nativeOn: {
-                                keyup: function ($event) {
-                                  if (
-                                    !$event.type.indexOf("key") &&
-                                    _vm._k(
-                                      $event.keyCode,
-                                      "enter",
-                                      13,
-                                      $event.key,
-                                      "Enter"
-                                    )
-                                  ) {
-                                    return null
-                                  }
-                                  return _vm.loadAsyncData.apply(
-                                    null,
-                                    arguments
-                                  )
-                                },
-                              },
-                              model: {
-                                value: _vm.search.lname,
-                                callback: function ($$v) {
-                                  _vm.$set(_vm.search, "lname", $$v)
-                                },
-                                expression: "search.lname",
-                              },
-                            }),
-                            _vm._v(" "),
-                            _c(
-                              "p",
-                              { staticClass: "control" },
-                              [
-                                _c(
-                                  "b-tooltip",
-                                  {
-                                    attrs: {
-                                      label: "Search",
-                                      type: "is-success",
-                                    },
-                                  },
-                                  [
-                                    _c("b-button", {
-                                      attrs: {
-                                        type: "is-primary",
-                                        "icon-right": "account-filter",
-                                      },
-                                      on: { click: _vm.loadAsyncData },
-                                    }),
-                                  ],
-                                  1
-                                ),
-                              ],
-                              1
-                            ),
-                          ],
-                          1
-                        ),
-                      ],
-                      1
-                    ),
-                  ]),
-                ]),
+                _vm.schedule.fri == 1 ? _c("span", [_vm._v("F")]) : _vm._e(),
                 _vm._v(" "),
+                _vm.schedule.sat == 1 ? _c("span", [_vm._v("S")]) : _vm._e(),
+                _vm._v(" "),
+                _vm.schedule.sun == 1 ? _c("span", [_vm._v("SU")]) : _vm._e(),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "columns" }, [
                 _c(
                   "div",
-                  { staticClass: "buttons mt-3" },
-                  [
-                    _c(
-                      "b-button",
-                      {
-                        staticClass: "is-success",
-                        attrs: { "icon-left": "plus" },
-                        on: { click: _vm.openModal },
-                      },
-                      [_vm._v("NEW")]
-                    ),
-                  ],
+                  { staticClass: "column" },
+                  [_c("b-field", { attrs: { label: "" } })],
                   1
                 ),
                 _vm._v(" "),
-                _c(
-                  "b-table",
-                  {
-                    attrs: {
-                      data: _vm.data,
-                      loading: _vm.loading,
-                      paginated: "",
-                      "backend-pagination": "",
-                      total: _vm.total,
-                      "pagination-rounded": true,
-                      "per-page": _vm.perPage,
-                      "aria-next-label": "Next page",
-                      "aria-previous-label": "Previous page",
-                      "aria-page-label": "Page",
-                      "aria-current-label": "Current page",
-                      "backend-sorting": "",
-                      "default-sort-direction": _vm.defaultSortDirection,
+                _c("div", { staticClass: "column" }),
+              ]),
+              _vm._v(" "),
+              _c(
+                "b-table",
+                {
+                  attrs: {
+                    data: _vm.data,
+                    loading: _vm.loading,
+                    "checked-rows": _vm.checkedRows,
+                    checkable: "",
+                  },
+                  on: {
+                    "update:checkedRows": function ($event) {
+                      _vm.checkedRows = $event
                     },
-                    on: { "page-change": _vm.onPageChange, sort: _vm.onSort },
+                    "update:checked-rows": function ($event) {
+                      _vm.checkedRows = $event
+                    },
                   },
-                  [
-                    _c("b-table-column", {
-                      attrs: {
-                        field: "schedule_student_list_id",
-                        label: "ID",
-                        sortable: "",
+                },
+                [
+                  _c("b-table-column", {
+                    attrs: {
+                      field: "schedule_student_list_id",
+                      label: "ID",
+                      sortable: "",
+                    },
+                    scopedSlots: _vm._u([
+                      {
+                        key: "default",
+                        fn: function (props) {
+                          return [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(props.row.schedule_student_list_id) +
+                                "\n                        "
+                            ),
+                          ]
+                        },
                       },
-                      scopedSlots: _vm._u([
-                        {
-                          key: "default",
-                          fn: function (props) {
-                            return [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(props.row.schedule_student_list_id) +
-                                  "\n                        "
-                              ),
-                            ]
-                          },
+                    ]),
+                  }),
+                  _vm._v(" "),
+                  _c("b-table-column", {
+                    attrs: {
+                      field: "student_name",
+                      label: "Name",
+                      sortable: "",
+                    },
+                    scopedSlots: _vm._u([
+                      {
+                        key: "default",
+                        fn: function (props) {
+                          return [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(props.row.student_lname) +
+                                ", " +
+                                _vm._s(props.row.student_fname) +
+                                " " +
+                                _vm._s(props.row.student_mname) +
+                                " \n                        "
+                            ),
+                          ]
                         },
-                      ]),
-                    }),
-                    _vm._v(" "),
-                    _c("b-table-column", {
-                      attrs: {
-                        field: "student_name",
-                        label: "Name",
-                        sortable: "",
                       },
-                      scopedSlots: _vm._u([
-                        {
-                          key: "default",
-                          fn: function (props) {
-                            return [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(props.row.student_fname) +
-                                  " " +
-                                  _vm._s(props.row.student_mname) +
-                                  " " +
-                                  _vm._s(props.row.student_lname) +
-                                  "\n                        "
-                              ),
-                            ]
-                          },
+                    ]),
+                  }),
+                  _vm._v(" "),
+                  _c("b-table-column", {
+                    attrs: { field: "student_sex", label: "Sex", sortable: "" },
+                    scopedSlots: _vm._u([
+                      {
+                        key: "default",
+                        fn: function (props) {
+                          return [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(props.row.student_sex) +
+                                "\n                        "
+                            ),
+                          ]
                         },
-                      ]),
-                    }),
-                    _vm._v(" "),
-                    _c("b-table-column", {
-                      attrs: {
-                        field: "student_sex",
-                        label: "Sex",
-                        sortable: "",
                       },
-                      scopedSlots: _vm._u([
-                        {
-                          key: "default",
-                          fn: function (props) {
-                            return [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(props.row.student_sex) +
-                                  "\n                        "
-                              ),
-                            ]
-                          },
+                    ]),
+                  }),
+                  _vm._v(" "),
+                  _c("b-table-column", {
+                    attrs: {
+                      field: "student_contact_no",
+                      label: "Contact No.",
+                      sortable: "",
+                    },
+                    scopedSlots: _vm._u([
+                      {
+                        key: "default",
+                        fn: function (props) {
+                          return [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(props.row.student_contact_no) +
+                                "\n                        "
+                            ),
+                          ]
                         },
-                      ]),
-                    }),
-                    _vm._v(" "),
-                    _c("b-table-column", {
-                      attrs: {
-                        field: "student_contact_no",
-                        label: "Contact No.",
-                        sortable: "",
                       },
-                      scopedSlots: _vm._u([
-                        {
-                          key: "default",
-                          fn: function (props) {
-                            return [
-                              _vm._v(
-                                "\n                            " +
-                                  _vm._s(props.row.student_contact_no) +
-                                  "\n                        "
-                              ),
-                            ]
-                          },
-                        },
-                      ]),
-                    }),
-                    _vm._v(" "),
-                    _c("b-table-column", {
-                      attrs: { label: "Action" },
-                      scopedSlots: _vm._u([
-                        {
-                          key: "default",
-                          fn: function (props) {
-                            return [
-                              _c(
-                                "div",
-                                { staticClass: "is-flex" },
-                                [
-                                  _c(
-                                    "b-tooltip",
-                                    {
-                                      attrs: {
-                                        label: "Edit",
-                                        type: "is-warning",
-                                      },
-                                    },
-                                    [
-                                      _c("b-button", {
-                                        staticClass: "button is-small mr-1",
-                                        attrs: {
-                                          tag: "a",
-                                          "icon-right": "pencil",
-                                        },
-                                        on: {
-                                          click: function ($event) {
-                                            return _vm.getData(
-                                              props.row.schedule_student_list_id
-                                            )
-                                          },
-                                        },
-                                      }),
-                                    ],
-                                    1
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "b-tooltip",
-                                    {
-                                      attrs: {
-                                        label: "Delete",
-                                        type: "is-danger",
-                                      },
-                                    },
-                                    [
-                                      _c("b-button", {
-                                        staticClass: "button is-small mr-1",
-                                        attrs: { "icon-right": "delete" },
-                                        on: {
-                                          click: function ($event) {
-                                            return _vm.confirmDelete(
-                                              props.row.schedule_student_list_id
-                                            )
-                                          },
-                                        },
-                                      }),
-                                    ],
-                                    1
-                                  ),
-                                ],
-                                1
-                              ),
-                            ]
-                          },
-                        },
-                      ]),
-                    }),
-                  ],
-                  1
-                ),
-              ],
-              1
-            ),
-          ]),
+                    ]),
+                  }),
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "buttons is-right mt-4" },
+                [
+                  _c("b-button", {
+                    attrs: { label: "Save Attendance" },
+                    on: { click: _vm.submit },
+                  }),
+                ],
+                1
+              ),
+            ],
+            1
+          ),
         ]),
       ]),
-      _vm._v(" "),
-      _c(
-        "b-modal",
-        {
-          attrs: {
-            "has-modal-card": "",
-            "trap-focus": "",
-            width: 640,
-            "aria-role": "dialog",
-            "aria-label": "Modal",
-            "aria-modal": "",
-          },
-          model: {
-            value: _vm.isModalCreate,
-            callback: function ($$v) {
-              _vm.isModalCreate = $$v
-            },
-            expression: "isModalCreate",
-          },
-        },
-        [
-          _c(
-            "form",
-            {
-              on: {
-                submit: function ($event) {
-                  $event.preventDefault()
-                  return _vm.submit.apply(null, arguments)
-                },
-              },
-            },
-            [
-              _c("div", { staticClass: "modal-card" }, [
-                _c("header", { staticClass: "modal-card-head" }, [
-                  _c("p", { staticClass: "modal-card-title" }, [
-                    _vm._v("Student Information"),
-                  ]),
-                  _vm._v(" "),
-                  _c("button", {
-                    staticClass: "delete",
-                    attrs: { type: "button" },
-                    on: {
-                      click: function ($event) {
-                        _vm.isModalCreate = false
-                      },
-                    },
-                  }),
-                ]),
-                _vm._v(" "),
-                _c("section", { staticClass: "modal-card-body" }, [
-                  _c("div", { staticClass: "wrapper" }, [
-                    _c("div", { staticClass: "columns" }, [
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "Student ID",
-                                "label-position": "on-border",
-                                type: _vm.errors.student_id ? "is-danger" : "",
-                                message: _vm.errors.student_id
-                                  ? _vm.errors.student_id[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c("b-input", {
-                                attrs: {
-                                  placeholder: "Student ID",
-                                  required: "",
-                                },
-                                model: {
-                                  value: _vm.fields.student_id,
-                                  callback: function ($$v) {
-                                    _vm.$set(_vm.fields, "student_id", $$v)
-                                  },
-                                  expression: "fields.student_id",
-                                },
-                              }),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "columns" }, [
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "Last Name",
-                                "label-position": "on-border",
-                                type: _vm.errors.student_lname
-                                  ? "is-danger"
-                                  : "",
-                                message: _vm.errors.student_lname
-                                  ? _vm.errors.student_lname[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c("b-input", {
-                                attrs: {
-                                  placeholder: "Last Name",
-                                  required: "",
-                                },
-                                model: {
-                                  value: _vm.fields.student_lname,
-                                  callback: function ($$v) {
-                                    _vm.$set(_vm.fields, "student_lname", $$v)
-                                  },
-                                  expression: "fields.student_lname",
-                                },
-                              }),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "First Name",
-                                "label-position": "on-border",
-                                type: _vm.errors.student_fname
-                                  ? "is-danger"
-                                  : "",
-                                message: _vm.errors.student_fname
-                                  ? _vm.errors.student_fname[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c("b-input", {
-                                attrs: {
-                                  placeholder: "First Name",
-                                  required: "",
-                                },
-                                model: {
-                                  value: _vm.fields.student_fname,
-                                  callback: function ($$v) {
-                                    _vm.$set(_vm.fields, "student_fname", $$v)
-                                  },
-                                  expression: "fields.student_fname",
-                                },
-                              }),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "columns" }, [
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "Middle Name",
-                                "label-position": "on-border",
-                                type: _vm.errors.student_mname
-                                  ? "is-danger"
-                                  : "",
-                                message: _vm.errors.student_mname
-                                  ? _vm.errors.student_mname[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c("b-input", {
-                                attrs: { placeholder: "Middle Name" },
-                                model: {
-                                  value: _vm.fields.student_mname,
-                                  callback: function ($$v) {
-                                    _vm.$set(_vm.fields, "student_mname", $$v)
-                                  },
-                                  expression: "fields.student_mname",
-                                },
-                              }),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "Suffix",
-                                "label-position": "on-border",
-                                type: _vm.errors.student_suffix
-                                  ? "is-danger"
-                                  : "",
-                                message: _vm.errors.student_suffix
-                                  ? _vm.errors.student_suffix[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c("b-input", {
-                                attrs: { type: "text", placeholder: "Suffix" },
-                                model: {
-                                  value: _vm.fields.student_suffix,
-                                  callback: function ($$v) {
-                                    _vm.$set(_vm.fields, "student_suffix", $$v)
-                                  },
-                                  expression: "fields.student_suffix",
-                                },
-                              }),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "columns" }, [
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "Sex",
-                                "label-position": "on-border",
-                                expanded: "",
-                                type: _vm.errors.student_sex ? "is-danger" : "",
-                                message: _vm.errors.student_sex
-                                  ? _vm.errors.student_sex[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c(
-                                "b-select",
-                                {
-                                  attrs: { expanded: "" },
-                                  model: {
-                                    value: _vm.fields.student_sex,
-                                    callback: function ($$v) {
-                                      _vm.$set(_vm.fields, "student_sex", $$v)
-                                    },
-                                    expression: "fields.student_sex",
-                                  },
-                                },
-                                [
-                                  _c("option", { attrs: { value: "MALE" } }, [
-                                    _vm._v("MALE"),
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("option", { attrs: { value: "FEMALE" } }, [
-                                    _vm._v("FEMALE"),
-                                  ]),
-                                ]
-                              ),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "Contact No",
-                                "label-position": "on-border",
-                                type: _vm.errors.student_contact_no
-                                  ? "is-danger"
-                                  : "",
-                                message: _vm.errors.student_contact_no
-                                  ? _vm.errors.student_contact_no[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c("b-input", {
-                                attrs: {
-                                  type: "number",
-                                  placeholder: "Contact No",
-                                },
-                                model: {
-                                  value: _vm.fields.student_contact_no,
-                                  callback: function ($$v) {
-                                    _vm.$set(
-                                      _vm.fields,
-                                      "student_contact_no",
-                                      $$v
-                                    )
-                                  },
-                                  expression: "fields.student_contact_no",
-                                },
-                              }),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                    ]),
-                  ]),
-                ]),
-                _vm._v(" "),
-                _c(
-                  "footer",
-                  { staticClass: "modal-card-foot" },
-                  [
-                    _c("b-button", {
-                      attrs: { label: "Close" },
-                      on: {
-                        click: function ($event) {
-                          _vm.isModalCreate = false
-                        },
-                      },
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        class: _vm.btnClass,
-                        attrs: { label: "Save", type: "is-success" },
-                      },
-                      [_vm._v("SAVE")]
-                    ),
-                  ],
-                  1
-                ),
-              ]),
-            ]
-          ),
-        ]
-      ),
-    ],
-    1
-  )
+    ]),
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -43105,6 +42282,30 @@ var render = function () {
                                 "\n                            " +
                                   _vm._s(props.row.schedule_id) +
                                   "\n                        "
+                              ),
+                            ]
+                          },
+                        },
+                      ]),
+                    }),
+                    _vm._v(" "),
+                    _c("b-table-column", {
+                      attrs: {
+                        field: "academic_year",
+                        label: "A.Y.",
+                        sortable: "",
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function (props) {
+                            return [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(props.row.ay.ay_desc) +
+                                  " (" +
+                                  _vm._s(props.row.ay.ay_code) +
+                                  ")\n                        "
                               ),
                             ]
                           },

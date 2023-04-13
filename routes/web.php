@@ -129,6 +129,8 @@ Route::middleware(['auth', 'faculty'])->group(function() {
 
 
     Route::get('/my-schedule-student-attendance/{sId}', [App\Http\Controllers\Faculty\MyScheduleStudentAttendanceController::class, 'index']);
+    Route::get('/get-my-schedule-student-list-for-attendance', [App\Http\Controllers\Faculty\MyScheduleStudentAttendanceController::class, 'getAll']);
+
     //Route::get('/get-attendances', [App\Http\Controllers\Faculty\AttendanceController::class, 'getAll']);
 
 
