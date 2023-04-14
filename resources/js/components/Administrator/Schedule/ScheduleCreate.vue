@@ -2,7 +2,7 @@
     <div>
         <div class="section">
             <div class="columns is-centered">
-                <div class="column is-10">
+                <div class="column is-6">
                     <div class="box">
 
                         <div class="is-flex mb-2" style="font-size: 20px; font-weight: bold;">Add New Schedule</div>
@@ -19,6 +19,17 @@
                                                 :key="index" 
                                                 :value="item.ay_id">{{ item.ay_code }} - {{ item.ay_desc }}</option>
                                         </b-select>
+                                    </b-field>
+                                </div>
+                            </div>
+
+                            <div class="columns">
+                                <div class="column">
+                                    <b-field label="Schedule Description" label-position="on-border"
+                                        :type="errors.schedule_description ? 'is-danger':''"
+                                        :message="errors.schedule_description ? errors.schedule_description[0] : ''">
+                                        <b-input type="text" placeholder="Schedule Description"
+                                            v-model="fields.schedule_description"></b-input>
                                     </b-field>
                                 </div>
                             </div>
@@ -221,6 +232,7 @@ export default{
         submit: function(){
 
             let inputs = {
+                schedule_description: '',
                 door_id: 0,
                 ay_id: 0,
                 user_id: 0,
@@ -235,19 +247,20 @@ export default{
                 sun: 0,
             }
 
-            inputs.door_id = this.fields.door_id
-            inputs.user_id = this.fields.user_id
-            inputs.ay_id = this.fields.ay_id
+            inputs.schedule_description = this.fields.schedule_description;
+            inputs.door_id = this.fields.door_id;
+            inputs.user_id = this.fields.user_id;
+            inputs.ay_id = this.fields.ay_id;
             let time_from = new Date(this.fields.time_from);
             let time_to = new Date(this.fields.time_to);
 
-            inputs.mon = this.fields.mon ? 1 : 0
-            inputs.tue = this.fields.tue ? 1 : 0
-            inputs.wed = this.fields.wed ? 1 : 0
-            inputs.thu = this.fields.thu ? 1 : 0
-            inputs.fri = this.fields.fri ? 1 : 0
-            inputs.sat = this.fields.sat ? 1 : 0
-            inputs.sun = this.fields.sun ? 1 : 0 
+            inputs.mon = this.fields.mon ? 1 : 0;
+            inputs.tue = this.fields.tue ? 1 : 0;
+            inputs.wed = this.fields.wed ? 1 : 0;
+            inputs.thu = this.fields.thu ? 1 : 0;
+            inputs.fri = this.fields.fri ? 1 : 0;
+            inputs.sat = this.fields.sat ? 1 : 0;
+            inputs.sun = this.fields.sun ? 1 : 0 ;
 
 
             inputs.time_from = '2023-01-01 ' + time_from.getHours().toString().padStart(2, "0") + ':' + time_from.getMinutes().toString().padStart(2, "0")
@@ -328,7 +341,7 @@ export default{
             this.fields.ay_id = this.schedule.ay_id;
             this.userFullname = this.schedule.user.lname + ', ' + this.schedule.user.fname + ' ' + this.schedule.user.mname;
             this.fields.user_id = this.schedule.user_id;
-            
+            this.fields.schedule_description = this.schedule.schedule_description;
             this.fields.door_id = this.schedule.door_id;
             this.doorName = this.schedule.door.door_name;
 

@@ -6,7 +6,9 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Attendance;
 use App\Models\AcademicYear;
+use App\Models\Schedule;
 use Auth;
+
 
 class MyAttendanceController extends Controller
 {
@@ -32,9 +34,14 @@ class MyAttendanceController extends Controller
     }
 
     public function create(){
+        $user = Auth::user();
         $academicYears = AcademicYear::all();
+        $schedules = Schedule::where('user_id', $user->user_id)
+            ->get();
+
         return view('faculty.my-attendance-create')
-            ->with('academicYears', $academicYears);
+            ->with('academicYears', $academicYears)
+            ->with('schedules', $schedules);
     }
 
 }

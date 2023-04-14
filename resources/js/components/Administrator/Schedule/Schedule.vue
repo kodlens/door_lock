@@ -67,19 +67,23 @@
                                 {{ props.row.schedule_id }}
                             </b-table-column>
 
-                            <b-table-column field="rfid" label="RFID" sortable v-slot="props" centered>
+                            <b-table-column field="rfid" label="RFID" sortable v-slot="props">
                                 {{ props.row.user.rfid }}
                             </b-table-column>
 
-                            <b-table-column field="user" label="Name" sortable v-slot="props" centered>
+                            <b-table-column field="schedule_description" label="Description" sortable v-slot="props">
+                                {{ props.row.schedule_description }}
+                            </b-table-column>
+
+                            <b-table-column field="user" label="Name" sortable v-slot="props">
                                 {{ props.row.user.lname }}, {{ props.row.user.fname}} {{ props.row.user.mname}}
                             </b-table-column>
 
-                            <b-table-column field="door" label="Door" sortable v-slot="props" centered>
+                            <b-table-column field="door" label="Door" sortable v-slot="props">
                                 {{ props.row.door.door_name }}
                             </b-table-column>
 
-                            <b-table-column field="door" label="Time" sortable v-slot="props" centered>
+                            <b-table-column field="door" label="Time" sortable v-slot="props">
                                 {{ props.row.time_start | formatTime }} - {{ props.row.time_end | formatTime }}
                             </b-table-column>
                           

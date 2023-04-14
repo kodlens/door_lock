@@ -13,9 +13,10 @@ class Schedule extends Model
 
     protected $primaryKey = 'schedule_id';
     protected $fillable = [
+        'schedule_description',
         'user_id', 
         'door_id', 
-        'ay_id', 
+        'ay_id',  
         'time_start', 
         'time_end', 
         'mon', 

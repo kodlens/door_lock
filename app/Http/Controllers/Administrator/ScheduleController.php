@@ -65,7 +65,7 @@ class ScheduleController extends Controller
 
     
     public function create(){
-        $academicYears = AcademicYear::orderBy('ay_code', 'asc')->get();
+        $academicYears = AcademicYear::orderBy('ay_code', 'desc')->get();
 
         return view ('administrator.schedule.schedule-create')
             ->with('academicYears', $academicYears)
@@ -81,6 +81,7 @@ class ScheduleController extends Controller
         $timeTo = date("H:i:s", strtotime($req->time_to)); //convert to date format UNIX
 
         $req->validate([
+            'schedule_description' => ['required', 'unique:schedules'],
             'ay_id' => ['required'],
             'door_id' => ['required'],
             'user_id' => ['required'],
@@ -94,6 +95,7 @@ class ScheduleController extends Controller
 
         //store data
         Schedule::create([
+            'schedule_description' => strtoupper($req->schedule_description),
             'user_id' => $req->user_id,
             'door_id' => $req->door_id,
             'ay_id' => $req->ay_id,
@@ -130,6 +132,7 @@ class ScheduleController extends Controller
         //return $req;
 
         $req->validate([
+            'schedule_description' => ['required', 'unique:schedules,schedule_description,' . $id  . ',schedule_id'],
             'ay_id' => ['required'],
             'door_id' => ['required'],
             'user_id' => ['required'],
@@ -144,6 +147,7 @@ class ScheduleController extends Controller
 
         Schedule::where('schedule_id', $id)
             ->update([
+                'schedule_description' => strtoupper($req->schedule_description),
                 'user_id' => $req->user_id,
                 'door_id' => $req->door_id,
                 'ay_id' => $req->ay_id,

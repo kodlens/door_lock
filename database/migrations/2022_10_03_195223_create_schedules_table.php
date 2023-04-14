@@ -16,6 +16,9 @@ class CreateSchedulesTable extends Migration
         Schema::create('schedules', function (Blueprint $table) {
             $table->id('schedule_id');
 
+            
+            $table->string('schedule_description')->nullable();
+
             $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('user_id')->on('users')
                 ->onDelete('cascade')

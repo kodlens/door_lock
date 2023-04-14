@@ -15,6 +15,7 @@ class ScheduleSeeder extends Seeder
     {
         $data = [
             [
+                'schedule_description' => 'ENGL 1',
                 'user_id' => 2, 
                 'door_id' => 2, 
                 'ay_id' => 1, 
@@ -30,6 +31,7 @@ class ScheduleSeeder extends Seeder
             ],
 
             [
+                'schedule_description' => 'FIL 1',
                 'user_id' => 2, 
                 'door_id' => 2, 
                 'ay_id' => 1, 
@@ -46,6 +48,7 @@ class ScheduleSeeder extends Seeder
 
 
             [
+                'schedule_description' => 'PHILO 1',
                 'user_id' => 4, 
                 'door_id' => 3, 
                 'ay_id' => 1, 

@@ -9092,6 +9092,10 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "AppointmentType",
   data: function data() {
@@ -9447,6 +9451,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     propAcademicYears: {
@@ -9499,6 +9514,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       var inputs = {
+        schedule_description: '',
         door_id: 0,
         ay_id: 0,
         user_id: 0,
@@ -9512,6 +9528,7 @@ __webpack_require__.r(__webpack_exports__);
         sat: 0,
         sun: 0
       };
+      inputs.schedule_description = this.fields.schedule_description;
       inputs.door_id = this.fields.door_id;
       inputs.user_id = this.fields.user_id;
       inputs.ay_id = this.fields.ay_id;
@@ -9598,6 +9615,7 @@ __webpack_require__.r(__webpack_exports__);
       this.fields.ay_id = this.schedule.ay_id;
       this.userFullname = this.schedule.user.lname + ', ' + this.schedule.user.fname + ' ' + this.schedule.user.mname;
       this.fields.user_id = this.schedule.user_id;
+      this.fields.schedule_description = this.schedule.schedule_description;
       this.fields.door_id = this.schedule.door_id;
       this.doorName = this.schedule.door.door_name;
       this.fields.time_from = new Date('2023-01-01 ' + this.schedule.time_start);
@@ -10764,10 +10782,74 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['propAcademicYears'],
+  props: ['propAcademicYears', 'propSchedules'],
   data: function data() {
     return {
+      attendance_datetime: new Date(),
       fields: {},
       errors: {},
       btnClass: {
@@ -10775,10 +10857,26 @@ __webpack_require__.r(__webpack_exports__);
         'button': true,
         'is-loading': false
       },
-      academicYears: []
+      academicYears: [],
+      schedules: []
     };
   },
   methods: {
+    loadAsyncData: function loadAsyncData() {
+      var _this = this;
+
+      var params = ["scheduleid=".concat(this.schedule.schedule_id)].join('&');
+      this.loading = true;
+      axios.get("/get-my-schedule-student-list-for-attendance?".concat(params)).then(function (res) {
+        _this.data = res.data;
+        _this.loading = false;
+      })["catch"](function (error) {
+        _this.data = [];
+        _this.total = 0;
+        _this.loading = false;
+        throw error;
+      });
+    },
     loadAcademicYears: function loadAcademicYears() {
       // axios.get('/get-open-academic-years').then(res=>{
       //     this.academicYears = res.data
@@ -10786,41 +10884,41 @@ __webpack_require__.r(__webpack_exports__);
       this.academicYears = JSON.parse(this.propAcademicYears);
     },
     loadUserSchedules: function loadUserSchedules() {
-      var _this = this;
+      var _this2 = this;
 
       var params = ["ay=".concat(this.fields.ay), "perpage=".concat(this.perPage), "page=".concat(this.page)].join('&');
       axios.get('/get-my-schedules').then(function (res) {
-        _this.academicYears = res.data;
+        _this2.academicYears = res.data;
       });
     },
     submit: function submit() {
-      var _this2 = this;
+      var _this3 = this;
 
       if (this.global_id > 0) {
         //update
         axios.put('/users/' + this.global_id, this.fields).then(function (res) {
           if (res.data.status === 'updated') {
-            _this2.$buefy.dialog.alert({
+            _this3.$buefy.dialog.alert({
               title: 'UPDATED!',
               message: 'Successfully updated.',
               type: 'is-success',
               onConfirm: function onConfirm() {
-                _this2.loadAsyncData();
+                _this3.loadAsyncData();
 
-                _this2.clearFields();
+                _this3.clearFields();
 
-                _this2.global_id = 0;
-                _this2.isModalCreate = false;
+                _this3.global_id = 0;
+                _this3.isModalCreate = false;
               }
             });
           }
         })["catch"](function (err) {
           if (err.response.status === 422) {
-            _this2.errors = err.response.data.errors;
+            _this3.errors = err.response.data.errors;
 
-            if (_this2.errors.rfid) {
-              _this2.rfid.type = 'is-danger';
-              _this2.rfid.msg = _this2.errors.rfid[0];
+            if (_this3.errors.rfid) {
+              _this3.rfid.type = 'is-danger';
+              _this3.rfid.msg = _this3.errors.rfid[0];
             }
           }
         });
@@ -10828,29 +10926,29 @@ __webpack_require__.r(__webpack_exports__);
         //INSERT HERE
         axios.post('/users', this.fields).then(function (res) {
           if (res.data.status === 'saved') {
-            _this2.$buefy.dialog.alert({
+            _this3.$buefy.dialog.alert({
               title: 'SAVED!',
               message: 'Successfully saved.',
               type: 'is-success',
               confirmText: 'OK',
               onConfirm: function onConfirm() {
-                _this2.isModalCreate = false;
+                _this3.isModalCreate = false;
 
-                _this2.loadAsyncData();
+                _this3.loadAsyncData();
 
-                _this2.clearFields();
+                _this3.clearFields();
 
-                _this2.global_id = 0;
+                _this3.global_id = 0;
               }
             });
           }
         })["catch"](function (err) {
           if (err.response.status === 422) {
-            _this2.errors = err.response.data.errors;
+            _this3.errors = err.response.data.errors;
 
-            if (_this2.errors.rfid) {
-              _this2.rfid.type = 'is-danger';
-              _this2.rfid.msg = _this2.errors.rfid[0];
+            if (_this3.errors.rfid) {
+              _this3.rfid.type = 'is-danger';
+              _this3.rfid.msg = _this3.errors.rfid[0];
             }
           }
         });
@@ -12104,6 +12202,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+//
+//
+//
+//
 //
 //
 //
@@ -39469,12 +39571,7 @@ var render = function () {
                   }),
                   _vm._v(" "),
                   _c("b-table-column", {
-                    attrs: {
-                      field: "rfid",
-                      label: "RFID",
-                      sortable: "",
-                      centered: "",
-                    },
+                    attrs: { field: "rfid", label: "RFID", sortable: "" },
                     scopedSlots: _vm._u([
                       {
                         key: "default",
@@ -39493,11 +39590,28 @@ var render = function () {
                   _vm._v(" "),
                   _c("b-table-column", {
                     attrs: {
-                      field: "user",
-                      label: "Name",
+                      field: "schedule_description",
+                      label: "Description",
                       sortable: "",
-                      centered: "",
                     },
+                    scopedSlots: _vm._u([
+                      {
+                        key: "default",
+                        fn: function (props) {
+                          return [
+                            _vm._v(
+                              "\n                            " +
+                                _vm._s(props.row.schedule_description) +
+                                "\n                        "
+                            ),
+                          ]
+                        },
+                      },
+                    ]),
+                  }),
+                  _vm._v(" "),
+                  _c("b-table-column", {
+                    attrs: { field: "user", label: "Name", sortable: "" },
                     scopedSlots: _vm._u([
                       {
                         key: "default",
@@ -39519,12 +39633,7 @@ var render = function () {
                   }),
                   _vm._v(" "),
                   _c("b-table-column", {
-                    attrs: {
-                      field: "door",
-                      label: "Door",
-                      sortable: "",
-                      centered: "",
-                    },
+                    attrs: { field: "door", label: "Door", sortable: "" },
                     scopedSlots: _vm._u([
                       {
                         key: "default",
@@ -39542,12 +39651,7 @@ var render = function () {
                   }),
                   _vm._v(" "),
                   _c("b-table-column", {
-                    attrs: {
-                      field: "door",
-                      label: "Time",
-                      sortable: "",
-                      centered: "",
-                    },
+                    attrs: { field: "door", label: "Time", sortable: "" },
                     scopedSlots: _vm._u([
                       {
                         key: "default",
@@ -39733,7 +39837,7 @@ var render = function () {
   return _c("div", [
     _c("div", { staticClass: "section" }, [
       _c("div", { staticClass: "columns is-centered" }, [
-        _c("div", { staticClass: "column is-10" }, [
+        _c("div", { staticClass: "column is-6" }, [
           _c("div", { staticClass: "box" }, [
             _c(
               "div",
@@ -39788,6 +39892,47 @@ var render = function () {
                           }),
                           0
                         ),
+                      ],
+                      1
+                    ),
+                  ],
+                  1
+                ),
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "columns" }, [
+                _c(
+                  "div",
+                  { staticClass: "column" },
+                  [
+                    _c(
+                      "b-field",
+                      {
+                        attrs: {
+                          label: "Schedule Description",
+                          "label-position": "on-border",
+                          type: _vm.errors.schedule_description
+                            ? "is-danger"
+                            : "",
+                          message: _vm.errors.schedule_description
+                            ? _vm.errors.schedule_description[0]
+                            : "",
+                        },
+                      },
+                      [
+                        _c("b-input", {
+                          attrs: {
+                            type: "text",
+                            placeholder: "Schedule Description",
+                          },
+                          model: {
+                            value: _vm.fields.schedule_description,
+                            callback: function ($$v) {
+                              _vm.$set(_vm.fields, "schedule_description", $$v)
+                            },
+                            expression: "fields.schedule_description",
+                          },
+                        }),
                       ],
                       1
                     ),
@@ -42031,44 +42176,295 @@ var render = function () {
                 { staticClass: "column" },
                 [
                   _c(
-                    "b-select",
+                    "b-field",
                     {
-                      attrs: { placeholder: "Academic Year" },
-                      model: {
-                        value: _vm.fields.ay,
-                        callback: function ($$v) {
-                          _vm.$set(_vm.fields, "ay", $$v)
-                        },
-                        expression: "fields.ay",
+                      attrs: {
+                        label: "Academic Year",
+                        "label-position": "on-border",
                       },
                     },
                     [
-                      _c("option", { attrs: { value: "" } }, [
-                        _vm._v("--ALL--"),
-                      ]),
-                      _vm._v(" "),
-                      _vm._l(_vm.academicYears, function (item, index) {
-                        return _c(
-                          "option",
-                          { key: index, domProps: { value: item.ay_id } },
-                          [
-                            _vm._v(
-                              "\n                                        " +
-                                _vm._s(item.ay_code) +
-                                " - " +
-                                _vm._s(item.ay_desc) +
-                                "\n                                    "
-                            ),
-                          ]
-                        )
-                      }),
+                      _c(
+                        "b-select",
+                        {
+                          attrs: { placeholder: "Academic Year" },
+                          model: {
+                            value: _vm.fields.ay,
+                            callback: function ($$v) {
+                              _vm.$set(_vm.fields, "ay", $$v)
+                            },
+                            expression: "fields.ay",
+                          },
+                        },
+                        _vm._l(_vm.academicYears, function (item, index) {
+                          return _c(
+                            "option",
+                            { key: index, domProps: { value: item.ay_id } },
+                            [
+                              _vm._v(
+                                "\n                                            " +
+                                  _vm._s(item.ay_code) +
+                                  " - " +
+                                  _vm._s(item.ay_desc) +
+                                  "\n                                        "
+                              ),
+                            ]
+                          )
+                        }),
+                        0
+                      ),
                     ],
-                    2
+                    1
                   ),
                 ],
                 1
               ),
             ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "columns" }, [
+              _c(
+                "div",
+                { staticClass: "column" },
+                [
+                  _c(
+                    "b-field",
+                    {
+                      attrs: {
+                        label: "Schedule",
+                        "label-position": "on-border",
+                      },
+                    },
+                    [
+                      _c(
+                        "b-select",
+                        {
+                          attrs: { placeholder: "Schedule" },
+                          model: {
+                            value: _vm.fields.schedule,
+                            callback: function ($$v) {
+                              _vm.$set(_vm.fields, "schedule", $$v)
+                            },
+                            expression: "fields.schedule",
+                          },
+                        },
+                        _vm._l(_vm.schedules, function (iSched, schedX) {
+                          return _c(
+                            "option",
+                            {
+                              key: schedX,
+                              domProps: { value: iSched.schedule_id },
+                            },
+                            [
+                              _vm._v(
+                                "\n                                            " +
+                                  _vm._s(iSched.schedule_desc) +
+                                  "\n                                        "
+                              ),
+                            ]
+                          )
+                        }),
+                        0
+                      ),
+                    ],
+                    1
+                  ),
+                ],
+                1
+              ),
+              _vm._v(" "),
+              _c(
+                "div",
+                { staticClass: "column" },
+                [
+                  _c(
+                    "b-field",
+                    {
+                      attrs: {
+                        label: "Attendance Date & Time",
+                        "label-position": "on-border",
+                      },
+                    },
+                    [
+                      _c("b-datetimepicker", {
+                        model: {
+                          value: _vm.attendance_datetime,
+                          callback: function ($$v) {
+                            _vm.attendance_datetime = $$v
+                          },
+                          expression: "attendance_datetime",
+                        },
+                      }),
+                    ],
+                    1
+                  ),
+                ],
+                1
+              ),
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "columns" }, [
+              _c(
+                "div",
+                { staticClass: "column" },
+                [
+                  _c(
+                    "b-field",
+                    {
+                      attrs: { label: "Remark", "label-position": "on-border" },
+                    },
+                    [
+                      _c("b-input", {
+                        attrs: { type: "textarea" },
+                        model: {
+                          value: _vm.fields.attendance_remark,
+                          callback: function ($$v) {
+                            _vm.$set(_vm.fields, "attendance_remark", $$v)
+                          },
+                          expression: "fields.attendance_remark",
+                        },
+                      }),
+                    ],
+                    1
+                  ),
+                ],
+                1
+              ),
+            ]),
+            _vm._v(" "),
+            _c("hr"),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "is-flex mb-2",
+                staticStyle: { "font-size": "18px", "font-weight": "bold" },
+              },
+              [
+                _vm._v(
+                  "\n                            STUDENT LIST\n                    "
+                ),
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              [
+                _c(
+                  "b-table",
+                  {
+                    attrs: {
+                      data: _vm.data,
+                      loading: _vm.loading,
+                      "checked-rows": _vm.checkedRows,
+                      checkable: "",
+                    },
+                    on: {
+                      "update:checkedRows": function ($event) {
+                        _vm.checkedRows = $event
+                      },
+                      "update:checked-rows": function ($event) {
+                        _vm.checkedRows = $event
+                      },
+                    },
+                  },
+                  [
+                    _c("b-table-column", {
+                      attrs: {
+                        field: "schedule_student_list_id",
+                        label: "ID",
+                        sortable: "",
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function (props) {
+                            return [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(props.row.schedule_student_list_id) +
+                                  "\n                            "
+                              ),
+                            ]
+                          },
+                        },
+                      ]),
+                    }),
+                    _vm._v(" "),
+                    _c("b-table-column", {
+                      attrs: {
+                        field: "student_name",
+                        label: "Name",
+                        sortable: "",
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function (props) {
+                            return [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(props.row.student_lname) +
+                                  ", " +
+                                  _vm._s(props.row.student_fname) +
+                                  " " +
+                                  _vm._s(props.row.student_mname) +
+                                  " \n                            "
+                              ),
+                            ]
+                          },
+                        },
+                      ]),
+                    }),
+                    _vm._v(" "),
+                    _c("b-table-column", {
+                      attrs: {
+                        field: "student_sex",
+                        label: "Sex",
+                        sortable: "",
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function (props) {
+                            return [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(props.row.student_sex) +
+                                  "\n                            "
+                              ),
+                            ]
+                          },
+                        },
+                      ]),
+                    }),
+                    _vm._v(" "),
+                    _c("b-table-column", {
+                      attrs: {
+                        field: "student_contact_no",
+                        label: "Contact No.",
+                        sortable: "",
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function (props) {
+                            return [
+                              _vm._v(
+                                "\n                                " +
+                                  _vm._s(props.row.student_contact_no) +
+                                  "\n                            "
+                              ),
+                            ]
+                          },
+                        },
+                      ]),
+                    }),
+                  ],
+                  1
+                ),
+              ],
+              1
+            ),
           ]),
         ]),
       ]),
@@ -44225,6 +44621,28 @@ var render = function () {
                               _vm._v(
                                 "\n                            " +
                                   _vm._s(props.row.schedule_id) +
+                                  "\n                        "
+                              ),
+                            ]
+                          },
+                        },
+                      ]),
+                    }),
+                    _vm._v(" "),
+                    _c("b-table-column", {
+                      attrs: {
+                        field: "schedule_desc",
+                        label: "Description",
+                        sortable: "",
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function (props) {
+                            return [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(props.row.schedule_desc) +
                                   "\n                        "
                               ),
                             ]

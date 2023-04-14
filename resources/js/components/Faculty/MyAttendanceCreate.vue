@@ -12,20 +12,83 @@
 
                         <div class="columns mt-4">
                             <div class="column">
-                                <b-select v-model="fields.ay"
-                                    placeholder="Academic Year">
-                                    <option value="">--ALL--</option>
-                                    <option 
-                                        v-for="(item, index) in academicYears"
-                                        :key="index"
-                                        :value="item.ay_id">
-                                            {{  item.ay_code }} - {{ item.ay_desc }}
-                                        </option>
-                                </b-select>
+                                <b-field label="Academic Year" label-position="on-border">
+                                    <b-select v-model="fields.ay"
+                                        placeholder="Academic Year">
+                                        <option 
+                                            v-for="(item, index) in academicYears"
+                                            :key="index"
+                                            :value="item.ay_id">
+                                                {{  item.ay_code }} - {{ item.ay_desc }}
+                                            </option>
+                                    </b-select>
+                                </b-field>
                             </div>
                         </div>
 
+                        <div class="columns">
+                            <div class="column">
+                                <b-field label="Schedule" label-position="on-border">
+                                    <b-select v-model="fields.schedule"
+                                        placeholder="Schedule">
+                                        <option 
+                                            v-for="(iSched, schedX) in schedules"
+                                            :key="schedX"
+                                            :value="iSched.schedule_id">
+                                                {{  iSched.schedule_desc }}
+                                            </option>
+                                    </b-select>
+                                </b-field>
+                            </div>
 
+                            <div class="column">
+                                <b-field label="Attendance Date & Time" label-position="on-border">
+                                    <b-datetimepicker v-model="attendance_datetime">
+                                    </b-datetimepicker>
+                                </b-field>
+                            </div>
+                        </div>
+
+                        <div class="columns">
+                            <div class="column">
+                                <b-field label="Remark" label-position="on-border">
+                                    <b-input type="textarea" v-model="fields.attendance_remark"></b-input>
+                                </b-field>
+                            </div>
+                        </div>
+
+                        <hr>
+                        
+                        <div class="is-flex mb-2" 
+                            style="font-size: 18px; font-weight: bold;">
+                                STUDENT LIST
+                        </div>
+
+                        <div>
+                            <b-table
+                                :data="data"
+                                :loading="loading"
+                                :checked-rows.sync="checkedRows"
+                                checkable>
+
+                                <b-table-column field="schedule_student_list_id" label="ID" sortable v-slot="props">
+                                    {{ props.row.schedule_student_list_id }}
+                                </b-table-column>
+
+                                <b-table-column field="student_name" label="Name" sortable v-slot="props">
+                                    {{ props.row.student_lname }}, {{ props.row.student_fname }} {{ props.row.student_mname}} 
+                                </b-table-column>
+
+                                <b-table-column field="student_sex" label="Sex" sortable v-slot="props">
+                                    {{ props.row.student_sex }}
+                                </b-table-column>
+
+                                <b-table-column field="student_contact_no" label="Contact No." sortable v-slot="props">
+                                    {{ props.row.student_contact_no }}
+                                </b-table-column>
+
+                            </b-table>
+                        </div>
                     </div>
                 </div><!--col -->
             </div><!-- cols -->
@@ -38,11 +101,14 @@
 <script>
 
 export default{
-    props: ['propAcademicYears'],
+    props: ['propAcademicYears', 'propSchedules'],
+
     data() {
         return{
-           fields: {},
-           errors: {},
+
+            attendance_datetime: new Date(),
+            fields: {},
+            errors: {},
 
             btnClass: {
                 'is-success': true,
@@ -51,13 +117,34 @@ export default{
             },
 
             academicYears: [],
-
+            schedules: [],
         }
-
     },
 
     methods: {
        
+        loadAsyncData() {
+            const params = [
+                `scheduleid=${this.schedule.schedule_id}`,
+            ].join('&')
+
+            this.loading = true
+            axios.get(`/get-my-schedule-student-list-for-attendance?${params}`)
+                .then(res=> {
+                   
+                    this.data = res.data
+                    this.loading = false
+                    
+                })
+                .catch((error) => {
+                    this.data = []
+                    this.total = 0
+                    this.loading = false
+                    throw error
+                })
+        },
+
+
         loadAcademicYears(){
             // axios.get('/get-open-academic-years').then(res=>{
             //     this.academicYears = res.data
