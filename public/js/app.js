@@ -10845,10 +10845,40 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['propAcademicYears', 'propSchedules'],
+  props: ['propAcademicYear', 'propSchedules'],
   data: function data() {
     return {
+      data: [],
+      loading: false,
+      checkedRows: [],
       attendance_datetime: new Date(),
       fields: {},
       errors: {},
@@ -10857,31 +10887,30 @@ __webpack_require__.r(__webpack_exports__);
         'button': true,
         'is-loading': false
       },
-      academicYears: [],
-      schedules: []
+      academicYear: {},
+      schedules: [],
+      students: []
     };
   },
   methods: {
     loadAsyncData: function loadAsyncData() {
       var _this = this;
 
-      var params = ["scheduleid=".concat(this.schedule.schedule_id)].join('&');
+      var params = ["scheduleid=".concat(this.fields.schedule_id)].join('&');
       this.loading = true;
-      axios.get("/get-my-schedule-student-list-for-attendance?".concat(params)).then(function (res) {
-        _this.data = res.data;
+      axios.get("/get-my-attendance-student-list?".concat(params)).then(function (res) {
+        _this.students = [];
+        _this.students = res.data;
         _this.loading = false;
       })["catch"](function (error) {
-        _this.data = [];
-        _this.total = 0;
         _this.loading = false;
         throw error;
       });
     },
-    loadAcademicYears: function loadAcademicYears() {
-      // axios.get('/get-open-academic-years').then(res=>{
-      //     this.academicYears = res.data
-      // })
-      this.academicYears = JSON.parse(this.propAcademicYears);
+    initData: function initData() {
+      this.academicYear = JSON.parse(this.propAcademicYear);
+      this.schedules = JSON.parse(this.propSchedules);
+      console.log(this.schedules);
     },
     loadUserSchedules: function loadUserSchedules() {
       var _this2 = this;
@@ -10968,7 +10997,7 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   mounted: function mounted() {
-    this.loadAcademicYears();
+    this.initData();
     this.loadAsyncData();
   }
 });
@@ -42170,56 +42199,61 @@ var render = function () {
               ]
             ),
             _vm._v(" "),
-            _c("div", { staticClass: "columns mt-4" }, [
-              _c(
-                "div",
-                { staticClass: "column" },
-                [
-                  _c(
-                    "b-field",
-                    {
-                      attrs: {
-                        label: "Academic Year",
-                        "label-position": "on-border",
-                      },
+            _c(
+              "div",
+              {
+                staticClass: "mt-3",
+                staticStyle: { "font-weight": "bold", "font-size": "1em" },
+              },
+              [
+                _vm._v("Academic Year: \n                        "),
+                _c(
+                  "span",
+                  {
+                    staticStyle: {
+                      "font-weight": "bold",
+                      "font-style": "italic",
                     },
-                    [
-                      _c(
-                        "b-select",
-                        {
-                          attrs: { placeholder: "Academic Year" },
-                          model: {
-                            value: _vm.fields.ay,
-                            callback: function ($$v) {
-                              _vm.$set(_vm.fields, "ay", $$v)
-                            },
-                            expression: "fields.ay",
-                          },
-                        },
-                        _vm._l(_vm.academicYears, function (item, index) {
-                          return _c(
-                            "option",
-                            { key: index, domProps: { value: item.ay_id } },
-                            [
-                              _vm._v(
-                                "\n                                            " +
-                                  _vm._s(item.ay_code) +
-                                  " - " +
-                                  _vm._s(item.ay_desc) +
-                                  "\n                                        "
-                              ),
-                            ]
-                          )
-                        }),
-                        0
-                      ),
-                    ],
-                    1
-                  ),
-                ],
-                1
-              ),
-            ]),
+                  },
+                  [
+                    _vm._v(
+                      "\n                            " +
+                        _vm._s(_vm.academicYear.ay_code) +
+                        " " +
+                        _vm._s(_vm.academicYear.ay_desc) +
+                        "\n                        "
+                    ),
+                  ]
+                ),
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              {
+                staticClass: "mb-4",
+                staticStyle: { "font-weight": "bold", "font-size": "1em" },
+              },
+              [
+                _vm._v("Semester: \n                        "),
+                _c(
+                  "span",
+                  {
+                    staticStyle: {
+                      "font-weight": "bold",
+                      "font-style": "italic",
+                    },
+                  },
+                  [
+                    _vm._v(
+                      "\n                            " +
+                        _vm._s(_vm.academicYear.semester) +
+                        "\n                        "
+                    ),
+                  ]
+                ),
+              ]
+            ),
             _vm._v(" "),
             _c("div", { staticClass: "columns" }, [
               _c(
@@ -42239,12 +42273,13 @@ var render = function () {
                         "b-select",
                         {
                           attrs: { placeholder: "Schedule" },
+                          on: { input: _vm.loadAsyncData },
                           model: {
-                            value: _vm.fields.schedule,
+                            value: _vm.fields.schedule_id,
                             callback: function ($$v) {
-                              _vm.$set(_vm.fields, "schedule", $$v)
+                              _vm.$set(_vm.fields, "schedule_id", $$v)
                             },
-                            expression: "fields.schedule",
+                            expression: "fields.schedule_id",
                           },
                         },
                         _vm._l(_vm.schedules, function (iSched, schedX) {
@@ -42257,9 +42292,44 @@ var render = function () {
                             [
                               _vm._v(
                                 "\n                                            " +
-                                  _vm._s(iSched.schedule_desc) +
-                                  "\n                                        "
+                                  _vm._s(iSched.schedule_description) +
+                                  "\n                                            (" +
+                                  _vm._s(
+                                    _vm._f("formatTime")(iSched.time_start)
+                                  ) +
+                                  " - " +
+                                  _vm._s(
+                                    _vm._f("formatTime")(iSched.time_end)
+                                  ) +
+                                  ")\n                                            "
                               ),
+                              iSched.mon == 1
+                                ? _c("span", [_vm._v("M")])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              iSched.tue == 1
+                                ? _c("span", [_vm._v("T")])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              iSched.wed == 1
+                                ? _c("span", [_vm._v("W")])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              iSched.thu == 1
+                                ? _c("span", [_vm._v("TH")])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              iSched.fri == 1
+                                ? _c("span", [_vm._v("F")])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              iSched.sat == 1
+                                ? _c("span", [_vm._v("S")])
+                                : _vm._e(),
+                              _vm._v(" "),
+                              iSched.sun == 1
+                                ? _c("span", [_vm._v("SU")])
+                                : _vm._e(),
                             ]
                           )
                         }),
@@ -42353,7 +42423,7 @@ var render = function () {
                   "b-table",
                   {
                     attrs: {
-                      data: _vm.data,
+                      data: _vm.students,
                       loading: _vm.loading,
                       "checked-rows": _vm.checkedRows,
                       checkable: "",
@@ -42462,6 +42532,22 @@ var render = function () {
                   ],
                   1
                 ),
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c(
+              "div",
+              { staticClass: "buttons is-right mt-4" },
+              [
+                _c("b-button", {
+                  attrs: {
+                    label: "Save Attendance",
+                    "icon-left": "save",
+                    type: "is-primary",
+                  },
+                  on: { click: _vm.submit },
+                }),
               ],
               1
             ),

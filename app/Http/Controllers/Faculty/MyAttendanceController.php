@@ -8,6 +8,7 @@ use App\Models\Attendance;
 use App\Models\AcademicYear;
 use App\Models\Schedule;
 use Auth;
+use App\Models\ScheduleStudentList;
 
 
 class MyAttendanceController extends Controller
@@ -33,14 +34,25 @@ class MyAttendanceController extends Controller
         return $data;
     }
 
+    public function getStudentList(Request $req){
+        $schedId = $req->scheduleid;
+
+        $students = ScheduleStudentList::where('schedule_id', $schedId)
+            ->get();
+
+        return $students;
+    }
+
     public function create(){
         $user = Auth::user();
-        $academicYears = AcademicYear::all();
+        $ay = AcademicYear::where('active', 1)->first();
+
+
         $schedules = Schedule::where('user_id', $user->user_id)
             ->get();
 
         return view('faculty.my-attendance-create')
-            ->with('academicYears', $academicYears)
+            ->with('ay', $ay)
             ->with('schedules', $schedules);
     }
 

@@ -10,7 +10,18 @@
                                 CREATE ATTENDANCE
                         </div>
 
-                        <div class="columns mt-4">
+                        <div class="mt-3" style="font-weight: bold; font-size: 1em;">Academic Year: 
+                            <span style="font-weight: bold; font-style: italic;">
+                                {{ academicYear.ay_code }} {{ academicYear.ay_desc }}
+                            </span>
+                        </div>
+                        <div class="mb-4" style="font-weight: bold; font-size: 1em;">Semester: 
+                            <span style="font-weight: bold; font-style: italic;">
+                                {{ academicYear.semester }}
+                            </span>
+                        </div>
+
+                        <!-- <div class="columns mt-4">
                             <div class="column">
                                 <b-field label="Academic Year" label-position="on-border">
                                     <b-select v-model="fields.ay"
@@ -24,18 +35,26 @@
                                     </b-select>
                                 </b-field>
                             </div>
-                        </div>
+                        </div> -->
 
                         <div class="columns">
                             <div class="column">
                                 <b-field label="Schedule" label-position="on-border">
-                                    <b-select v-model="fields.schedule"
-                                        placeholder="Schedule">
+                                    <b-select v-model="fields.schedule_id"
+                                        placeholder="Schedule" @input="loadAsyncData">
                                         <option 
                                             v-for="(iSched, schedX) in schedules"
                                             :key="schedX"
                                             :value="iSched.schedule_id">
-                                                {{  iSched.schedule_desc }}
+                                                {{  iSched.schedule_description }}
+                                                ({{ iSched.time_start | formatTime}} - {{ iSched.time_end | formatTime }})
+                                                <span v-if=" iSched.mon == 1">M</span>
+                                                <span v-if=" iSched.tue == 1">T</span>
+                                                <span v-if=" iSched.wed == 1">W</span>
+                                                <span v-if=" iSched.thu == 1">TH</span>
+                                                <span v-if=" iSched.fri == 1">F</span>
+                                                <span v-if=" iSched.sat == 1">S</span>
+                                                <span v-if=" iSched.sun == 1">SU</span>
                                             </option>
                                     </b-select>
                                 </b-field>
@@ -66,7 +85,7 @@
 
                         <div>
                             <b-table
-                                :data="data"
+                                :data="students"
                                 :loading="loading"
                                 :checked-rows.sync="checkedRows"
                                 checkable>
@@ -89,7 +108,15 @@
 
                             </b-table>
                         </div>
-                    </div>
+
+                        <div class="buttons is-right mt-4">
+                            <b-button label="Save Attendance" 
+                                icon-left="save"
+                                type="is-primary"
+                                @click="submit"></b-button>
+                        </div>
+
+                    </div><!--box-->
                 </div><!--col -->
             </div><!-- cols -->
         </div><!--section div-->
@@ -101,10 +128,14 @@
 <script>
 
 export default{
-    props: ['propAcademicYears', 'propSchedules'],
+    props: ['propAcademicYear', 'propSchedules'],
 
     data() {
         return{
+
+            data: [],
+            loading: false,
+            checkedRows: [],
 
             attendance_datetime: new Date(),
             fields: {},
@@ -116,40 +147,43 @@ export default{
                 'is-loading':false,
             },
 
-            academicYears: [],
+            academicYear: {},
             schedules: [],
+            students: [],
         }
     },
 
     methods: {
        
         loadAsyncData() {
+
             const params = [
-                `scheduleid=${this.schedule.schedule_id}`,
+                `scheduleid=${this.fields.schedule_id}`,
             ].join('&')
 
             this.loading = true
-            axios.get(`/get-my-schedule-student-list-for-attendance?${params}`)
+            axios.get(`/get-my-attendance-student-list?${params}`)
                 .then(res=> {
+                    this.students = []
                    
-                    this.data = res.data
+                    this.students = res.data
                     this.loading = false
                     
                 })
                 .catch((error) => {
-                    this.data = []
-                    this.total = 0
                     this.loading = false
                     throw error
                 })
         },
 
 
-        loadAcademicYears(){
-            // axios.get('/get-open-academic-years').then(res=>{
-            //     this.academicYears = res.data
-            // })
-            this.academicYears = JSON.parse(this.propAcademicYears)
+
+        initData(){
+            this.academicYear = JSON.parse(this.propAcademicYear)
+            this.schedules = JSON.parse(this.propSchedules)
+
+            console.log(this.schedules);
+
         },
 
         loadUserSchedules(){
@@ -166,6 +200,7 @@ export default{
 
     
         submit: function(){
+            
             if(this.global_id > 0){
                 //update
                 axios.put('/users/'+this.global_id, this.fields).then(res=>{
@@ -244,7 +279,7 @@ export default{
     },
 
     mounted() {
-        this.loadAcademicYears();
+        this.initData();
         this.loadAsyncData();
     }
 }

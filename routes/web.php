@@ -129,7 +129,7 @@ Route::middleware(['auth', 'faculty'])->group(function() {
 
     Route::resource('/my-attendances', App\Http\Controllers\Faculty\MyAttendanceController::class);
     Route::get('/get-my-attendances', [App\Http\Controllers\Faculty\MyAttendanceController::class, 'getAll']);
-
+    Route::get('/get-my-attendance-student-list', [App\Http\Controllers\Faculty\MyAttendanceController::class, 'getStudentList']); //get the list of student in attendance
 
 
     Route::resource('/my-profile', App\Http\Controllers\Faculty\MyProfileController::class);
