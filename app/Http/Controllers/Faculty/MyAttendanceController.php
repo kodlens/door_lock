@@ -9,6 +9,8 @@ use App\Models\AcademicYear;
 use App\Models\Schedule;
 use Auth;
 use App\Models\ScheduleStudentList;
+use App\Models\AttendanceStudent;
+use Illuminate\Support\Facades\DB;
 
 
 class MyAttendanceController extends Controller
@@ -19,20 +21,26 @@ class MyAttendanceController extends Controller
         return view('faculty.my-attendances');
     }
 
+
+
+
     public function getAll(Request $req){
 
         $sort = explode('.', $req->sort_by);
 
         $user_id = Auth::user()->user_id;
 
-        $data = Attendance::with(['ay'])
+        $data = Attendance::with(['ay', 'schedule', 'student_attendance'])
             ->where('user_id', $user_id)
             ->where('ay_id', 'like', $req->ay . '%')
+            ->where('attendance_remark', 'like', $req->remark . '%')
             ->orderBy($sort[0], $sort[1])
             ->paginate($req->perpage);
-
         return $data;
     }
+
+
+
 
     public function getStudentList(Request $req){
         $schedId = $req->scheduleid;
@@ -47,13 +55,131 @@ class MyAttendanceController extends Controller
         $user = Auth::user();
         $ay = AcademicYear::where('active', 1)->first();
 
-
         $schedules = Schedule::where('user_id', $user->user_id)
             ->get();
 
         return view('faculty.my-attendance-create')
             ->with('ay', $ay)
-            ->with('schedules', $schedules);
+            ->with('schedules', $schedules)
+            ->with('attendance', '')
+            ->with('isUpdate', 0);
+    }
+
+    public function store(Request $req){
+        //return $req;
+
+        $ndate = date('Y-m-d', strtotime($req->attendance_date));
+        $userId = Auth::user()->user_id;
+        $ay = AcademicYear::where('active', 1)->first();
+
+       //query if date already have data in databsae
+        $isExist = Attendance::where('attendance_date', $ndate)
+            ->where('user_id', $userId)
+            ->where('schedule_id', $req->schedule_id)
+            ->where('ay_id', $ay->ay_id)
+            ->exists();
+
+        //validate if already have attendance recorded in a date.
+        //return 422 if already existed in database
+        if($isExist){
+            return response()->json([
+                'errors' => [
+                    'duplicate_attendance' => 'Attendance for this day already recorded.'
+                ]
+            ], 422);
+        }
+
+ 
+        //transaction, inserting data to database
+        DB::transaction(function() use ($req, $ndate, $userId, $ay) {
+            //
+            $att = Attendance::create([
+                'user_id' => $userId,
+                'ay_id' => $ay->ay_id,
+                'schedule_id' => $req->schedule_id,
+                'attendance_date' => $ndate,
+                'attendance_remark' => $req->attendance_remark
+            ]);
+
+            $data = [];
+
+
+            //its n2
+            //need to optimized if possible
+            foreach($req->students as $std){
+                
+                //closure
+                $isPresent = function() use ($req, $std){
+                    //helped by chatGPT
+                    $flag = 0;
+                    foreach($req->checkedRows as $check){
+                        if($check['schedule_student_list_id'] == $std['schedule_student_list_id']){
+                            $flag = 1;
+                            break;
+                        }
+                    }
+                    return $flag;
+                };
+
+                array_push($data, 
+                [
+                    'attendance_id' => $att->attendance_id,
+                    'student_id' => $std['student_id'],
+                    'student_lname' => $std['student_lname'],
+                    'student_fname' => $std['student_fname'],
+                    'student_mname' => $std['student_mname'],
+                    'student_suffix' => $std['student_suffix'],
+                    'student_sex' => $std['student_sex'],
+                    'student_contact_no' => $std['student_contact_no'],
+                    'is_present' => $isPresent(),
+                ]);
+            }
+
+            AttendanceStudent::insert($data);
+           
+        });
+
+        return response()->json([
+            'status' => 'saved'
+        ], 200);
+        
+    }
+
+
+
+
+    //update here
+    public function edit($id){
+
+        $user = Auth::user();
+        $ay = AcademicYear::where('active', 1)->first();
+        $schedules = Schedule::where('user_id', $user->user_id)
+            ->get();
+        $attendance = Attendance::find($id);
+
+
+        return view('faculty.my-attendance-create')
+            ->with('ay', $ay)
+            ->with('schedules', $schedules)
+            ->with('attendance', $attendance)
+            ->with('isUpdate', 1);
+    }
+
+
+
+
+
+
+    
+
+    //delete attendance
+    public function destroy($id){
+
+        Attendance::destroy($id);
+
+        return response()->json([
+            'status' => 'deleted'
+        ], 200);
     }
 
 }

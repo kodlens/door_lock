@@ -10872,14 +10872,36 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
-  props: ['propAcademicYear', 'propSchedules'],
+  props: {
+    propAcademicYear: {
+      type: String,
+      "default": ''
+    },
+    propSchedules: {
+      type: String,
+      "default": ''
+    },
+    propAttendance: {
+      type: String,
+      "default": ''
+    },
+    propIsUpdate: {
+      type: Number,
+      "default": 0
+    }
+  },
+  //props: ['propAcademicYear', 'propSchedules'],
   data: function data() {
     return {
-      data: [],
       loading: false,
       checkedRows: [],
-      attendance_datetime: new Date(),
+      attendance_date: new Date(),
       fields: {},
       errors: {},
       btnClass: {
@@ -10910,7 +10932,10 @@ __webpack_require__.r(__webpack_exports__);
     initData: function initData() {
       this.academicYear = JSON.parse(this.propAcademicYear);
       this.schedules = JSON.parse(this.propSchedules);
-      console.log(this.schedules);
+
+      if (this.propIsUpdate > 0) {
+        this.getData();
+      }
     },
     loadUserSchedules: function loadUserSchedules() {
       var _this2 = this;
@@ -10920,24 +10945,49 @@ __webpack_require__.r(__webpack_exports__);
         _this2.academicYears = res.data;
       });
     },
+    getData: function getData() {
+      this.data = [];
+      var data = JSON.parse(this.propAttendance);
+      this.fields.schedule_id = data.schedule_id;
+      this.attendance_date = data.attendance_date;
+      this.fields.remark = data.attendance_remark;
+    },
     submit: function submit() {
       var _this3 = this;
 
-      if (this.global_id > 0) {
+      if (this.students.length < 1) {
+        this.$buefy.dialog.alert({
+          title: 'No Schedule.',
+          message: 'Please select schedule.',
+          type: 'is-danger'
+        });
+        return;
+      }
+
+      if (this.checkedRows.length < 1) {
+        this.$buefy.dialog.alert({
+          title: 'No Student.',
+          message: 'Please select student.',
+          type: 'is-danger'
+        });
+        return;
+      }
+
+      var ndate = new Date(this.attendance_date);
+      this.fields.attendance_date = ndate.getFullYear() + '-' + (ndate.getMonth() + 1) + '-' + ndate.getDate();
+      this.fields.students = this.students;
+      this.fields.checkedRows = this.checkedRows;
+
+      if (this.propIsUpdate > 0) {
         //update
-        axios.put('/users/' + this.global_id, this.fields).then(function (res) {
+        axios.put('/my-attendances/' + this.global_id, this.fields).then(function (res) {
           if (res.data.status === 'updated') {
             _this3.$buefy.dialog.alert({
               title: 'UPDATED!',
               message: 'Successfully updated.',
               type: 'is-success',
               onConfirm: function onConfirm() {
-                _this3.loadAsyncData();
-
                 _this3.clearFields();
-
-                _this3.global_id = 0;
-                _this3.isModalCreate = false;
               }
             });
           }
@@ -10945,15 +10995,18 @@ __webpack_require__.r(__webpack_exports__);
           if (err.response.status === 422) {
             _this3.errors = err.response.data.errors;
 
-            if (_this3.errors.rfid) {
-              _this3.rfid.type = 'is-danger';
-              _this3.rfid.msg = _this3.errors.rfid[0];
+            if (_this3.errors.duplicate_attendance) {
+              _this3.$buefy.dialog.alert({
+                title: 'Duplicate Attendance.',
+                message: _this3.errors.duplicate_attendance,
+                type: 'is-danger'
+              });
             }
           }
         });
       } else {
         //INSERT HERE
-        axios.post('/users', this.fields).then(function (res) {
+        axios.post('/my-attendances', this.fields).then(function (res) {
           if (res.data.status === 'saved') {
             _this3.$buefy.dialog.alert({
               title: 'SAVED!',
@@ -10961,13 +11014,7 @@ __webpack_require__.r(__webpack_exports__);
               type: 'is-success',
               confirmText: 'OK',
               onConfirm: function onConfirm() {
-                _this3.isModalCreate = false;
-
-                _this3.loadAsyncData();
-
                 _this3.clearFields();
-
-                _this3.global_id = 0;
               }
             });
           }
@@ -10975,25 +11022,33 @@ __webpack_require__.r(__webpack_exports__);
           if (err.response.status === 422) {
             _this3.errors = err.response.data.errors;
 
-            if (_this3.errors.rfid) {
-              _this3.rfid.type = 'is-danger';
-              _this3.rfid.msg = _this3.errors.rfid[0];
+            if (_this3.errors.duplicate_attendance) {
+              _this3.$buefy.dialog.alert({
+                title: 'Duplicate Attendance.',
+                message: _this3.errors.duplicate_attendance,
+                type: 'is-danger'
+              });
             }
           }
         });
       }
     },
+    newStudent: function newStudent() {
+      if (this.students.length < 1) {
+        this.$buefy.dialog.alert({
+          title: 'No Schedule.',
+          message: 'Please select schedule.',
+          type: 'is-danger'
+        });
+        return;
+      }
+
+      window.location = '/my-schedule-student-list/' + this.fields.schedule_id;
+    },
     clearFields: function clearFields() {
-      this.fields.rfid = '';
-      this.fields.username = '';
-      this.fields.lname = '';
-      this.fields.fname = '';
-      this.fields.mname = '';
-      this.fields.sex = '';
-      this.fields.password = '';
-      this.fields.password_confirmation = '';
-      this.fields.contact_no = '';
-      this.fields.role = '';
+      this.students = [];
+      this.fields.schedule_id = null;
+      this.fields.attendance_remark = '';
     }
   },
   mounted: function mounted() {
@@ -11287,6 +11342,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -11301,7 +11370,7 @@ __webpack_require__.r(__webpack_exports__);
       academicYears: [],
       global_id: 0,
       search: {
-        door: '',
+        remark: '',
         ay: ''
       },
       isModalCreate: false,
@@ -11337,7 +11406,7 @@ __webpack_require__.r(__webpack_exports__);
     loadAsyncData: function loadAsyncData() {
       var _this = this;
 
-      var params = ["sort_by=".concat(this.sortField, ".").concat(this.sortOrder), "door=".concat(this.search.door), "ay=".concat(this.search.ay), "perpage=".concat(this.perPage), "page=".concat(this.page)].join('&');
+      var params = ["sort_by=".concat(this.sortField, ".").concat(this.sortOrder), "remark=".concat(this.search.remark), "ay=".concat(this.search.ay), "perpage=".concat(this.perPage), "page=".concat(this.page)].join('&');
       this.loading = true;
       axios.get("/get-my-attendances?".concat(params)).then(function (_ref) {
         var data = _ref.data;
@@ -11459,7 +11528,7 @@ __webpack_require__.r(__webpack_exports__);
         type: 'is-danger',
         message: 'Are you sure you want to delete this data?',
         cancelText: 'Cancel',
-        confirmText: 'Delete user account?',
+        confirmText: 'Delete?',
         onConfirm: function onConfirm() {
           return _this4.deleteSubmit(delete_id);
         }
@@ -11469,7 +11538,7 @@ __webpack_require__.r(__webpack_exports__);
     deleteSubmit: function deleteSubmit(delete_id) {
       var _this5 = this;
 
-      axios["delete"]('/users/' + delete_id).then(function (res) {
+      axios["delete"]('/my-attendances/' + delete_id).then(function (res) {
         _this5.loadAsyncData();
       })["catch"](function (err) {
         if (err.response.status === 422) {
@@ -11497,6 +11566,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     studentAttendance: function studentAttendance(data_id) {
       window.location = '/my-schedule-student-attendance/' + data_id;
+    },
+    updateAttendance: function updateAttendance(data_id) {
+      window.location = '/my-attendances/' + data_id + '/edit';
     },
     //CHANGE PASSWORD
     openModalResetPassword: function openModalResetPassword(dataId) {
@@ -42355,13 +42427,13 @@ var render = function () {
                       },
                     },
                     [
-                      _c("b-datetimepicker", {
+                      _c("b-datepicker", {
                         model: {
-                          value: _vm.attendance_datetime,
+                          value: _vm.attendance_date,
                           callback: function ($$v) {
-                            _vm.attendance_datetime = $$v
+                            _vm.attendance_date = $$v
                           },
-                          expression: "attendance_datetime",
+                          expression: "attendance_date",
                         },
                       }),
                     ],
@@ -42425,8 +42497,8 @@ var render = function () {
                     attrs: {
                       data: _vm.students,
                       loading: _vm.loading,
-                      "checked-rows": _vm.checkedRows,
                       checkable: "",
+                      "checked-rows": _vm.checkedRows,
                     },
                     on: {
                       "update:checkedRows": function ($event) {
@@ -42541,9 +42613,15 @@ var render = function () {
               { staticClass: "buttons is-right mt-4" },
               [
                 _c("b-button", {
+                  staticClass: "is-info is-outlined",
+                  attrs: { label: "Add New Student", "icon-left": "account" },
+                  on: { click: _vm.newStudent },
+                }),
+                _vm._v(" "),
+                _c("b-button", {
                   attrs: {
                     label: "Save Attendance",
-                    "icon-left": "save",
+                    "icon-left": "content-save-all",
                     type: "is-primary",
                   },
                   on: { click: _vm.submit },
@@ -42585,7 +42663,7 @@ var render = function () {
     [
       _c("div", { staticClass: "section" }, [
         _c("div", { staticClass: "columns is-centered" }, [
-          _c("div", { staticClass: "column is-8" }, [
+          _c("div", { staticClass: "column is-10" }, [
             _c(
               "div",
               { staticClass: "box" },
@@ -42674,7 +42752,7 @@ var render = function () {
                               _c("b-input", {
                                 attrs: {
                                   type: "text",
-                                  placeholder: "Search Door",
+                                  placeholder: "Search Remark",
                                 },
                                 nativeOn: {
                                   keyup: function ($event) {
@@ -42697,11 +42775,11 @@ var render = function () {
                                   },
                                 },
                                 model: {
-                                  value: _vm.search.door,
+                                  value: _vm.search.remark,
                                   callback: function ($$v) {
-                                    _vm.$set(_vm.search, "door", $$v)
+                                    _vm.$set(_vm.search, "remark", $$v)
                                   },
-                                  expression: "search.door",
+                                  expression: "search.remark",
                                 },
                               }),
                               _vm._v(" "),
@@ -42885,7 +42963,29 @@ var render = function () {
                     _vm._v(" "),
                     _c("b-table-column", {
                       attrs: {
-                        field: "schedule_time",
+                        field: "attendance_date",
+                        label: "Schedule",
+                        sortable: "",
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function (props) {
+                            return [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(props.row.attendance_date) +
+                                  "\n                        "
+                              ),
+                            ]
+                          },
+                        },
+                      ]),
+                    }),
+                    _vm._v(" "),
+                    _c("b-table-column", {
+                      attrs: {
+                        field: "attendance_date",
                         label: "Schedule",
                         sortable: "",
                       },
@@ -42897,11 +42997,15 @@ var render = function () {
                               _vm._v(
                                 "\n                            " +
                                   _vm._s(
-                                    _vm._f("formatTime")(props.row.time_start)
+                                    _vm._f("formatTime")(
+                                      props.row.schedule.time_start
+                                    )
                                   ) +
                                   " - " +
                                   _vm._s(
-                                    _vm._f("formatTime")(props.row.time_end)
+                                    _vm._f("formatTime")(
+                                      props.row.schedule.time_end
+                                    )
                                   ) +
                                   "\n                        "
                               ),
@@ -42918,33 +43022,78 @@ var render = function () {
                           key: "default",
                           fn: function (props) {
                             return [
-                              props.row.mon == 1
+                              props.row.schedule.mon == 1
                                 ? _c("span", [_vm._v("M")])
                                 : _vm._e(),
                               _vm._v(" "),
-                              props.row.tue == 1
+                              props.row.schedule.tue == 1
                                 ? _c("span", [_vm._v("T")])
                                 : _vm._e(),
                               _vm._v(" "),
-                              props.row.wed == 1
+                              props.row.schedule.wed == 1
                                 ? _c("span", [_vm._v("W")])
                                 : _vm._e(),
                               _vm._v(" "),
-                              props.row.thu == 1
+                              props.row.schedule.thu == 1
                                 ? _c("span", [_vm._v("TH")])
                                 : _vm._e(),
                               _vm._v(" "),
-                              props.row.fri == 1
+                              props.row.schedule.fri == 1
                                 ? _c("span", [_vm._v("F")])
                                 : _vm._e(),
                               _vm._v(" "),
-                              props.row.sat == 1
+                              props.row.schedule.sat == 1
                                 ? _c("span", [_vm._v("S")])
                                 : _vm._e(),
                               _vm._v(" "),
-                              props.row.sun == 1
+                              props.row.schedule.sun == 1
                                 ? _c("span", [_vm._v("SU")])
                                 : _vm._e(),
+                            ]
+                          },
+                        },
+                      ]),
+                    }),
+                    _vm._v(" "),
+                    _c("b-table-column", {
+                      attrs: {
+                        field: "attendance_remark",
+                        label: "Remark",
+                        sortable: "",
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function (props) {
+                            return [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(props.row.attendance_remark) +
+                                  "\n                        "
+                              ),
+                            ]
+                          },
+                        },
+                      ]),
+                    }),
+                    _vm._v(" "),
+                    _c("b-table-column", {
+                      attrs: {
+                        field: "attendance_no",
+                        label: "Attendance No.",
+                        centered: "",
+                        sortable: "",
+                      },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function (props) {
+                            return [
+                              _vm._v(
+                                "\n                            " +
+                                  _vm._s(props.row.student_attendance.length) +
+                                  "\n                        "
+                              ),
                             ]
                           },
                         },
@@ -42975,12 +43124,12 @@ var render = function () {
                                         staticClass: "button is-small mr-1",
                                         attrs: {
                                           tag: "a",
-                                          "icon-right": "account",
+                                          "icon-right": "pencil",
                                         },
                                         on: {
                                           click: function ($event) {
-                                            return _vm.studentList(
-                                              props.row.schedule_id
+                                            return _vm.updateAttendance(
+                                              props.row.attendance_id
                                             )
                                           },
                                         },
@@ -42993,21 +43142,19 @@ var render = function () {
                                     "b-tooltip",
                                     {
                                       attrs: {
-                                        label: "Attendance",
-                                        type: "is-primary",
+                                        label: "Delete",
+                                        type: "is-danger",
                                       },
                                     },
                                     [
                                       _c("b-button", {
-                                        staticClass: "button is-small mr-1",
-                                        attrs: {
-                                          tag: "a",
-                                          "icon-right": "list-status",
-                                        },
+                                        staticClass:
+                                          "button is-small mr-1 is-danger",
+                                        attrs: { "icon-right": "delete" },
                                         on: {
                                           click: function ($event) {
-                                            return _vm.studentAttendance(
-                                              props.row.schedule_id
+                                            return _vm.confirmDelete(
+                                              props.row.attendance_id
                                             )
                                           },
                                         },

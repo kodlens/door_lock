@@ -30,6 +30,7 @@ class CreateAttendanceStudentsTable extends Migration
             $table->string('student_contact_no')->nullable();
 
             $table->string('remark')->nullable();
+            $table->tinyInteger('is_present')->default(0);
 
             $table->timestamps();
         });

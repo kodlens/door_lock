@@ -2,7 +2,7 @@
     <div>
         <div class="section">
             <div class="columns is-centered">
-                <div class="column is-8">
+                <div class="column is-10">
                     <div class="box">
 
                         <div class="is-flex mb-2" 
@@ -30,8 +30,8 @@
                                         <div class="column">
                                             <b-field label="Search" label-position="on-border">
                                                 <b-input type="text"
-                                                    v-model="search.door" 
-                                                    placeholder="Search Door"
+                                                    v-model="search.remark" 
+                                                    placeholder="Search Remark"
                                                     @keyup.native.enter="loadAsyncData"/>
                                                 <p class="control">
                                                     <b-tooltip label="Search" type="is-success">
@@ -94,37 +94,51 @@
                                 {{ props.row.ay.ay_desc }} ({{props.row.ay.ay_code}})
                             </b-table-column>
 
-                            <b-table-column field="schedule_time" label="Schedule" sortable v-slot="props">
-                                {{ props.row.time_start | formatTime }} - {{ props.row.time_end | formatTime }}
+                            <b-table-column field="attendance_date" label="Schedule" sortable v-slot="props">
+                                {{ props.row.attendance_date }}
+                            </b-table-column>
+
+                            <b-table-column field="attendance_date" label="Schedule" sortable v-slot="props">
+                                {{ props.row.schedule.time_start | formatTime }} - {{ props.row.schedule.time_end | formatTime }}
                             </b-table-column>
 
                             <b-table-column label="Day" sortable v-slot="props" centered>
-                                <span v-if=" props.row.mon == 1">M</span>
-                                <span v-if=" props.row.tue == 1">T</span>
-                                <span v-if=" props.row.wed == 1">W</span>
-                                <span v-if=" props.row.thu == 1">TH</span>
-                                <span v-if=" props.row.fri == 1">F</span>
-                                <span v-if=" props.row.sat == 1">S</span>
-                                <span v-if=" props.row.sun == 1">SU</span>
+                                <span v-if=" props.row.schedule.mon == 1">M</span>
+                                <span v-if=" props.row.schedule.tue == 1">T</span>
+                                <span v-if=" props.row.schedule.wed == 1">W</span>
+                                <span v-if=" props.row.schedule.thu == 1">TH</span>
+                                <span v-if=" props.row.schedule.fri == 1">F</span>
+                                <span v-if=" props.row.schedule.sat == 1">S</span>
+                                <span v-if=" props.row.schedule.sun == 1">SU</span>
+                            </b-table-column>
+
+                            <b-table-column field="attendance_remark" label="Remark" sortable v-slot="props">
+                                {{ props.row.attendance_remark }}
+                            </b-table-column>
+
+                            <b-table-column field="attendance_no" label="Attendance No." centered sortable v-slot="props">
+                                {{ props.row.student_attendance.length }}
                             </b-table-column>
 
                             <b-table-column label="Action" v-slot="props">
                                 <div class="is-flex">
                                     <b-tooltip label="Student List" type="is-primary">
-                                        <b-button class="button is-small mr-1" tag="a" icon-right="account" 
-                                            @click="studentList(props.row.schedule_id)">
+                                        <b-button class="button is-small mr-1" tag="a" icon-right="pencil" 
+                                            @click="updateAttendance(props.row.attendance_id)">
                                         </b-button>
                                     </b-tooltip>
 
-                                     <b-tooltip label="Attendance" type="is-primary">
+                                     <!-- <b-tooltip label="Attendance" type="is-primary">
                                         <b-button class="button is-small mr-1" tag="a" icon-right="list-status" 
                                             @click="studentAttendance(props.row.schedule_id)">
                                         </b-button>
-                                    </b-tooltip>
-                                    <!-- <b-tooltip label="Delete" type="is-danger">
-                                        <b-button class="button is-small mr-1" icon-right="delete" @click="confirmDelete(props.row.user_id)"></b-button>
-                                    </b-tooltip>
-                                    <b-tooltip label="Reset Password" type="is-info">
+                                    </b-tooltip> -->
+                                <b-tooltip label="Delete" type="is-danger">
+                                    <b-button class="button is-small mr-1 is-danger" 
+                                        icon-right="delete" 
+                                        @click="confirmDelete(props.row.attendance_id)"></b-button>
+                                </b-tooltip>
+                                    <!--<b-tooltip label="Reset Password" type="is-info">
                                         <b-button class="button is-small mr-1" icon-right="lock" @click="openModalResetPassword(props.row.user_id)"></b-button>
                                     </b-tooltip> -->
                                 </div>
@@ -289,7 +303,7 @@ export default{
             global_id : 0,
 
             search: {
-                door: '',
+                remark: '',
                 ay: '',
             },
 
@@ -327,7 +341,7 @@ export default{
         loadAsyncData() {
             const params = [
                 `sort_by=${this.sortField}.${this.sortOrder}`,
-                `door=${this.search.door}`,
+                `remark=${this.search.remark}`,
                 `ay=${this.search.ay}`,
                 `perpage=${this.perPage}`,
                 `page=${this.page}`
@@ -451,13 +465,13 @@ export default{
                 type: 'is-danger',
                 message: 'Are you sure you want to delete this data?',
                 cancelText: 'Cancel',
-                confirmText: 'Delete user account?',
+                confirmText: 'Delete?',
                 onConfirm: () => this.deleteSubmit(delete_id)
             });
         },
         //execute delete after confirming
         deleteSubmit(delete_id) {
-            axios.delete('/users/' + delete_id).then(res => {
+            axios.delete('/my-attendances/' + delete_id).then(res => {
                 this.loadAsyncData();
             }).catch(err => {
                 if (err.response.status === 422) {
@@ -494,6 +508,11 @@ export default{
             window.location = '/my-schedule-student-attendance/' + data_id
         },
 
+        updateAttendance(data_id){
+            window.location = '/my-attendances/' + data_id + '/edit'
+
+        },
+
         //CHANGE PASSWORD
         openModalResetPassword(dataId){
             this.modalResetPassword = true;
@@ -523,6 +542,7 @@ export default{
                 this.errors = err.response.data.errors;
             })
         },
+
         
         scanQR(){
             this.fields.rfid = "1234";        
@@ -536,15 +556,19 @@ export default{
             this.fields.password = "a";  
             this.fields.password_confirmation = "a";  
             this.fields.contact_no = "03287238";
-        }
-        
+        },
+
+    
     },
 
     mounted() {
         this.loadAcademicYears();
         this.loadAsyncData();
     }
+
 }
+
+ 
 </script>
 
 

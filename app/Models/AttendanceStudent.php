@@ -21,7 +21,8 @@ class AttendanceStudent extends Model
         'student_fname',
         'student_suffix', 
         'student_sex', 
-        'student_contact_no'
+        'student_contact_no',
+        'is_present'
     ];
 
 

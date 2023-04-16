@@ -31,7 +31,7 @@ class CreateAttendancesTable extends Migration
                 ->onDelete('cascade')
                 ->onUpdate('cascade');
 
-            $table->dateTime('attendance_datetime')->nullable();
+            $table->date('attendance_date')->nullable();
             $table->string('attendance_remark')->nullable();
 
             $table->timestamps();

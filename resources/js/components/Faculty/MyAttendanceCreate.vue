@@ -62,8 +62,8 @@
 
                             <div class="column">
                                 <b-field label="Attendance Date & Time" label-position="on-border">
-                                    <b-datetimepicker v-model="attendance_datetime">
-                                    </b-datetimepicker>
+                                    <b-datepicker v-model="attendance_date">
+                                    </b-datepicker>
                                 </b-field>
                             </div>
                         </div>
@@ -87,8 +87,9 @@
                             <b-table
                                 :data="students"
                                 :loading="loading"
+                                checkable
                                 :checked-rows.sync="checkedRows"
-                                checkable>
+                            >
 
                                 <b-table-column field="schedule_student_list_id" label="ID" sortable v-slot="props">
                                     {{ props.row.schedule_student_list_id }}
@@ -110,8 +111,12 @@
                         </div>
 
                         <div class="buttons is-right mt-4">
+                            <b-button label="Add New Student" 
+                                icon-left="account"
+                                class="is-info is-outlined"
+                                @click="newStudent"></b-button>
                             <b-button label="Save Attendance" 
-                                icon-left="save"
+                                icon-left="content-save-all"
                                 type="is-primary"
                                 @click="submit"></b-button>
                         </div>
@@ -128,16 +133,33 @@
 <script>
 
 export default{
-    props: ['propAcademicYear', 'propSchedules'],
+    props: {
+        propAcademicYear:{
+            type: String,
+            default: '',
+        },
+        propSchedules: {
+            type: String,
+            default: ''
+        },
+        propAttendance: {
+            type: String,
+            default: ''
+        },
+        propIsUpdate: {
+            type: Number,
+            default: 0
+        }
+    },
+    //props: ['propAcademicYear', 'propSchedules'],
 
     data() {
         return{
 
-            data: [],
             loading: false,
             checkedRows: [],
 
-            attendance_datetime: new Date(),
+            attendance_date: new Date(),
             fields: {},
             errors: {},
 
@@ -150,6 +172,7 @@ export default{
             academicYear: {},
             schedules: [],
             students: [],
+
         }
     },
 
@@ -182,7 +205,9 @@ export default{
             this.academicYear = JSON.parse(this.propAcademicYear)
             this.schedules = JSON.parse(this.propSchedules)
 
-            console.log(this.schedules);
+            if(this.propIsUpdate > 0){
+                this.getData();
+            }
 
         },
 
@@ -198,22 +223,52 @@ export default{
             })
         },
 
+        getData(){
+            this.data = [];
+            let data = JSON.parse(this.propAttendance)
+            this.fields.schedule_id = data.schedule_id
+            this.attendance_date = data.attendance_date
+            this.fields.remark = data.attendance_remark
+        },
+
     
         submit: function(){
-            
-            if(this.global_id > 0){
+            if(this.students.length < 1){
+                this.$buefy.dialog.alert({
+                    title: 'No Schedule.',
+                    message: 'Please select schedule.',
+                    type: 'is-danger'
+                });
+
+                return;
+            }
+
+            if(this.checkedRows.length < 1){
+                this.$buefy.dialog.alert({
+                    title: 'No Student.',
+                    message: 'Please select student.',
+                    type: 'is-danger'
+                });
+
+                return;
+            }
+
+            let ndate = new Date(this.attendance_date);
+
+            this.fields.attendance_date = ndate.getFullYear() + '-' + (ndate.getMonth() + 1) + '-' + ndate.getDate();
+            this.fields.students = this.students;
+            this.fields.checkedRows = this.checkedRows
+
+            if(this.propIsUpdate > 0){
                 //update
-                axios.put('/users/'+this.global_id, this.fields).then(res=>{
+                axios.put('/my-attendances/'+this.global_id, this.fields).then(res=>{
                     if(res.data.status === 'updated'){
                         this.$buefy.dialog.alert({
                             title: 'UPDATED!',
                             message: 'Successfully updated.',
                             type: 'is-success',
                             onConfirm: () => {
-                                this.loadAsyncData();
                                 this.clearFields();
-                                this.global_id = 0;
-                                this.isModalCreate = false;
                             }
                         })
                     }
@@ -221,15 +276,18 @@ export default{
                     if(err.response.status === 422){
                         this.errors = err.response.data.errors;
 
-                        if(this.errors.rfid){
-                            this.rfid.type = 'is-danger'
-                            this.rfid.msg = this.errors.rfid[0]
+                        if(this.errors.duplicate_attendance){
+                            this.$buefy.dialog.alert({
+                                title: 'Duplicate Attendance.',
+                                message: this.errors.duplicate_attendance,
+                                type: 'is-danger'
+                            })
                         }
                     }
                 })
             }else{
                 //INSERT HERE
-                axios.post('/users', this.fields).then(res=>{
+                axios.post('/my-attendances', this.fields).then(res=>{
                     if(res.data.status === 'saved'){
                         this.$buefy.dialog.alert({
                             title: 'SAVED!',
@@ -237,10 +295,7 @@ export default{
                             type: 'is-success',
                             confirmText: 'OK',
                             onConfirm: () => {
-                                this.isModalCreate = false;
-                                this.loadAsyncData();
                                 this.clearFields();
-                                this.global_id = 0;
                             }
                         })
                     }
@@ -248,13 +303,29 @@ export default{
                     if(err.response.status === 422){
                         this.errors = err.response.data.errors;
 
-                        if(this.errors.rfid){
-                            this.rfid.type = 'is-danger'
-                            this.rfid.msg = this.errors.rfid[0]
+                        if(this.errors.duplicate_attendance){
+                            this.$buefy.dialog.alert({
+                                title: 'Duplicate Attendance.',
+                                message: this.errors.duplicate_attendance,
+                                type: 'is-danger'
+                            })
                         }
                     }
                 });
             }
+        },
+
+        newStudent(){
+            if(this.students.length < 1){
+                this.$buefy.dialog.alert({
+                    title: 'No Schedule.',
+                    message: 'Please select schedule.',
+                    type: 'is-danger'
+                });
+
+                return;
+            }
+            window.location = '/my-schedule-student-list/' + this.fields.schedule_id
         },
 
 
@@ -262,16 +333,9 @@ export default{
 
         clearFields(){
 
-            this.fields.rfid = ''
-            this.fields.username = ''
-            this.fields.lname = ''
-            this.fields.fname = ''
-            this.fields.mname = ''
-            this.fields.sex = ''
-            this.fields.password = ''
-            this.fields.password_confirmation = ''
-            this.fields.contact_no = ''
-            this.fields.role = ''
+            this.students = []
+            this.fields.schedule_id = null
+            this.fields.attendance_remark = ''
  
         },
 
