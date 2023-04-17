@@ -29,13 +29,18 @@ class MyAttendanceController extends Controller
         $sort = explode('.', $req->sort_by);
 
         $user_id = Auth::user()->user_id;
+        
 
         $data = Attendance::with(['ay', 'schedule', 'student_attendance'])
             ->where('user_id', $user_id)
             ->where('ay_id', 'like', $req->ay . '%')
-            ->where('attendance_remark', 'like', $req->remark . '%')
+            ->where(function($q) use ($req){
+                $q->orWhere('attendance_remark', 'like', $req->remark . '%')
+                    ->orWhereNull('attendance_remark');
+            })
             ->orderBy($sort[0], $sort[1])
             ->paginate($req->perpage);
+
         return $data;
     }
 
@@ -155,7 +160,7 @@ class MyAttendanceController extends Controller
         $ay = AcademicYear::where('active', 1)->first();
         $schedules = Schedule::where('user_id', $user->user_id)
             ->get();
-        $attendance = Attendance::find($id);
+        $attendance = Attendance::with('student_attendance')->find($id);
 
 
         return view('faculty.my-attendance-create')

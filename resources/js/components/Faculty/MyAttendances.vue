@@ -117,6 +117,8 @@
                             </b-table-column>
 
                             <b-table-column field="attendance_no" label="Attendance No." centered sortable v-slot="props">
+                                {{ props.row.student_attendance.filter(item => item.is_present === 1).length }} 
+                                / 
                                 {{ props.row.student_attendance.length }}
                             </b-table-column>
 
@@ -361,6 +363,7 @@ export default{
                         //item.release_date = item.release_date ? item.release_date.replace(/-/g, '/') : null
                         this.data.push(item)
                     })
+                    
                     this.loading = false
                 })
                 .catch((error) => {

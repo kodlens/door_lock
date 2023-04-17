@@ -10949,8 +10949,12 @@ __webpack_require__.r(__webpack_exports__);
       this.data = [];
       var data = JSON.parse(this.propAttendance);
       this.fields.schedule_id = data.schedule_id;
-      this.attendance_date = data.attendance_date;
+      this.attendance_date = new Date(data.attendance_date);
       this.fields.remark = data.attendance_remark;
+      this.checkedRows = data.student_attendance.filter(function (item) {
+        return item.is_present === 1;
+      });
+      console.log(this.checkedRows);
     },
     submit: function submit() {
       var _this3 = this;
@@ -11070,6 +11074,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+//
+//
 //
 //
 //
@@ -43091,6 +43097,14 @@ var render = function () {
                             return [
                               _vm._v(
                                 "\n                            " +
+                                  _vm._s(
+                                    props.row.student_attendance.filter(
+                                      function (item) {
+                                        return item.is_present === 1
+                                      }
+                                    ).length
+                                  ) +
+                                  " \n                            / \n                            " +
                                   _vm._s(props.row.student_attendance.length) +
                                   "\n                        "
                               ),

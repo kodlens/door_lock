@@ -227,8 +227,11 @@ export default{
             this.data = [];
             let data = JSON.parse(this.propAttendance)
             this.fields.schedule_id = data.schedule_id
-            this.attendance_date = data.attendance_date
+            this.attendance_date = new Date(data.attendance_date)
             this.fields.remark = data.attendance_remark
+
+            this.checkedRows = data.student_attendance.filter(item => item.is_present === 1);
+            console.log(this.checkedRows)
         },
 
     
