@@ -48,8 +48,8 @@ class MyAttendanceController extends Controller
 
 
     public function getStudentList(Request $req){
-        $schedId = $req->scheduleid;
 
+        $schedId = $req->scheduleid;
         $students = ScheduleStudentList::where('schedule_id', $schedId)
             ->get();
 
@@ -77,7 +77,7 @@ class MyAttendanceController extends Controller
         $userId = Auth::user()->user_id;
         $ay = AcademicYear::where('active', 1)->first();
 
-       //query if date already have data in databsae
+        //query if date already have data in databsae
         $isExist = Attendance::where('attendance_date', $ndate)
             ->where('user_id', $userId)
             ->where('schedule_id', $req->schedule_id)
@@ -170,7 +170,78 @@ class MyAttendanceController extends Controller
             ->with('isUpdate', 1);
     }
 
+    public function update(Request $req, $id){
+        //return $req;
 
+        $ndate = date('Y-m-d', strtotime($req->attendance_date));
+        $userId = Auth::user()->user_id;
+        $ay = AcademicYear::where('active', 1)->first();
+
+        //query if date already have data in databsae
+        $isExist = Attendance::where('attendance_date', $ndate)
+            ->where('user_id', $userId)
+            ->where('schedule_id', $req->schedule_id)
+            ->where('ay_id', $ay->ay_id)
+            ->where('attendance_id', '!=', $id)
+            ->exists();
+
+        //validate if already have attendance recorded in a date.
+        //return 422 if already existed in database
+        if($isExist){
+            return response()->json([
+                'errors' => [
+                    'duplicate_attendance' => 'Attendance for this day already recorded.'
+                ]
+            ], 422);
+        }
+
+        $att = Attendance::where('attendance_id', $id)
+            ->update([
+                'schedule_id' => $req->schedule_id,
+                'attendance_date' => $ndate,
+                'attendance_remark' => $req->attendance_remark
+            ]);
+        
+        $data = [];
+        $ids = [];
+        foreach($req->students as $std){
+            
+            //closure
+            $isPresent = function() use ($req, $std){
+                //helped by chatGPT
+                $flag = 0;
+                foreach($req->checkedRows as $check){
+                    if($check['attendance_student_id'] == $std['attendance_student_id']){
+                        $flag = 1;
+                        break;
+                    }
+                }
+                return $flag;
+            };
+
+            array_push($ids, $std['attendance_student_id']);
+
+            array_push($data, 
+            [
+                'student_id' => $std['student_id'],
+                'student_lname' => $std['student_lname'],
+                'student_fname' => $std['student_fname'],
+                'student_mname' => $std['student_mname'],
+                'student_suffix' => $std['student_suffix'],
+                'student_sex' => $std['student_sex'],
+                'student_contact_no' => $std['student_contact_no'],
+                'is_present' => $isPresent(),
+            ]);
+        }
+
+        AttendanceStudent::whereIn('attendance_student_id', $ids)
+            ->update($data);
+
+        return response()->json([
+            'status' => 'updated'
+        ], 200);
+
+    }
 
 
 

@@ -99,8 +99,7 @@ Route::middleware(['auth'])->group(function() {
 
 
 //Open AcadYear
-Route::get('/get-open-academic-years', 
-    [App\Http\Controllers\OpenAcademicYearController::class, 'getOpenAcademicYear']);
+Route::get('/get-open-academic-years', [App\Http\Controllers\OpenAcademicYearController::class, 'getOpenAcademicYear']);
 
 
 
@@ -124,8 +123,6 @@ Route::middleware(['auth', 'faculty'])->group(function() {
 
     Route::resource('/my-students', App\Http\Controllers\Faculty\MyStudentController::class);
     Route::get('/get-faculty-students', [App\Http\Controllers\Faculty\MyStudentController::class, 'getAll']);
-
-
 
     Route::resource('/my-attendances', App\Http\Controllers\Faculty\MyAttendanceController::class);
     Route::get('/get-my-attendances', [App\Http\Controllers\Faculty\MyAttendanceController::class, 'getAll']);

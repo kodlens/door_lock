@@ -140,6 +140,12 @@
                                         icon-right="delete" 
                                         @click="confirmDelete(props.row.attendance_id)"></b-button>
                                 </b-tooltip>
+
+                                <b-tooltip label="Print Attendance" type="is-info">
+                                    <b-button class="button is-small mr-1 is-info" 
+                                        icon-right="printer" 
+                                        @click="printAttendance(props.row.attendance_id)"></b-button>
+                                </b-tooltip>
                                     <!--<b-tooltip label="Reset Password" type="is-info">
                                         <b-button class="button is-small mr-1" icon-right="lock" @click="openModalResetPassword(props.row.user_id)"></b-button>
                                     </b-tooltip> -->
@@ -395,6 +401,9 @@ export default{
             window.location = '/my-attendances/create';
         },
 
+        printAttendance(i){
+            window.location = '/print-attendance/' + i;
+        },
 
         loadAcademicYears(){
             axios.get('/get-open-academic-years').then(res=>{

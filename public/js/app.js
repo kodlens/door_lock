@@ -10918,23 +10918,23 @@ __webpack_require__.r(__webpack_exports__);
     loadAsyncData: function loadAsyncData() {
       var _this = this;
 
-      var params = ["scheduleid=".concat(this.fields.schedule_id)].join('&');
-      this.loading = true;
-      axios.get("/get-my-attendance-student-list?".concat(params)).then(function (res) {
-        _this.students = [];
-        _this.students = res.data;
-        _this.loading = false;
-      })["catch"](function (error) {
-        _this.loading = false;
-        throw error;
-      });
-    },
-    initData: function initData() {
-      this.academicYear = JSON.parse(this.propAcademicYear);
-      this.schedules = JSON.parse(this.propSchedules);
-
-      if (this.propIsUpdate > 0) {
-        this.getData();
+      if (this.propIsUpdate < 1) {
+        var params = ["scheduleid=".concat(this.fields.schedule_id)].join('&');
+        this.loading = true;
+        axios.get("/get-my-attendance-student-list?".concat(params)).then(function (res) {
+          _this.students = [];
+          _this.students = res.data;
+          _this.loading = false; // if(this.propIsUpdate > 0){
+          //     this.students.forEach(row => {
+          //         if(row.is_present === 1){
+          //             this.checkedRows.push(row)
+          //         }
+          //     });
+          // }
+        })["catch"](function (error) {
+          _this.loading = false;
+          throw error;
+        });
       }
     },
     loadUserSchedules: function loadUserSchedules() {
@@ -10945,19 +10945,33 @@ __webpack_require__.r(__webpack_exports__);
         _this2.academicYears = res.data;
       });
     },
+    initData: function initData() {
+      this.academicYear = JSON.parse(this.propAcademicYear);
+      this.schedules = JSON.parse(this.propSchedules);
+
+      if (this.propIsUpdate > 0) {
+        this.getData();
+      }
+    },
     getData: function getData() {
-      this.data = [];
+      var _this3 = this;
+
       var data = JSON.parse(this.propAttendance);
       this.fields.schedule_id = data.schedule_id;
       this.attendance_date = new Date(data.attendance_date);
       this.fields.remark = data.attendance_remark;
-      this.checkedRows = data.student_attendance.filter(function (item) {
-        return item.is_present === 1;
-      });
-      console.log(this.checkedRows);
+      this.global_id = data.attendance_id;
+      this.students = data.student_attendance;
+      this.students.forEach(function (row) {
+        if (row.is_present === 1) {
+          _this3.checkedRows.push(row);
+        }
+      }); //console.log(this.students)
+      //this.checkedRows = data.student_attendance.filter(item => item.is_present === 1);
+      //console.log(this.checkedRows)
     },
     submit: function submit() {
-      var _this3 = this;
+      var _this4 = this;
 
       if (this.students.length < 1) {
         this.$buefy.dialog.alert({
@@ -10986,23 +11000,23 @@ __webpack_require__.r(__webpack_exports__);
         //update
         axios.put('/my-attendances/' + this.global_id, this.fields).then(function (res) {
           if (res.data.status === 'updated') {
-            _this3.$buefy.dialog.alert({
+            _this4.$buefy.dialog.alert({
               title: 'UPDATED!',
               message: 'Successfully updated.',
               type: 'is-success',
               onConfirm: function onConfirm() {
-                _this3.clearFields();
+                window.location = '/my-attendances';
               }
             });
           }
         })["catch"](function (err) {
           if (err.response.status === 422) {
-            _this3.errors = err.response.data.errors;
+            _this4.errors = err.response.data.errors;
 
-            if (_this3.errors.duplicate_attendance) {
-              _this3.$buefy.dialog.alert({
+            if (_this4.errors.duplicate_attendance) {
+              _this4.$buefy.dialog.alert({
                 title: 'Duplicate Attendance.',
-                message: _this3.errors.duplicate_attendance,
+                message: _this4.errors.duplicate_attendance,
                 type: 'is-danger'
               });
             }
@@ -11012,24 +11026,24 @@ __webpack_require__.r(__webpack_exports__);
         //INSERT HERE
         axios.post('/my-attendances', this.fields).then(function (res) {
           if (res.data.status === 'saved') {
-            _this3.$buefy.dialog.alert({
+            _this4.$buefy.dialog.alert({
               title: 'SAVED!',
               message: 'Successfully saved.',
               type: 'is-success',
               confirmText: 'OK',
               onConfirm: function onConfirm() {
-                _this3.clearFields();
+                _this4.clearFields();
               }
             });
           }
         })["catch"](function (err) {
           if (err.response.status === 422) {
-            _this3.errors = err.response.data.errors;
+            _this4.errors = err.response.data.errors;
 
-            if (_this3.errors.duplicate_attendance) {
-              _this3.$buefy.dialog.alert({
+            if (_this4.errors.duplicate_attendance) {
+              _this4.$buefy.dialog.alert({
                 title: 'Duplicate Attendance.',
-                message: _this3.errors.duplicate_attendance,
+                message: _this4.errors.duplicate_attendance,
                 type: 'is-danger'
               });
             }
@@ -11074,6 +11088,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -11454,6 +11474,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     createAttendance: function createAttendance() {
       window.location = '/my-attendances/create';
+    },
+    printAttendance: function printAttendance(i) {
+      window.location = '/print-attendance/' + i;
     },
     loadAcademicYears: function loadAcademicYears() {
       var _this2 = this;
@@ -42518,8 +42541,8 @@ var render = function () {
                   [
                     _c("b-table-column", {
                       attrs: {
-                        field: "schedule_student_list_id",
-                        label: "ID",
+                        field: "student_id",
+                        label: "Student ID",
                         sortable: "",
                       },
                       scopedSlots: _vm._u([
@@ -42529,7 +42552,7 @@ var render = function () {
                             return [
                               _vm._v(
                                 "\n                                " +
-                                  _vm._s(props.row.schedule_student_list_id) +
+                                  _vm._s(props.row.student_id) +
                                   "\n                            "
                               ),
                             ]
@@ -43168,6 +43191,31 @@ var render = function () {
                                         on: {
                                           click: function ($event) {
                                             return _vm.confirmDelete(
+                                              props.row.attendance_id
+                                            )
+                                          },
+                                        },
+                                      }),
+                                    ],
+                                    1
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "b-tooltip",
+                                    {
+                                      attrs: {
+                                        label: "Print Attendance",
+                                        type: "is-info",
+                                      },
+                                    },
+                                    [
+                                      _c("b-button", {
+                                        staticClass:
+                                          "button is-small mr-1 is-info",
+                                        attrs: { "icon-right": "printer" },
+                                        on: {
+                                          click: function ($event) {
+                                            return _vm.printAttendance(
                                               props.row.attendance_id
                                             )
                                           },

@@ -91,8 +91,8 @@
                                 :checked-rows.sync="checkedRows"
                             >
 
-                                <b-table-column field="schedule_student_list_id" label="ID" sortable v-slot="props">
-                                    {{ props.row.schedule_student_list_id }}
+                                <b-table-column field="student_id" label="Student ID" sortable v-slot="props">
+                                    {{ props.row.student_id }}
                                 </b-table-column>
 
                                 <b-table-column field="student_name" label="Name" sortable v-slot="props">
@@ -179,37 +179,34 @@ export default{
     methods: {
        
         loadAsyncData() {
-
-            const params = [
-                `scheduleid=${this.fields.schedule_id}`,
-            ].join('&')
-
-            this.loading = true
-            axios.get(`/get-my-attendance-student-list?${params}`)
-                .then(res=> {
-                    this.students = []
-                   
-                    this.students = res.data
-                    this.loading = false
-                    
-                })
-                .catch((error) => {
-                    this.loading = false
-                    throw error
-                })
-        },
-
-
-
-        initData(){
-            this.academicYear = JSON.parse(this.propAcademicYear)
-            this.schedules = JSON.parse(this.propSchedules)
-
-            if(this.propIsUpdate > 0){
-                this.getData();
+            if(this.propIsUpdate < 1){
+                const params = [
+                    `scheduleid=${this.fields.schedule_id}`,
+                ].join('&')
+    
+                this.loading = true
+                axios.get(`/get-my-attendance-student-list?${params}`)
+                    .then(res=> {
+                        this.students = []
+                        
+                        this.students = res.data
+                        this.loading = false
+    
+                        // if(this.propIsUpdate > 0){
+                        //     this.students.forEach(row => {
+                        //         if(row.is_present === 1){
+                        //             this.checkedRows.push(row)
+                        //         }
+                        //     });
+                        // }
+                    })
+                    .catch((error) => {
+                        this.loading = false
+                        throw error
+                    })
             }
-
         },
+
 
         loadUserSchedules(){
             const params = [
@@ -223,15 +220,37 @@ export default{
             })
         },
 
-        getData(){
-            this.data = [];
-            let data = JSON.parse(this.propAttendance)
-            this.fields.schedule_id = data.schedule_id
-            this.attendance_date = new Date(data.attendance_date)
-            this.fields.remark = data.attendance_remark
+        initData(){
+            this.academicYear = JSON.parse(this.propAcademicYear)
 
-            this.checkedRows = data.student_attendance.filter(item => item.is_present === 1);
-            console.log(this.checkedRows)
+            this.schedules = JSON.parse(this.propSchedules)
+
+            if(this.propIsUpdate > 0){
+                this.getData();
+            }
+
+        },
+
+        
+        getData(){
+            let data = JSON.parse(this.propAttendance);
+            this.fields.schedule_id = data.schedule_id;
+            this.attendance_date = new Date(data.attendance_date);
+            this.fields.remark = data.attendance_remark;
+            this.global_id = data.attendance_id;
+            this.students = data.student_attendance;
+           
+            this.students.forEach(row => {
+                if(row.is_present === 1){
+                    this.checkedRows.push(row);
+                }
+            });
+
+             
+
+            //console.log(this.students)
+            //this.checkedRows = data.student_attendance.filter(item => item.is_present === 1);
+            //console.log(this.checkedRows)
         },
 
     
@@ -264,14 +283,14 @@ export default{
 
             if(this.propIsUpdate > 0){
                 //update
-                axios.put('/my-attendances/'+this.global_id, this.fields).then(res=>{
+                axios.put('/my-attendances/' + this.global_id, this.fields).then(res=>{
                     if(res.data.status === 'updated'){
                         this.$buefy.dialog.alert({
                             title: 'UPDATED!',
                             message: 'Successfully updated.',
                             type: 'is-success',
                             onConfirm: () => {
-                                this.clearFields();
+                                window.location = '/my-attendances';
                             }
                         })
                     }
