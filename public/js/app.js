@@ -10670,9 +10670,10 @@ __webpack_require__.r(__webpack_exports__);
       //nodemcu
       this.rfid.type = '';
       this.rfid.msg = '';
-      this.fields.rfid = '';
+      this.fields.rfid = ''; //change this IP to the IP of the Scanner
+
       axios.get('http://192.168.0.45/scan').then(function (res) {
-        console.log(res.data);
+        //console.log(res.data);
         _this2.fields.rfid = res.data;
         _this2.rfid.type = 'is-success';
         _this2.rfid.msg = 'Scanned successfully.';
