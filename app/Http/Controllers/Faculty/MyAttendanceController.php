@@ -23,15 +23,12 @@ class MyAttendanceController extends Controller
     }
 
 
-
-
     public function getAll(Request $req){
 
         $sort = explode('.', $req->sort_by);
 
         $user_id = Auth::user()->user_id;
         
-
         $data = Attendance::with(['ay', 'schedule', 'student_attendance'])
             ->where('user_id', $user_id)
             ->where('ay_id', 'like', $req->ay . '%')
