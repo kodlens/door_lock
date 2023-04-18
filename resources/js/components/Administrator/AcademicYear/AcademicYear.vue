@@ -73,6 +73,11 @@
                             <b-table-column field="semester" label="Semester" v-slot="props">
                                 {{ props.row.semester }}
                             </b-table-column>
+
+                            <b-table-column field="active" label="Active" centered v-slot="props">
+                                <b-icon icon="check-bold" type="is-success" v-if="props.row.active === 1"></b-icon>
+                                <b-icon icon="minus-circle-outline" v-else></b-icon>
+                            </b-table-column>
                             
 
                             <b-table-column label="Action" v-slot="props">
@@ -82,6 +87,9 @@
                                     </b-tooltip>
                                     <b-tooltip label="Delete" type="is-danger">
                                         <b-button class="button is-small is-danger mr-1" icon-right="delete" @click="confirmDelete(props.row.ay_id)"></b-button>
+                                    </b-tooltip>
+                                    <b-tooltip label="Active" type="is-danger" v-if="props.row.active === 0">
+                                        <b-button class="button is-small is-info mr-1" icon-right="check-bold" @click="setActive(props.row.ay_id)"></b-button>
                                     </b-tooltip>
                                 </div>
                             </b-table-column>
@@ -264,6 +272,20 @@ export default {
             this.errors = {};
 
 
+        },
+
+        setActive(data_id){
+            axios.post('/set-active-ay/' + data_id).then(res=>{
+                if(res.data.status === 'success'){
+                    this.$buefy.dialog.alert({
+                        title: 'Active!',
+                        message: 'Successfully set to active.',
+                        type: 'is-success'
+                    });
+                    this.loadAsyncData()
+                }
+                
+            })
         },
 
 

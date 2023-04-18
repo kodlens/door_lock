@@ -7752,6 +7752,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -7832,9 +7840,24 @@ __webpack_require__.r(__webpack_exports__);
       this.fields = {};
       this.errors = {};
     },
+    setActive: function setActive(data_id) {
+      var _this2 = this;
+
+      axios.post('/set-active-ay/' + data_id).then(function (res) {
+        if (res.data.status === 'success') {
+          _this2.$buefy.dialog.alert({
+            title: 'Active!',
+            message: 'Successfully set to active.',
+            type: 'is-success'
+          });
+
+          _this2.loadAsyncData();
+        }
+      });
+    },
     //alert box ask for deletion
     confirmDelete: function confirmDelete(delete_id) {
-      var _this2 = this;
+      var _this3 = this;
 
       this.$buefy.dialog.confirm({
         title: 'DELETE!',
@@ -7843,32 +7866,32 @@ __webpack_require__.r(__webpack_exports__);
         cancelText: 'Cancel',
         confirmText: 'Delete',
         onConfirm: function onConfirm() {
-          return _this2.deleteSubmit(delete_id);
+          return _this3.deleteSubmit(delete_id);
         }
       });
     },
     //execute delete after confirming
     deleteSubmit: function deleteSubmit(delete_id) {
-      var _this3 = this;
+      var _this4 = this;
 
       axios["delete"]('/academic-years/' + delete_id).then(function (res) {
-        _this3.loadAsyncData();
+        _this4.loadAsyncData();
       })["catch"](function (err) {
         if (err.response.status === 422) {
-          _this3.errors = err.response.data.errors;
+          _this4.errors = err.response.data.errors;
         }
       });
     },
     //update code here
     getData: function getData(data_id) {
-      var _this4 = this;
+      var _this5 = this;
 
       this.clearFields();
       this.global_id = data_id;
       this.isModalCreate = true; //nested axios for getting the address 1 by 1 or request by request
 
       axios.get('/academic-years/' + data_id).then(function (res) {
-        _this4.fields = res.data;
+        _this5.fields = res.data;
       });
     },
     clearFields: function clearFields() {
@@ -7877,63 +7900,63 @@ __webpack_require__.r(__webpack_exports__);
       };
     },
     submit: function submit() {
-      var _this5 = this;
+      var _this6 = this;
 
       if (this.global_id > 0) {
         //update
         axios.put('/academic-years/' + this.global_id, this.fields).then(function (res) {
           if (res.data.status === 'updated') {
-            _this5.$buefy.dialog.alert({
+            _this6.$buefy.dialog.alert({
               title: 'UPDATED!',
               message: 'Successfully updated.',
               type: 'is-success',
               onConfirm: function onConfirm() {
-                _this5.loadAsyncData();
+                _this6.loadAsyncData();
 
-                _this5.clearFields();
+                _this6.clearFields();
 
-                _this5.global_id = 0;
-                _this5.isModalCreate = false;
+                _this6.global_id = 0;
+                _this6.isModalCreate = false;
               }
             });
           }
         })["catch"](function (err) {
           if (err.response.status === 422) {
-            _this5.errors = err.response.data.errors;
+            _this6.errors = err.response.data.errors;
           }
         });
       } else {
         //INSERT HERE
         axios.post('/academic-years', this.fields).then(function (res) {
           if (res.data.status === 'saved') {
-            _this5.$buefy.dialog.alert({
+            _this6.$buefy.dialog.alert({
               title: 'SAVED!',
               message: 'Successfully saved.',
               type: 'is-success',
               confirmText: 'OK',
               onConfirm: function onConfirm() {
-                _this5.isModalCreate = false;
+                _this6.isModalCreate = false;
 
-                _this5.loadAsyncData();
+                _this6.loadAsyncData();
 
-                _this5.clearFields();
+                _this6.clearFields();
 
-                _this5.global_id = 0;
+                _this6.global_id = 0;
               }
             });
           }
         })["catch"](function (err) {
           if (err.response.status === 422) {
-            _this5.errors = err.response.data.errors;
+            _this6.errors = err.response.data.errors;
           }
         });
       }
     },
     loadSemesters: function loadSemesters() {
-      var _this6 = this;
+      var _this7 = this;
 
       axios.get('/load-semesters').then(function (res) {
-        _this6.semesters = res.data;
+        _this7.semesters = res.data;
       });
     }
   },
@@ -38424,6 +38447,29 @@ var render = function () {
                     }),
                     _vm._v(" "),
                     _c("b-table-column", {
+                      attrs: { field: "active", label: "Active", centered: "" },
+                      scopedSlots: _vm._u([
+                        {
+                          key: "default",
+                          fn: function (props) {
+                            return [
+                              props.row.active === 1
+                                ? _c("b-icon", {
+                                    attrs: {
+                                      icon: "check-bold",
+                                      type: "is-success",
+                                    },
+                                  })
+                                : _c("b-icon", {
+                                    attrs: { icon: "minus-circle-outline" },
+                                  }),
+                            ]
+                          },
+                        },
+                      ]),
+                    }),
+                    _vm._v(" "),
+                    _c("b-table-column", {
                       attrs: { label: "Action" },
                       scopedSlots: _vm._u([
                         {
@@ -38484,6 +38530,35 @@ var render = function () {
                                     ],
                                     1
                                   ),
+                                  _vm._v(" "),
+                                  props.row.active === 0
+                                    ? _c(
+                                        "b-tooltip",
+                                        {
+                                          attrs: {
+                                            label: "Active",
+                                            type: "is-danger",
+                                          },
+                                        },
+                                        [
+                                          _c("b-button", {
+                                            staticClass:
+                                              "button is-small is-info mr-1",
+                                            attrs: {
+                                              "icon-right": "check-bold",
+                                            },
+                                            on: {
+                                              click: function ($event) {
+                                                return _vm.setActive(
+                                                  props.row.ay_id
+                                                )
+                                              },
+                                            },
+                                          }),
+                                        ],
+                                        1
+                                      )
+                                    : _vm._e(),
                                 ],
                                 1
                               ),

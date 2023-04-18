@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Administrator;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\AcademicYear;
+use Illuminate\Support\Facades\DB;
 
 class AcademicYearController extends Controller
 {
@@ -30,6 +31,15 @@ class AcademicYearController extends Controller
             ->paginate($req->perpage);
 
         return $data;
+    }
+
+    public function setActive($id){
+        DB::statement('UPDATE academic_years SET active = 0');
+        DB::statement('UPDATE academic_years SET active = 1 WHERE ay_id = ?', [$id]);
+
+        return response()->json([
+            'status' => 'success'
+        ], 200);
     }
 
     public function store(Request $req){

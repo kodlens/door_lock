@@ -94,6 +94,9 @@ Route::middleware(['auth'])->group(function() {
 
     Route::resource('/academic-years', App\Http\Controllers\Administrator\AcademicYearController::class);
     Route::get('/get-academic-years', [App\Http\Controllers\Administrator\AcademicYearController::class, 'getAcademicYears']);
+    Route::post('/set-active-ay/{ayId}', [App\Http\Controllers\Administrator\AcademicYearController::class, 'setActive']);
+
+    
 
     Route::resource('/logs', App\Http\Controllers\Administrator\AppLogController::class);
     Route::get('/get-logs', [App\Http\Controllers\Administrator\AppLogController::class, 'getLogs']);
