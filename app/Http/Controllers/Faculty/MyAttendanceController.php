@@ -204,6 +204,7 @@ class MyAttendanceController extends Controller
         
         $data = [];
         $ids = [];
+
         foreach($req->students as $std){
             
             //closure
@@ -219,23 +220,18 @@ class MyAttendanceController extends Controller
                 return $flag;
             };
 
-            array_push($ids, $std['attendance_student_id']);
-
-            array_push($data, 
-            [
-                'student_id' => $std['student_id'],
-                'student_lname' => $std['student_lname'],
-                'student_fname' => $std['student_fname'],
-                'student_mname' => $std['student_mname'],
-                'student_suffix' => $std['student_suffix'],
-                'student_sex' => $std['student_sex'],
-                'student_contact_no' => $std['student_contact_no'],
-                'is_present' => $isPresent(),
-            ]);
+            AttendanceStudent::where('attendance_student_id', $std['attendance_student_id'])
+                ->update([
+                    'student_id' => $std['student_id'],
+                    'student_lname' => $std['student_lname'],
+                    'student_fname' => $std['student_fname'],
+                    'student_mname' => $std['student_mname'],
+                    'student_suffix' => $std['student_suffix'],
+                    'student_sex' => $std['student_sex'],
+                    'student_contact_no' => $std['student_contact_no'],
+                    'is_present' => $isPresent(),
+                ]);
         }
-
-        AttendanceStudent::whereIn('attendance_student_id', $ids)
-            ->update($data);
 
         return response()->json([
             'status' => 'updated'
@@ -247,7 +243,19 @@ class MyAttendanceController extends Controller
 
 
     
+    public function printAttendance($id){
 
+        $user = Auth::user();
+        $ay = AcademicYear::where('active', 1)->first();
+        $schedules = Schedule::where('user_id', $user->user_id)
+            ->get();
+        $attendance = Attendance::with(['student_attendance', 'schedule', 'ay'])->find($id);
+
+        //return $attendance;
+
+        return view('faculty.print-attendance')
+            ->with('attendance', $attendance);
+    }
     //delete attendance
     public function destroy($id){
 
