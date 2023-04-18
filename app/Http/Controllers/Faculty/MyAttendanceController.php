@@ -75,7 +75,8 @@ class MyAttendanceController extends Controller
         //return $req;
 
         $ndate = date('Y-m-d', strtotime($req->attendance_date));
-        $userId = Auth::user()->user_id;
+        $user = Auth::user();
+        $userId = $user->user_id;
         $ay = AcademicYear::where('active', 1)->first();
 
         //query if date already have data in databsae

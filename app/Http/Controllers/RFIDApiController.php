@@ -46,7 +46,8 @@ class RFIDApiController extends Controller
 
             AppLog::create([
                 'user' => $name,
-                'activity' => $rfid . ' of ' . $name . ' was swiped and accepted. Door is unlock.'
+                'activity' => $rfid . ' of ' . $name . ' was swiped and accepted. Door is unlock.',
+                'role' => $user->role
             ]);
 
             return 1;
@@ -54,7 +55,8 @@ class RFIDApiController extends Controller
 
             AppLog::create([
                 'user' => $name,
-                'activity' => $rfid . ' of ' . $name . ' was swiped and rejected.'
+                'activity' => $rfid . ' of ' . $name . ' was swiped and rejected.',
+                'role' => $user->role
             ]);
 
             return 0;
