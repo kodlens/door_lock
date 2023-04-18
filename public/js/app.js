@@ -10547,7 +10547,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -40018,11 +40017,18 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", [
       _c("div", { staticClass: "w-hero" }, [
-        _c("div", { staticClass: "w-hero-text" }, [
-          _vm._v(
-            "\n            WELCOME TO DOOR LOCK SYSTEM USING RFID\n        "
-          ),
-        ]),
+        _c(
+          "div",
+          {
+            staticClass: "w-hero-text",
+            staticStyle: { "text-align": "center" },
+          },
+          [
+            _vm._v(
+              "\n            WELCOME TO LABORATORY ACCESS CONTROL USING RFID BASED DOOR LOCK\n        "
+            ),
+          ]
+        ),
       ]),
     ])
   },
@@ -42689,10 +42695,6 @@ var render = function () {
                                     { attrs: { value: "FACULTY" } },
                                     [_vm._v("FACULTY")]
                                   ),
-                                  _vm._v(" "),
-                                  _c("option", { attrs: { value: "DEAN" } }, [
-                                    _vm._v("DEAN"),
-                                  ]),
                                 ]
                               ),
                             ],

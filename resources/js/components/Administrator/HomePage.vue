@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="w-hero">
-            <div class="w-hero-text">
-                WELCOME TO DOOR LOCK SYSTEM USING RFID
+            <div class="w-hero-text" style="text-align: center;">
+                WELCOME TO LABORATORY ACCESS CONTROL USING RFID BASED DOOR LOCK
             </div>
         </div>
     </div>

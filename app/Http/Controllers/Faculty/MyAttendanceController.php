@@ -44,7 +44,6 @@ class MyAttendanceController extends Controller
 
 
 
-
     public function getStudentList(Request $req){
 
         $schedId = $req->scheduleid;
