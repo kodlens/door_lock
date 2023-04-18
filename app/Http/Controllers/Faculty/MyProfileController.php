@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Auth;
 
+use App\Models\AppLog;
+
 class MyProfileController extends Controller
 {
     //
@@ -32,6 +34,12 @@ class MyProfileController extends Controller
         $user = User::find($id);
         $user->password = Hash::make($req->password);
         $user->save();
+
+        AppLog::create([
+            'user' => $user->lname . ', ' . $user->lname . ' ' . $user->mname,
+            'activity' => 'Password was changed.',
+            'role' => $user->role
+        ]);
 
         return response()->json([
             'status' => 'changed'
@@ -59,6 +67,14 @@ class MyProfileController extends Controller
         $user->contact_no = $req->contact_no;
 
         $user->save();
+
+
+        AppLog::create([
+            'user' => $user->lname . ', ' . $user->lname . ' ' . $user->mname,
+            'activity' => 'Updated his profile.',
+            'role' => $user->role
+        ]);
+
 
         return response()->json([
             'status' => 'updated'

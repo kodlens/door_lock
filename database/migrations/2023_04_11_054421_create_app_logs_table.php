@@ -18,6 +18,7 @@ class CreateAppLogsTable extends Migration
 
             $table->unsignedBigInteger('faculty_id')->default(0);
             $table->string('user')->nullable();
+            $table->string('role')->nullable();
             $table->text('activity')->nullable();
 
             $table->timestamps();

@@ -38,8 +38,12 @@
                                 {{ props.row.user }}
                             </b-table-column>
 
-                             <b-table-column field="activity" label="Activity" sortable v-slot="props">
+                            <b-table-column field="activity" label="Activity" sortable v-slot="props">
                                 {{ props.row.activity }}
+                            </b-table-column>
+
+                            <b-table-column field="role" label="System Role" sortable v-slot="props">
+                                {{ props.row.role }}
                             </b-table-column>
 
                             <b-table-column field="date_created" label="Date Created" sortable v-slot="props">

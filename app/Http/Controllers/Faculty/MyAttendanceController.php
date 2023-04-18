@@ -11,6 +11,7 @@ use Auth;
 use App\Models\ScheduleStudentList;
 use App\Models\AttendanceStudent;
 use Illuminate\Support\Facades\DB;
+use App\Models\AppLog;
 
 
 class MyAttendanceController extends Controller
@@ -144,6 +145,13 @@ class MyAttendanceController extends Controller
            
         });
 
+        AppLog::create([
+            'user' => $user->lname . ', ' . $user->lname . ' ' . $user->mname,
+            'activity' => 'Saved student attendance.',
+            'role' => $user->role
+        ]);
+
+
         return response()->json([
             'status' => 'saved'
         ], 200);
@@ -261,6 +269,11 @@ class MyAttendanceController extends Controller
 
         Attendance::destroy($id);
 
+        AppLog::create([
+            'user' => $user->lname . ', ' . $user->lname . ' ' . $user->mname,
+            'activity' => 'Deleted the attendance.',
+            'role' => $user->role
+        ]);
         return response()->json([
             'status' => 'deleted'
         ], 200);

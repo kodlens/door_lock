@@ -12,6 +12,6 @@ class AppLog extends Model
 
     protected $table = 'app_logs';
     protected $primaryKey = 'id';
-    protected $fillable = ['faculty_id', 'user', 'activity'];
+    protected $fillable = ['faculty_id', 'user', 'activity', 'role'];
 
 }
