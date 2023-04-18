@@ -25,7 +25,7 @@ use App\Models\DentistSchedule;
 
 Route::get('/', function () {
     return view('login');
-});
+})->middleware('guest');
 
 
 
@@ -95,6 +95,13 @@ Route::middleware(['auth'])->group(function() {
     Route::resource('/academic-years', App\Http\Controllers\Administrator\AcademicYearController::class);
     Route::get('/get-academic-years', [App\Http\Controllers\Administrator\AcademicYearController::class, 'getAcademicYears']);
 
+    Route::resource('/logs', App\Http\Controllers\Administrator\AppLogController::class);
+    Route::get('/get-logs', [App\Http\Controllers\Administrator\AppLogController::class, 'getLogs']);
+
+
+
+
+
 }); //ADMINISTRATOR
 
 
@@ -131,6 +138,8 @@ Route::middleware(['auth', 'faculty'])->group(function() {
 
 
     Route::resource('/my-profile', App\Http\Controllers\Faculty\MyProfileController::class);
+    Route::post('/reset-my-password', [App\Http\Controllers\Faculty\MyProfileController::class, 'resetPassword']);
+    Route::post('/update-my-profile', [App\Http\Controllers\Faculty\MyProfileController::class, 'updateProfile']);
 
 
     Route::get('/my-schedule-student-attendance/{sId}', [App\Http\Controllers\Faculty\MyScheduleStudentAttendanceController::class, 'index']);

@@ -25,7 +25,11 @@ class RedirectIfAuthenticated
             if (Auth::guard($guard)->check()) {
                 $user = Auth::user();
                 if($user->role === 'ADMINISTRATOR'){
-                    return redirect('/admin-home');
+                    return redirect('/home');
+                }
+
+                if($user->role === 'FACULTY'){
+                    return redirect('/faculty-home');
                 }
                
                 //return redirect(RouteServiceProvider::HOME);

@@ -123,11 +123,11 @@
                                         </b-button>
                                     </b-tooltip>
 
-                                     <b-tooltip label="Attendance" type="is-primary">
+                                     <!-- <b-tooltip label="Attendance" type="is-primary">
                                         <b-button class="button is-small mr-1" tag="a" icon-right="list-status" 
                                             @click="studentAttendance(props.row.schedule_id)">
                                         </b-button>
-                                    </b-tooltip>
+                                    </b-tooltip> -->
                                     <!-- <b-tooltip label="Delete" type="is-danger">
                                         <b-button class="button is-small mr-1" icon-right="delete" @click="confirmDelete(props.row.user_id)"></b-button>
                                     </b-tooltip>

@@ -64,6 +64,11 @@
                     class="{{ (request()->is('users*')) ? 'active' : '' }}">
                     Users
                 </b-navbar-item>
+
+                <b-navbar-item href="/logs"
+                    class="{{ (request()->is('logs*')) ? 'active' : '' }}">
+                    Logs
+                </b-navbar-item>
                 
                 <!-- <b-navbar-item href="/about">
                     ABOUT

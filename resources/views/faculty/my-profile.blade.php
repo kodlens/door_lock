@@ -1,6 +1,7 @@
 @extends('layouts.faculty')
 
 @section('content')
-    <my-profile></my-profile>
+    <my-profile
+        prop-user='@json($user)'></my-profile>
 @endsection
 

@@ -21,7 +21,9 @@ class User extends Authenticatable
     protected $primaryKey = 'user_id';
     protected $fillable = [
         'rfid',
-        'username', 'lname', 'fname', 'mname', 'sex',
+        'username', 'lname', 'fname', 'mname', 
+        'suffix',
+        'sex',
         'contact_no', 'role', 'card_type',
         'password',
     ];
