@@ -459,7 +459,7 @@ export default{
             this.fields.rfid = '';
 
             //change this IP to the IP of the Scanner
-            axios.get('http://192.168.0.45/scan').then(res=>{
+            axios.get('http://192.168.254.40/scan').then(res=>{
                 //console.log(res.data);
                 this.fields.rfid = res.data;
                 this.rfid.type = 'is-success'

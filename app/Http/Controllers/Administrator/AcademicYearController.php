@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\AcademicYear;
 use Illuminate\Support\Facades\DB;
+use App\Models\AppLog;
 
 class AcademicYearController extends Controller
 {

@@ -1,5 +1,5 @@
 /*
- *  Created by TheCircuit
+ *  RFID Reader
 */
 
 #define SS_PIN 2  //D4
@@ -10,16 +10,16 @@
 #include <MFRC522.h>
 
 
-//const char* ssid="PLDTHOMEFIBR8scFm";   //Put your wifi network name here
-//const char* password = "PLDTWIFImsn5e";   //Put your wifi password here
+//const char* ssid="doorlock";   //Put your wifi network name here
+//const char* password = "1234-1234";   //Put your wifi password here
 
 
-const char* ssid="annateah";   //Put your wifi network name here
-const char* password = "11223344";   //Put your wifi password here
+const char* ssid="doorlock";   //Put your wifi network name here
+const char* password = "1234-1234";   //Put your wifi password here
 
-IPAddress local_ip(192,168,0,45);
+IPAddress local_ip(192,168,254,40);
 IPAddress subnet(255,255,255,0);
-IPAddress gateway(192,168,0,1);
+IPAddress gateway(192,168,254,1);
 IPAddress primaryDNS(8,8,8,8); //optional
 IPAddress secondaryDNS(8,8,4,4); //optional
 
@@ -34,6 +34,7 @@ String content= "";
 void setup() 
 {
   Serial.begin(9600);   // Initiate a serial communication
+  delay(100);
   SPI.begin();      // Initiate  SPI bus
   mfrc522.PCD_Init();   // Initiate MFRC522
 

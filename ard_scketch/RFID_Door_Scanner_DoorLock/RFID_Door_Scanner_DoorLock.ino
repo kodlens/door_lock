@@ -1,5 +1,6 @@
 /*
- *  Created by TheCircuit
+ *  Door Scanner
+ *  Unlock/Lock Door
 */
 #define MOTORPIN 16 //D0
 #define SS_PIN 2  //D4
@@ -16,17 +17,17 @@ Servo servo;
 
 
 //here are the credentials to fill out before loading to microcontroller
-const char* ssid="annateah";   //Put your wifi network name here
-const char* password = "11223344";   //Put your wifi password here
+const char* ssid="doorlock";   //Put your wifi network name here
+const char* password = "1234-1234";   //Put your wifi password here
 String content= "";
-String serverName = "http://192.168.0.10/rfid"; //server/host address
+String serverName = "http://192.168.254.10/rfid"; //server/host address
 String doorId = "1"; //door id, must be same from database or should i use ip or mac
 
 
 
-IPAddress local_ip(192,168,0,46);
+IPAddress local_ip(192,168,254,46);
 IPAddress subnet(255,255,255,0);
-IPAddress gateway(192,168,0,1);
+IPAddress gateway(192,168,254,1);
 IPAddress primaryDNS(8,8,8,8); //optional
 IPAddress secondaryDNS(8,8,4,4); //optional
 
@@ -72,7 +73,9 @@ void setup()
     Serial.print(".");          
   }
   Serial.println("Connected. \nDevice IP Address: ");
-  Serial.print(WiFi.localIP()); 
+  Serial.println(WiFi.localIP()); 
+  Serial.println("Connected. \nMac Address: ");
+  Serial.println(WiFi.macAddress()); 
 }
 
 
