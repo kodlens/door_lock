@@ -25,7 +25,7 @@ String doorId = "1"; //door id, must be same from database or should i use ip or
 
 
 
-IPAddress local_ip(192,168,254,46);
+IPAddress local_ip(192,168,254,45);
 IPAddress subnet(255,255,255,0);
 IPAddress gateway(192,168,254,1);
 IPAddress primaryDNS(8,8,8,8); //optional

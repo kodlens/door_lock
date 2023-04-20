@@ -73,6 +73,7 @@ Route::middleware(['auth'])->group(function() {
 
     Route::resource('/users', App\Http\Controllers\Administrator\UserController::class);
     Route::get('/get-users',[App\Http\Controllers\Administrator\UserController::class, 'getUsers']);
+    Route::post('/user-reset-password/{id}',[App\Http\Controllers\Administrator\UserController::class, 'resetPassword']);
 
 
     Route::resource('/faculty', App\Http\Controllers\Administrator\FacultyController::class);
