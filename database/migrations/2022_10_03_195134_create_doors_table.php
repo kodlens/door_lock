@@ -17,6 +17,7 @@ class CreateDoorsTable extends Migration
             $table->id('door_id');
             $table->string('door_name')->nullable();
             $table->string('mac_add')->nullable();
+            
             $table->timestamps();
         });
     }

@@ -20,6 +20,8 @@ class CreateAppLogsTable extends Migration
             $table->string('user')->nullable();
             $table->string('role')->nullable();
             $table->text('activity')->nullable();
+            $table->string('door')->nullable();
+            $table->string('log_type')->nullable();
 
             $table->timestamps();
         });

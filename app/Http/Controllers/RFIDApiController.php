@@ -38,16 +38,25 @@ class RFIDApiController extends Controller
             ->where('c.mac_add', $req->doormac)
             ->where('a.ay_id', $ay->ay_id)
             ->where($day, 1);
-
+        $count = $data->count();
+        $data = $data->first();
+        
         //return $data;
+
+        //get door description
+        $doorDesc = $data->door_name . ' MAC(' . $data->mac_add . ')';
+
+        //get user;
         $name = $user->lname . ', ' . $user->lname . ' ' . $user->mname;
 
-        if($data->count() > 0){
+        if($count > 0){
 
             AppLog::create([
                 'user' => $name,
                 'activity' => $rfid . ' of ' . $name . ' was swiped and accepted. Door is unlock.',
-                'role' => $user->role
+                'role' => $user->role,
+                'door' => $doorDesc,
+                'log_type' => 'ATTENDANCE'
             ]);
 
             return 1;
@@ -56,7 +65,9 @@ class RFIDApiController extends Controller
             AppLog::create([
                 'user' => $name,
                 'activity' => $rfid . ' of ' . $name . ' was swiped and rejected.',
-                'role' => $user->role
+                'role' => $user->role,
+                'door' => $doorDesc,
+                'log_type' => ''
             ]);
 
             return 0;

@@ -17,7 +17,8 @@
                                         <b-select v-model="fields.ay_id" expanded>
                                             <option v-for="(item, index) in academic_years"
                                                 :key="index" 
-                                                :value="item.ay_id">{{ item.ay_code }} - {{ item.ay_desc }}</option>
+                                                :value="item.ay_id">{{ item.ay_code }} - {{ item.ay_desc }}
+                                            </option>
                                         </b-select>
                                     </b-field>
                                 </div>
@@ -386,6 +387,9 @@ export default{
 
         loadAcademicYears(){
             this.academic_years = JSON.parse(this.propAcademicYears);
+
+            //this will return the active academic year
+            this.fields.ay_id = this.academic_years.filter(item => item.active === 1)[0].ay_id;
         },
 
         initData(){

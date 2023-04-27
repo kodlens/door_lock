@@ -22,4 +22,13 @@ class AppLogController extends Controller
 
         return $data;
     }
+
+    public function getAttendanceLogs(Request $req){
+        $sort = explode('.', $req->sort_by);
+
+        $data = AppLog::where('log_type', 'ATTENDANCE')->orderBy($sort[0], $sort[1])
+            ->paginate($req->perpage);
+
+        return $data;
+    }
 }

@@ -22,12 +22,9 @@ class DoorSeeder extends Seeder
             ],
             [
                 'door_name' => 'DOOR 2',
-                'mac_add' => ''
+                'mac_add' => '48:55:19:C8:C2:B8'
             ],
-            [
-                'door_name' => 'DOOR 3',
-                'mac_add' => ''
-            ],
+       
         ];
 
         \App\Models\Door::insertOrIgnore($data);

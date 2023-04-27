@@ -9057,17 +9057,85 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
       logs: [],
       data: [],
+      dataAttendance: [],
       total: 0,
+      totalAttendance: 0,
+      loadingAttendance: false,
       loading: false,
+      sortFieldAttendance: 'id',
       sortField: 'id',
+      sortOrderAttendance: 'desc',
       sortOrder: 'desc',
+      pageAttendance: 1,
       page: 1,
+      perPageAttendance: 20,
       perPage: 20,
+      defaultSortDirectionAttendance: 'asc',
       defaultSortDirection: 'asc'
     };
   },
@@ -9114,10 +9182,55 @@ __webpack_require__.r(__webpack_exports__);
     },
     setPerPage: function setPerPage() {
       this.loadAsyncData();
+    },
+    //FOR ATTENDANCE ASYNC
+    loadAsyncDataAttendance: function loadAsyncDataAttendance() {
+      var _this2 = this;
+
+      var params = ["sort_by=".concat(this.sortFieldAttendance, ".").concat(this.sortOrderAttendance), "perpage=".concat(this.perPageAttendance), "page=".concat(this.pageAttendance)].join('&');
+      this.loadingAttendance = true;
+      axios.get("/get-attendance-logs?".concat(params)).then(function (_ref2) {
+        var data = _ref2.data;
+        _this2.dataAttendance = [];
+        var currentTotal = data.totalAttendance;
+
+        if (data.totalAttendance / _this2.perPageAttendance > 1000) {
+          currentTotal = _this2.perPageAttendance * 1000;
+        }
+
+        _this2.totalAttendance = currentTotal;
+        data.data.forEach(function (item) {
+          //item.release_date = item.release_date ? item.release_date.replace(/-/g, '/') : null
+          _this2.dataAttendance.push(item);
+        });
+        _this2.loadingAttendance = false;
+      })["catch"](function (error) {
+        _this2.dataAttendance = [];
+        _this2.totalAttendance = 0;
+        _this2.loadingAttendance = false;
+        throw error;
+      });
+    },
+
+    /*
+    * Handle page-change event
+    */
+    onPageChangeAttendance: function onPageChangeAttendance(page) {
+      this.pageAttendance = page;
+      this.loadAsyncDataAttendance();
+    },
+    onSortAttendance: function onSortAttendance(field, order) {
+      this.sortFieldAttendance = field;
+      this.sortOrderAttendance = order;
+      this.loadAsyncDataAttendance();
+    },
+    setPerPageAttendance: function setPerPageAttendance() {
+      this.loadAsyncDataAttendance();
     }
   },
   mounted: function mounted() {
     this.loadAsyncData();
+    this.loadAsyncDataAttendance();
   }
 });
 
@@ -9633,6 +9746,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   props: {
     propAcademicYears: {
@@ -9821,7 +9935,11 @@ __webpack_require__.r(__webpack_exports__);
       this.fields.contact_no = "03287238";
     },
     loadAcademicYears: function loadAcademicYears() {
-      this.academic_years = JSON.parse(this.propAcademicYears);
+      this.academic_years = JSON.parse(this.propAcademicYears); //this will return the active academic year
+
+      this.fields.ay_id = this.academic_years.filter(function (item) {
+        return item.active === 1;
+      })[0].ay_id;
     },
     initData: function initData() {
       if (this.propId > 0) {
@@ -33872,7 +33990,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.panel-container[data-v-f639ce08]{\n    max-width: 720px;\n    margin: 30px auto;\n}\n.panel-header[data-v-f639ce08]{\n    border-bottom: 1px solid blue;\n    padding: 15px;\n}\n.panel-text-header[data-v-f639ce08]{\n    font-weight: bold;\n}\n.panel-body[data-v-f639ce08]{\n    padding: 25px;\n}\n.panel-footer[data-v-f639ce08]{\n    padding: 25px;\n    border-top: 1px solid blue;\n}\n\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.panel-header[data-v-f639ce08]{\n    border-bottom: 1px solid blue;\n    padding: 15px;\n}\n.panel-text-header[data-v-f639ce08]{\n    font-weight: bold;\n}\n.panel-body[data-v-f639ce08]{\n    padding: 15px;\n}\n.panel-footer[data-v-f639ce08]{\n    padding: 25px;\n    border-top: 1px solid blue;\n}\n\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -40242,154 +40360,397 @@ var render = function () {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("div", { staticClass: "panel-container" }, [
-      _c("div", { staticClass: "panel" }, [
-        _vm._m(0),
-        _vm._v(" "),
+    _c("div", { staticClass: "columns is-centered m-4" }, [
+      _c("div", { staticClass: "column is-10" }, [
         _c(
           "div",
-          { staticClass: "panel-body" },
+          { staticClass: "panel" },
           [
             _c(
-              "b-table",
-              {
-                attrs: {
-                  data: _vm.data,
-                  loading: _vm.loading,
-                  paginated: "",
-                  "backend-pagination": "",
-                  total: _vm.total,
-                  "pagination-rounded": true,
-                  "per-page": _vm.perPage,
-                  "aria-next-label": "Next page",
-                  "aria-previous-label": "Previous page",
-                  "aria-page-label": "Page",
-                  "aria-current-label": "Current page",
-                  "backend-sorting": "",
-                  "default-sort-direction": _vm.defaultSortDirection,
-                },
-                on: { "page-change": _vm.onPageChange, sort: _vm.onSort },
-              },
+              "b-tabs",
               [
-                _c("b-table-column", {
-                  attrs: { field: "id", label: "ID", sortable: "" },
-                  scopedSlots: _vm._u([
-                    {
-                      key: "default",
-                      fn: function (props) {
-                        return [
-                          _vm._v(
-                            "\n                            " +
-                              _vm._s(props.row.id) +
-                              "\n                        "
-                          ),
-                        ]
-                      },
-                    },
-                  ]),
-                }),
+                _c(
+                  "b-tab-item",
+                  { attrs: { label: "Activity Logs", icon: "view-list" } },
+                  [
+                    _c(
+                      "div",
+                      { staticClass: "panel-body" },
+                      [
+                        _c(
+                          "b-table",
+                          {
+                            attrs: {
+                              data: _vm.data,
+                              loading: _vm.loading,
+                              paginated: "",
+                              "backend-pagination": "",
+                              total: _vm.total,
+                              "pagination-rounded": true,
+                              "per-page": _vm.perPage,
+                              "aria-next-label": "Next page",
+                              "aria-previous-label": "Previous page",
+                              "aria-page-label": "Page",
+                              "aria-current-label": "Current page",
+                              "backend-sorting": "",
+                              "default-sort-direction":
+                                _vm.defaultSortDirection,
+                            },
+                            on: {
+                              "page-change": _vm.onPageChange,
+                              sort: _vm.onSort,
+                            },
+                          },
+                          [
+                            _c("b-table-column", {
+                              attrs: { field: "id", label: "ID", sortable: "" },
+                              scopedSlots: _vm._u([
+                                {
+                                  key: "default",
+                                  fn: function (props) {
+                                    return [
+                                      _vm._v(
+                                        "\n                                    " +
+                                          _vm._s(props.row.id) +
+                                          "\n                                "
+                                      ),
+                                    ]
+                                  },
+                                },
+                              ]),
+                            }),
+                            _vm._v(" "),
+                            _c("b-table-column", {
+                              attrs: {
+                                field: "user",
+                                label: "User",
+                                sortable: "",
+                              },
+                              scopedSlots: _vm._u([
+                                {
+                                  key: "default",
+                                  fn: function (props) {
+                                    return [
+                                      _vm._v(
+                                        "\n                                    " +
+                                          _vm._s(props.row.user) +
+                                          "\n                                "
+                                      ),
+                                    ]
+                                  },
+                                },
+                              ]),
+                            }),
+                            _vm._v(" "),
+                            _c("b-table-column", {
+                              attrs: {
+                                field: "activity",
+                                label: "Activity",
+                                sortable: "",
+                              },
+                              scopedSlots: _vm._u([
+                                {
+                                  key: "default",
+                                  fn: function (props) {
+                                    return [
+                                      _vm._v(
+                                        "\n                                    " +
+                                          _vm._s(props.row.activity) +
+                                          "\n                                "
+                                      ),
+                                    ]
+                                  },
+                                },
+                              ]),
+                            }),
+                            _vm._v(" "),
+                            _c("b-table-column", {
+                              attrs: {
+                                field: "role",
+                                label: "System Role",
+                                sortable: "",
+                              },
+                              scopedSlots: _vm._u([
+                                {
+                                  key: "default",
+                                  fn: function (props) {
+                                    return [
+                                      _vm._v(
+                                        "\n                                    " +
+                                          _vm._s(props.row.role) +
+                                          "\n                                "
+                                      ),
+                                    ]
+                                  },
+                                },
+                              ]),
+                            }),
+                            _vm._v(" "),
+                            _c("b-table-column", {
+                              attrs: {
+                                field: "door",
+                                label: "Door",
+                                sortable: "",
+                              },
+                              scopedSlots: _vm._u([
+                                {
+                                  key: "default",
+                                  fn: function (props) {
+                                    return [
+                                      props.row.door
+                                        ? _c("span", [
+                                            _vm._v(_vm._s(props.row.door)),
+                                          ])
+                                        : _vm._e(),
+                                    ]
+                                  },
+                                },
+                              ]),
+                            }),
+                            _vm._v(" "),
+                            _c("b-table-column", {
+                              attrs: {
+                                field: "log_type",
+                                label: "Log Type",
+                                sortable: "",
+                              },
+                              scopedSlots: _vm._u([
+                                {
+                                  key: "default",
+                                  fn: function (props) {
+                                    return [
+                                      props.row.log_type
+                                        ? _c("span", [
+                                            _vm._v(_vm._s(props.row.log_type)),
+                                          ])
+                                        : _vm._e(),
+                                    ]
+                                  },
+                                },
+                              ]),
+                            }),
+                            _vm._v(" "),
+                            _c("b-table-column", {
+                              attrs: {
+                                field: "date_created",
+                                label: "Date Created",
+                                sortable: "",
+                              },
+                              scopedSlots: _vm._u([
+                                {
+                                  key: "default",
+                                  fn: function (props) {
+                                    return [
+                                      _vm._v(
+                                        "\n                                    " +
+                                          _vm._s(
+                                            _vm._f("formatDateTime")(
+                                              props.row.created_at
+                                            )
+                                          ) +
+                                          "\n                                "
+                                      ),
+                                    ]
+                                  },
+                                },
+                              ]),
+                            }),
+                          ],
+                          1
+                        ),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "panel-footer" }),
+                  ]
+                ),
                 _vm._v(" "),
-                _c("b-table-column", {
-                  attrs: { field: "user", label: "User", sortable: "" },
-                  scopedSlots: _vm._u([
-                    {
-                      key: "default",
-                      fn: function (props) {
-                        return [
-                          _vm._v(
-                            "\n                            " +
-                              _vm._s(props.row.user) +
-                              "\n                        "
-                          ),
-                        ]
-                      },
-                    },
-                  ]),
-                }),
-                _vm._v(" "),
-                _c("b-table-column", {
-                  attrs: { field: "activity", label: "Activity", sortable: "" },
-                  scopedSlots: _vm._u([
-                    {
-                      key: "default",
-                      fn: function (props) {
-                        return [
-                          _vm._v(
-                            "\n                            " +
-                              _vm._s(props.row.activity) +
-                              "\n                        "
-                          ),
-                        ]
-                      },
-                    },
-                  ]),
-                }),
-                _vm._v(" "),
-                _c("b-table-column", {
-                  attrs: { field: "role", label: "System Role", sortable: "" },
-                  scopedSlots: _vm._u([
-                    {
-                      key: "default",
-                      fn: function (props) {
-                        return [
-                          _vm._v(
-                            "\n                            " +
-                              _vm._s(props.row.role) +
-                              "\n                        "
-                          ),
-                        ]
-                      },
-                    },
-                  ]),
-                }),
-                _vm._v(" "),
-                _c("b-table-column", {
-                  attrs: {
-                    field: "date_created",
-                    label: "Date Created",
-                    sortable: "",
-                  },
-                  scopedSlots: _vm._u([
-                    {
-                      key: "default",
-                      fn: function (props) {
-                        return [
-                          _vm._v(
-                            "\n                            " +
-                              _vm._s(
-                                _vm._f("formatDateTime")(props.row.created_at)
-                              ) +
-                              "\n                        "
-                          ),
-                        ]
-                      },
-                    },
-                  ]),
-                }),
+                _c(
+                  "b-tab-item",
+                  { attrs: { label: "Attendance", icon: "view-list-outline" } },
+                  [
+                    _c(
+                      "div",
+                      { staticClass: "panel-body" },
+                      [
+                        _c(
+                          "b-table",
+                          {
+                            attrs: {
+                              data: _vm.dataAttendance,
+                              loading: _vm.loadingAttendance,
+                              paginated: "",
+                              "backend-pagination": "",
+                              total: _vm.totalAttendance,
+                              "pagination-rounded": true,
+                              "per-page": _vm.perPageAttendance,
+                              "aria-next-label": "Next page",
+                              "aria-previous-label": "Previous page",
+                              "aria-page-label": "Page",
+                              "aria-current-label": "Current page",
+                              "backend-sorting": "",
+                              "default-sort-direction":
+                                _vm.defaultSortDirectionAttendance,
+                            },
+                            on: {
+                              "page-change": _vm.onPageChangeAttendance,
+                              sort: _vm.onSortAttendance,
+                            },
+                          },
+                          [
+                            _c("b-table-column", {
+                              attrs: { field: "id", label: "ID", sortable: "" },
+                              scopedSlots: _vm._u([
+                                {
+                                  key: "default",
+                                  fn: function (props) {
+                                    return [
+                                      _vm._v(
+                                        "\n                                    " +
+                                          _vm._s(props.row.id) +
+                                          "\n                                "
+                                      ),
+                                    ]
+                                  },
+                                },
+                              ]),
+                            }),
+                            _vm._v(" "),
+                            _c("b-table-column", {
+                              attrs: {
+                                field: "name",
+                                label: "Name",
+                                sortable: "",
+                              },
+                              scopedSlots: _vm._u([
+                                {
+                                  key: "default",
+                                  fn: function (props) {
+                                    return [
+                                      _vm._v(
+                                        "\n                                    " +
+                                          _vm._s(props.row.user) +
+                                          "\n                                "
+                                      ),
+                                    ]
+                                  },
+                                },
+                              ]),
+                            }),
+                            _vm._v(" "),
+                            _c("b-table-column", {
+                              attrs: {
+                                field: "activity",
+                                label: "Activity",
+                                sortable: "",
+                              },
+                              scopedSlots: _vm._u([
+                                {
+                                  key: "default",
+                                  fn: function (props) {
+                                    return [
+                                      _vm._v(
+                                        "\n                                    " +
+                                          _vm._s(props.row.activity) +
+                                          "\n                                "
+                                      ),
+                                    ]
+                                  },
+                                },
+                              ]),
+                            }),
+                            _vm._v(" "),
+                            _c("b-table-column", {
+                              attrs: {
+                                field: "role",
+                                label: "System Role",
+                                sortable: "",
+                              },
+                              scopedSlots: _vm._u([
+                                {
+                                  key: "default",
+                                  fn: function (props) {
+                                    return [
+                                      _vm._v(
+                                        "\n                                    " +
+                                          _vm._s(props.row.role) +
+                                          "\n                                "
+                                      ),
+                                    ]
+                                  },
+                                },
+                              ]),
+                            }),
+                            _vm._v(" "),
+                            _c("b-table-column", {
+                              attrs: {
+                                field: "door",
+                                label: "Door",
+                                sortable: "",
+                              },
+                              scopedSlots: _vm._u([
+                                {
+                                  key: "default",
+                                  fn: function (props) {
+                                    return [
+                                      props.row.door
+                                        ? _c("span", [
+                                            _vm._v(_vm._s(props.row.door)),
+                                          ])
+                                        : _vm._e(),
+                                    ]
+                                  },
+                                },
+                              ]),
+                            }),
+                            _vm._v(" "),
+                            _c("b-table-column", {
+                              attrs: {
+                                field: "date_created",
+                                label: "Attendance Date Time",
+                                sortable: "",
+                              },
+                              scopedSlots: _vm._u([
+                                {
+                                  key: "default",
+                                  fn: function (props) {
+                                    return [
+                                      _vm._v(
+                                        "\n                                    " +
+                                          _vm._s(
+                                            _vm._f("formatDateTime")(
+                                              props.row.created_at
+                                            )
+                                          ) +
+                                          "\n                                "
+                                      ),
+                                    ]
+                                  },
+                                },
+                              ]),
+                            }),
+                          ],
+                          1
+                        ),
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c("div", { staticClass: "panel-footer" }),
+                  ]
+                ),
               ],
               1
             ),
           ],
           1
         ),
-        _vm._v(" "),
-        _c("div", { staticClass: "panel-footer" }),
       ]),
     ]),
   ])
 }
-var staticRenderFns = [
-  function () {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "panel-header" }, [
-      _c("div", { staticClass: "panel-text-header" }, [
-        _vm._v("\n                    Acitivy Logs\n                "),
-      ]),
-    ])
-  },
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -40957,7 +41318,8 @@ var render = function () {
                                 _vm._v(
                                   _vm._s(item.ay_code) +
                                     " - " +
-                                    _vm._s(item.ay_desc)
+                                    _vm._s(item.ay_desc) +
+                                    "\n                                        "
                                 ),
                               ]
                             )

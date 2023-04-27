@@ -101,6 +101,7 @@ Route::middleware(['auth'])->group(function() {
 
     Route::resource('/logs', App\Http\Controllers\Administrator\AppLogController::class);
     Route::get('/get-logs', [App\Http\Controllers\Administrator\AppLogController::class, 'getLogs']);
+    Route::get('/get-attendance-logs', [App\Http\Controllers\Administrator\AppLogController::class, 'getAttendanceLogs']);
 
 
 
