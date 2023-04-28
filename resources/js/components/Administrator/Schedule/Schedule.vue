@@ -63,6 +63,24 @@
                             :default-sort-direction="defaultSortDirection"
                             @sort="onSort">
 
+                            <b-field class="file is-primary" :class="{'has-name': !!file}">
+                                <b-upload v-model="file" class="file-label">
+                                    <span class="file-cta">
+                                        <b-icon class="file-icon" icon="upload"></b-icon>
+                                        <span class="file-label">Click to upload</span>
+                                    </span>
+                                    <span class="file-name" v-if="file">
+                                        {{ file.name }}
+                                    </span>
+                                    <b-button :class="btnUpload" 
+                                        icon-right="arrow-right-bold"
+                                        @click="uploadCSV"
+                                        v-if="file"
+                                    >
+                                    </b-button>
+                                </b-upload>
+                            </b-field>  
+
                             <b-table-column field="schedule_id" label="ID" sortable v-slot="props" centered>
                                 {{ props.row.schedule_id }}
                             </b-table-column>
@@ -123,8 +141,6 @@
                     </div>
                 </div><!--close column-->
             </div>
-
-
         </div><!--section div-->
 
 
@@ -132,6 +148,8 @@
 </template>
 
 <script>
+ import Papa from 'papaparse';
+
 export default {
     name: "AppointmentType",
     data(){
@@ -144,6 +162,8 @@ export default {
             page: 1,
             perPage: 5,
             defaultSortDirection: 'asc',
+
+            file: null,
 
 
             global_id : 0,
@@ -162,6 +182,13 @@ export default {
 
             btnClass: {
                 'is-success': true,
+                'button': true,
+                'is-loading':false,
+            },
+
+            btnUpload: {
+                'is-info': true,
+                'is-outlined': true,
                 'button': true,
                 'is-loading':false,
             },
@@ -274,52 +301,16 @@ export default {
             };
         },
 
+        uploadCSV(){
 
-        submit: function(){
-            if(this.global_id > 0){
-                //update
-                axios.put('/doors/'+this.global_id, this.fields).then(res=>{
-                    if(res.data.status === 'updated'){
-                        this.$buefy.dialog.alert({
-                            title: 'UPDATED!',
-                            message: 'Successfully updated.',
-                            type: 'is-success',
-                            onConfirm: () => {
-                                this.loadAsyncData();
-                                this.clearFields();
-                                this.global_id = 0;
-                                this.isModalCreate = false;
-                            }
-                        })
-                    }
-                }).catch(err=>{
-                    if(err.response.status === 422){
-                        this.errors = err.response.data.errors;
-                    }
-                })
-            }else{
-                //INSERT HERE
-                axios.post('/doors', this.fields).then(res=>{
-                    if(res.data.status === 'saved'){
-                        this.$buefy.dialog.alert({
-                            title: 'SAVED!',
-                            message: 'Successfully saved.',
-                            type: 'is-success',
-                            confirmText: 'OK',
-                            onConfirm: () => {
-                                this.isModalCreate = false;
-                                this.loadAsyncData();
-                                this.clearFields();
-                                this.global_id = 0;
-                            }
-                        })
-                    }
-                }).catch(err=>{
-                    if(err.response.status === 422){
-                        this.errors = err.response.data.errors;
-                    }
-                });
-            }
+            Papa.parse(this.file, {
+                header: true,
+                complete: (results) => {
+                console.log(results.data);
+                // do something with the parsed data
+                },
+            });
+
         }
 
     },

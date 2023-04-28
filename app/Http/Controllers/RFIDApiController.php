@@ -47,7 +47,7 @@ class RFIDApiController extends Controller
         $doorDesc = $data->door_name . ' MAC(' . $data->mac_add . ')';
 
         //get user;
-        $name = $user->lname . ', ' . $user->lname . ' ' . $user->mname;
+        $name = $user->lname . ', ' . $user->fname . ' ' . $user->mname;
 
         if($count > 0){
 

@@ -3,7 +3,7 @@
 
         <div class="columns is-centered m-4">
 
-            <div class="column is-10">
+            <div class="column is-8">
                 <div class="panel">
                     <b-tabs>
                         <b-tab-item label="Activity Logs" icon="view-list">
@@ -35,7 +35,7 @@
                                         {{ props.row.user }}
                                     </b-table-column>
     
-                                    <b-table-column field="activity" label="Activity" sortable v-slot="props">
+                                    <b-table-column width="400" field="activity" label="Activity" sortable v-slot="props">
                                         {{ props.row.activity }}
                                     </b-table-column>
     
@@ -89,11 +89,11 @@
                                         {{ props.row.id }}
                                     </b-table-column>
     
-                                    <b-table-column field="name" label="Name" sortable v-slot="props">
+                                    <b-table-column field="user" label="Name" sortable v-slot="props">
                                         {{ props.row.user }}
                                     </b-table-column>
     
-                                    <b-table-column field="activity" label="Activity" sortable v-slot="props">
+                                    <b-table-column width="400" field="activity" label="Activity" sortable v-slot="props">
                                         {{ props.row.activity }}
                                     </b-table-column>
     
