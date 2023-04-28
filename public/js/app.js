@@ -9409,7 +9409,7 @@ __webpack_require__.r(__webpack_exports__);
       sortField: 'schedule_id',
       sortOrder: 'desc',
       page: 1,
-      perPage: 5,
+      perPage: 10,
       defaultSortDirection: 'asc',
       file: null,
       global_id: 0,
@@ -9532,10 +9532,27 @@ __webpack_require__.r(__webpack_exports__);
       };
     },
     uploadCSV: function uploadCSV() {
+      var _this5 = this;
+
+      this.btnUpload['is-loading'] = true;
       papaparse__WEBPACK_IMPORTED_MODULE_0___default().parse(this.file, {
         header: true,
         complete: function complete(results) {
-          console.log(results.data); // do something with the parsed data
+          axios.post('/upload-schedules', results).then(function (res) {
+            if (res.data.status === 'uploaded') {
+              _this5.$buefy.dialog.alert({
+                title: 'Uploaded!',
+                message: 'Uploaded Successfully.',
+                type: 'is-success'
+              });
+            }
+
+            _this5.btnUpload['is-loading'] = false;
+          })["catch"](function (err) {
+            _this5.btnUpload['is-loading'] = false;
+          }); // do something with the parsed data
+
+          _this5.loadAsyncData();
         }
       });
     }
@@ -41027,17 +41044,16 @@ var render = function () {
                                 ),
                               ])
                             : _vm._e(),
-                          _vm._v(" "),
-                          _vm.file
-                            ? _c("b-button", {
-                                class: _vm.btnUpload,
-                                attrs: { "icon-right": "arrow-right-bold" },
-                                on: { click: _vm.uploadCSV },
-                              })
-                            : _vm._e(),
-                        ],
-                        1
+                        ]
                       ),
+                      _vm._v(" "),
+                      _vm.file
+                        ? _c("b-button", {
+                            class: _vm.btnUpload,
+                            attrs: { "icon-right": "arrow-right-bold" },
+                            on: { click: _vm.uploadCSV },
+                          })
+                        : _vm._e(),
                     ],
                     1
                   ),

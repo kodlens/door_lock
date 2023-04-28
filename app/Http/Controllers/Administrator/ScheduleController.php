@@ -167,6 +167,41 @@ class ScheduleController extends Controller
         ],200);
 
     }
+
+
+    public function uploadSchedules(Request $req){
+        //return $req;
+        $arrData = [];
+        foreach($req->data as $item){
+            if($item['schedule_description'] != null || $item['schedule_description' != '']){
+
+                $timeFrom = date("H:i:s", strtotime($item['time_start'])); //convert to date format UNIX
+                $timeTo = date("H:i:s", strtotime($item['time_end'])); //convert to date format UNIX
+
+                array_push($arrData, [
+                    'schedule_description' => $item['schedule_description'],
+                    'user_id' => $item['user_id'],
+                    'door_id' => $item['door_id'],
+                    'ay_id' => $item['ay_id'],
+                    'time_start' => $timeFrom,
+                    'time_end' => $timeTo,
+                    'mon' => $item['mon'],
+                    'tue' => $item['tue'],
+                    'wed' => $item['wed'],
+                    'thu' => $item['thu'],
+                    'fri' => $item['fri'],
+                    'sat' => $item['sat'],
+                    'sun' => $item['sun'],
+                ]);
+            }
+        }
+        
+        Schedule::insert($arrData);
+
+        return response()->json([
+            'status' => 'uploaded'
+        ], 200);
+    }
     
     public function destroy($id){
         Schedule::destroy($id);

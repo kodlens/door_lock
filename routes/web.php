@@ -91,6 +91,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/get-schedules',[App\Http\Controllers\Administrator\ScheduleController::class, 'getSchedules']);
     Route::get('/get-browse-users',[App\Http\Controllers\Administrator\ScheduleController::class, 'getBrowseUsers']);
     Route::get('/get-browse-doors',[App\Http\Controllers\Administrator\ScheduleController::class, 'getBrowseDoors']);
+    Route::post('/upload-schedules',[App\Http\Controllers\Administrator\ScheduleController::class, 'uploadSchedules']);
 
 
     Route::resource('/academic-years', App\Http\Controllers\Administrator\AcademicYearController::class);

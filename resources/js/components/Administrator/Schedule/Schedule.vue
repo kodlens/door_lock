@@ -72,13 +72,13 @@
                                     <span class="file-name" v-if="file">
                                         {{ file.name }}
                                     </span>
-                                    <b-button :class="btnUpload" 
-                                        icon-right="arrow-right-bold"
-                                        @click="uploadCSV"
-                                        v-if="file"
-                                    >
-                                    </b-button>
                                 </b-upload>
+                                <b-button :class="btnUpload" 
+                                    icon-right="arrow-right-bold"
+                                    @click="uploadCSV"
+                                    v-if="file"
+                                >
+                                </b-button>
                             </b-field>  
 
                             <b-table-column field="schedule_id" label="ID" sortable v-slot="props" centered>
@@ -160,7 +160,7 @@ export default {
             sortField: 'schedule_id',
             sortOrder: 'desc',
             page: 1,
-            perPage: 5,
+            perPage: 10,
             defaultSortDirection: 'asc',
 
             file: null,
@@ -191,6 +191,7 @@ export default {
                 'is-outlined': true,
                 'button': true,
                 'is-loading':false,
+                
             },
 
         }
@@ -302,14 +303,33 @@ export default {
         },
 
         uploadCSV(){
+            this.btnUpload['is-loading'] = true;
 
             Papa.parse(this.file, {
                 header: true,
                 complete: (results) => {
-                console.log(results.data);
+                    axios.post('/upload-schedules', results).then(res=>{
+                        if(res.data.status === 'uploaded'){
+                            this.$buefy.dialog.alert({
+                                title: 'Uploaded!',
+                                message: 'Uploaded Successfully.',
+                                type: 'is-success'
+                            });
+                        }
+
+                        this.btnUpload['is-loading'] = false;
+                        
+                    }).catch(err=>{
+                        this.btnUpload['is-loading'] = false;
+                    })
                 // do something with the parsed data
+
+                this.loadAsyncData()
                 },
             });
+
+            
+            
 
         }
 

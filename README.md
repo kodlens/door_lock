@@ -14,7 +14,7 @@ arp <ip> -a <enter>
 	 butangan ug search bar
 	 printable ang logs
 	 dugangan ug laing tab para sa faculty attendace
-3.Schedule - mag import ug file CSV type.
+3.Schedule (Done) - mag import ug file CSV type.
 4. Faculty attendance - nga ning sulod siya sa door ana nga schedule.
 	printable iyang logs.
 	naa siyay attendance logs
