@@ -11723,6 +11723,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -41379,7 +41380,7 @@ var render = function () {
                         _c(
                           "b-select",
                           {
-                            attrs: { expanded: "" },
+                            attrs: { expanded: "", disabled: "" },
                             model: {
                               value: _vm.fields.ay_id,
                               callback: function ($$v) {
@@ -44364,6 +44365,15 @@ var render = function () {
                         on: { click: _vm.createAttendance },
                       },
                       [_vm._v("New Attendance")]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "b-button",
+                      {
+                        staticClass: "is-info is-outlined",
+                        attrs: { tag: "a", "icon-left": "chart-box-outline" },
+                      },
+                      [_vm._v("Generate Attendance")]
                     ),
                   ],
                   1

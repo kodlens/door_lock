@@ -66,6 +66,7 @@
 
                         <div class="buttons mt-3">
                             <b-button @click="createAttendance" icon-left="plus" class="is-success">New Attendance</b-button>
+                            <b-button tag="a" icon-left="chart-box-outline" class="is-info is-outlined">Generate Attendance</b-button>
                         </div>
 
 

@@ -14,7 +14,7 @@
                                     <b-field label="Academic Year" label-position="on-border"
                                             :type="errors.ay_id ? 'is-danger':''"
                                             :message="errors.ay_id ? errors.ay_id[0] : ''">
-                                        <b-select v-model="fields.ay_id" expanded>
+                                        <b-select v-model="fields.ay_id" expanded disabled>
                                             <option v-for="(item, index) in academic_years"
                                                 :key="index" 
                                                 :value="item.ay_id">{{ item.ay_code }} - {{ item.ay_desc }}
