@@ -16,12 +16,15 @@ class CreateAppLogsTable extends Migration
         Schema::create('app_logs', function (Blueprint $table) {
             $table->id();
 
-            $table->unsignedBigInteger('faculty_id')->default(0);
+            $table->unsignedBigInteger('user_id')->default(0);
             $table->string('user')->nullable();
             $table->string('role')->nullable();
             $table->text('activity')->nullable();
+            $table->unsignedBigInteger('door_id')->default(0);
             $table->string('door')->nullable();
+            $table->unsignedBigInteger('schedule_id')->default(0);
             $table->string('log_type')->nullable();
+            
 
             $table->timestamps();
         });

@@ -290,16 +290,34 @@ class MyAttendanceController extends Controller
     //Fetch data attendance of the faculty from database
     public function generateMyAttendance(Request $req){
         $user = Auth::user();
+        $ay = AcademicYear::where('active', 1)->first();
 
         //convert date from javascript to UNIX Time and convert format Y-m-d
         $dStart = date('Y-m-d', strtotime($req->start_date));
         $dEnd = date('Y-m-d', strtotime($req->end_date));
         
-        //
         $schedules = Schedule::where('user_id', $user->user_id)
+            ->where('ay_id', $ay->ay_id)
+            ->orderBy('time_start', 'asc')
+            ->get();
+        //
+        $attendances = DB::table('schedules as a')
+            ->join('faculty_attendances as b', 'a.schedule_id', 'b.schedule_id')
+            ->join('academic_years as c', 'a.ay_id', 'c.ay_id')
+            ->join('doors as d', 'a.door_id', 'd.door_id')
+            ->where('a.user_id', $user->user_id)
+            ->whereBetween('b.attendance_date', [$dStart, $dEnd])
+            ->orderBy('b.attendance_date', 'ASC')
+            ->orderBy('a.time_start', 'ASC')
+
             ->get();
 
-        return $schedules;
+
+        return view('faculty.generate-my-attendance')
+            ->with('schedules', $schedules)
+            ->with('attendances', $attendances)
+            ->with('start_date',$dStart)
+            ->with('end_date', $dEnd);
         
     }
 

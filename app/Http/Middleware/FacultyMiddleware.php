@@ -19,7 +19,7 @@ class FacultyMiddleware
     public function handle(Request $request, Closure $next)
     {
         $role = Auth::user()->role;
-        if($role === 'FACULTY' || $role === 'DEAN'){
+        if($role == 'FACULTY' || $role == 'DEAN'){
             return $next($request);
         }
 

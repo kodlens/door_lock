@@ -18,21 +18,37 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    <style>
+
+        @page{
+            size: 8.5 13in
+        }
+
+        .print-caontainer{
+            margin: 0;
+            padding: 0;
+        }
+
+        .att-table{
+            margin: 10px auto;
+            padding: 10px;
+        }
+
+        .att-table tr th{
+            padding: 8px;
+            /* border: 1px solid red; */
+        }
+        .att-table tr td{
+            padding: 8px;
+        }
+    </style>
+
 </head>
 <body>
     <div id="app">
         
-        <style>
-
-            @page{
-                size: 8.5 13in
-            }
-
-            .print-caontainer{
-                margin: 0;
-                padding: 0;
-            }
-        </style>
+        
 
         <div>
             @yield('content')
@@ -40,7 +56,7 @@
         </div>
 
 
-    </div>
+    {{-- </div> --}}
 
 
     <script>

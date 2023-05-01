@@ -5,12 +5,6 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Session;
 
-use App\Models\Appointment;
-use App\Models\User;
-use App\Models\DentistSchedule;
-
-
-
 
 /*
 |--------------------------------------------------------------------------
@@ -162,10 +156,10 @@ Route::middleware(['auth', 'faculty'])->group(function() {
 Route::get('/rfid', [App\Http\Controllers\RFIDApiController::class, 'validateRFID']);
 
 
+
 Route::get('/session', function(){
     return Session::all();
 });
-
 
 
 
