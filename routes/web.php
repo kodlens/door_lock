@@ -141,6 +141,7 @@ Route::middleware(['auth', 'faculty'])->group(function() {
     Route::get('/get-my-attendances', [App\Http\Controllers\Faculty\MyAttendanceController::class, 'getAll']);
     Route::get('/get-my-attendance-student-list', [App\Http\Controllers\Faculty\MyAttendanceController::class, 'getStudentList']); //get the list of student in attendance
     Route::get('/print-attendance/{attId}', [App\Http\Controllers\Faculty\MyAttendanceController::class, 'printAttendance']);
+    Route::get('/generate-my-attendance', [App\Http\Controllers\Faculty\MyAttendanceController::class, 'generateMyAttendance']);
 
 
     Route::resource('/my-profile', App\Http\Controllers\Faculty\MyProfileController::class);

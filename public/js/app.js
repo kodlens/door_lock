@@ -11653,77 +11653,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -11741,29 +11670,16 @@ __webpack_require__.r(__webpack_exports__);
         remark: '',
         ay: ''
       },
-      isModalCreate: false,
-      modalResetPassword: false,
+      modalPickDate: false,
       fields: {
-        rfid: '',
-        username: '',
-        lname: '',
-        fname: '',
-        mname: '',
-        password: '',
-        password_confirmation: '',
-        sex: '',
-        role: '',
-        contact_no: ''
+        start_date: new Date(),
+        end_date: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
       },
       errors: {},
       btnClass: {
         'is-success': true,
         'button': true,
         'is-loading': false
-      },
-      rfid: {
-        type: '',
-        msg: ''
       }
     };
   },
@@ -11827,72 +11743,20 @@ __webpack_require__.r(__webpack_exports__);
         _this2.academicYears = res.data;
       });
     },
+    openModalPickDate: function openModalPickDate() {
+      this.modalPickDate = true;
+    },
     submit: function submit() {
-      var _this3 = this;
-
-      if (this.global_id > 0) {
-        //update
-        axios.put('/users/' + this.global_id, this.fields).then(function (res) {
-          if (res.data.status === 'updated') {
-            _this3.$buefy.dialog.alert({
-              title: 'UPDATED!',
-              message: 'Successfully updated.',
-              type: 'is-success',
-              onConfirm: function onConfirm() {
-                _this3.loadAsyncData();
-
-                _this3.clearFields();
-
-                _this3.global_id = 0;
-                _this3.isModalCreate = false;
-              }
-            });
-          }
-        })["catch"](function (err) {
-          if (err.response.status === 422) {
-            _this3.errors = err.response.data.errors;
-
-            if (_this3.errors.rfid) {
-              _this3.rfid.type = 'is-danger';
-              _this3.rfid.msg = _this3.errors.rfid[0];
-            }
-          }
-        });
-      } else {
-        //INSERT HERE
-        axios.post('/users', this.fields).then(function (res) {
-          if (res.data.status === 'saved') {
-            _this3.$buefy.dialog.alert({
-              title: 'SAVED!',
-              message: 'Successfully saved.',
-              type: 'is-success',
-              confirmText: 'OK',
-              onConfirm: function onConfirm() {
-                _this3.isModalCreate = false;
-
-                _this3.loadAsyncData();
-
-                _this3.clearFields();
-
-                _this3.global_id = 0;
-              }
-            });
-          }
-        })["catch"](function (err) {
-          if (err.response.status === 422) {
-            _this3.errors = err.response.data.errors;
-
-            if (_this3.errors.rfid) {
-              _this3.rfid.type = 'is-danger';
-              _this3.rfid.msg = _this3.errors.rfid[0];
-            }
-          }
-        });
-      }
+      var dStart = new Date(this.fields.start_date);
+      var dEnd = new Date(this.fields.end_date);
+      var startDate = dStart.getFullYear() + '-' + (dStart.getMonth() + 1).toString().padStart(2, '0') + '-' + dStart.getDate().toString().padStart(2, '0');
+      var endDate = dEnd.getFullYear() + '-' + (dEnd.getMonth() + 1).toString().padStart(2, '0') + '-' + dEnd.getDate().toString().padStart(2, '0');
+      var params = ["start_date=".concat(startDate), "end_date=".concat(endDate)].join('&');
+      window.location = '/generate-my-attendance?' + params;
     },
     //alert box ask for deletion
     confirmDelete: function confirmDelete(delete_id) {
-      var _this4 = this;
+      var _this3 = this;
 
       this.$buefy.dialog.confirm({
         title: 'DELETE!',
@@ -11901,19 +11765,19 @@ __webpack_require__.r(__webpack_exports__);
         cancelText: 'Cancel',
         confirmText: 'Delete?',
         onConfirm: function onConfirm() {
-          return _this4.deleteSubmit(delete_id);
+          return _this3.deleteSubmit(delete_id);
         }
       });
     },
     //execute delete after confirming
     deleteSubmit: function deleteSubmit(delete_id) {
-      var _this5 = this;
+      var _this4 = this;
 
       axios["delete"]('/my-attendances/' + delete_id).then(function (res) {
-        _this5.loadAsyncData();
+        _this4.loadAsyncData();
       })["catch"](function (err) {
         if (err.response.status === 422) {
-          _this5.errors = err.response.data.errors;
+          _this4.errors = err.response.data.errors;
         }
       });
     },
@@ -11949,26 +11813,26 @@ __webpack_require__.r(__webpack_exports__);
       this.global_id = dataId;
     },
     resetPassword: function resetPassword() {
-      var _this6 = this;
+      var _this5 = this;
 
       axios.post('/user-reset-password/' + this.global_id, this.fields).then(function (res) {
         if (res.data.status === 'changed') {
-          _this6.$buefy.dialog.alert({
+          _this5.$buefy.dialog.alert({
             title: 'PASSWORD CHANGED',
             type: 'is-success',
             message: 'Password changed successfully.',
             confirmText: 'OK',
             onConfirm: function onConfirm() {
-              _this6.modalResetPassword = false;
-              _this6.fields = {};
-              _this6.errors = {};
+              _this5.modalResetPassword = false;
+              _this5.fields = {};
+              _this5.errors = {};
 
-              _this6.loadAsyncData();
+              _this5.loadAsyncData();
             }
           });
         }
       })["catch"](function (err) {
-        _this6.errors = err.response.data.errors;
+        _this5.errors = err.response.data.errors;
       });
     },
     scanQR: function scanQR() {
@@ -44371,7 +44235,8 @@ var render = function () {
                       "b-button",
                       {
                         staticClass: "is-info is-outlined",
-                        attrs: { tag: "a", "icon-left": "chart-box-outline" },
+                        attrs: { "icon-left": "chart-box-outline" },
+                        on: { click: _vm.openModalPickDate },
                       },
                       [_vm._v("Generate Attendance")]
                     ),
@@ -44704,382 +44569,108 @@ var render = function () {
           attrs: {
             "has-modal-card": "",
             "trap-focus": "",
-            width: 640,
             "aria-role": "dialog",
             "aria-label": "Modal",
             "aria-modal": "",
           },
           model: {
-            value: _vm.isModalCreate,
+            value: _vm.modalPickDate,
             callback: function ($$v) {
-              _vm.isModalCreate = $$v
+              _vm.modalPickDate = $$v
             },
-            expression: "isModalCreate",
+            expression: "modalPickDate",
           },
         },
         [
-          _c(
-            "form",
-            {
-              on: {
-                submit: function ($event) {
-                  $event.preventDefault()
-                  return _vm.submit.apply(null, arguments)
+          _c("div", { staticClass: "modal-card" }, [
+            _c("header", { staticClass: "modal-card-head" }, [
+              _c("p", { staticClass: "modal-card-title" }, [
+                _vm._v("Pick Date Range"),
+              ]),
+              _vm._v(" "),
+              _c("button", {
+                staticClass: "delete",
+                attrs: { type: "button" },
+                on: {
+                  click: function ($event) {
+                    _vm.modalPickDate = false
+                  },
                 },
-              },
-            },
-            [
-              _c("div", { staticClass: "modal-card" }, [
-                _c("header", { staticClass: "modal-card-head" }, [
-                  _c("p", { staticClass: "modal-card-title" }, [
-                    _vm._v("Student Information"),
-                  ]),
-                  _vm._v(" "),
-                  _c("button", {
-                    staticClass: "delete",
-                    attrs: { type: "button" },
-                    on: {
-                      click: function ($event) {
-                        _vm.isModalCreate = false
+              }),
+            ]),
+            _vm._v(" "),
+            _c("section", { staticClass: "modal-card-body" }, [
+              _c(
+                "div",
+                { staticClass: "wrapper" },
+                [
+                  _c(
+                    "b-field",
+                    {
+                      attrs: {
+                        label: "Start Date",
+                        "label-position": "on-border",
                       },
                     },
-                  }),
-                ]),
-                _vm._v(" "),
-                _c("section", { staticClass: "modal-card-body" }, [
-                  _c("div", { staticClass: "wrapper" }, [
-                    _c("div", { staticClass: "columns" }, [
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "Academic Year",
-                                "label-position": "on-border",
-                                type: _vm.errors.ay ? "is-danger" : "",
-                                message: _vm.errors.ay ? _vm.errors.ay[0] : "",
-                              },
-                            },
-                            [
-                              _c(
-                                "b-select",
-                                {
-                                  attrs: {
-                                    placeholder: "Academic Year",
-                                    required: "",
-                                  },
-                                  model: {
-                                    value: _vm.fields.ay,
-                                    callback: function ($$v) {
-                                      _vm.$set(_vm.fields, "ay", $$v)
-                                    },
-                                    expression: "fields.ay",
-                                  },
-                                },
-                                _vm._l(
-                                  _vm.academicYears,
-                                  function (item, index) {
-                                    return _c(
-                                      "option",
-                                      {
-                                        key: index,
-                                        domProps: { value: item.ay_id },
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\n                                                " +
-                                            _vm._s(item.ay_code) +
-                                            " - " +
-                                            _vm._s(item.ay_desc) +
-                                            "\n                                            "
-                                        ),
-                                      ]
-                                    )
-                                  }
-                                ),
-                                0
-                              ),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "columns" }, [
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "Last Name",
-                                "label-position": "on-border",
-                                type: _vm.errors.student_lname
-                                  ? "is-danger"
-                                  : "",
-                                message: _vm.errors.student_lname
-                                  ? _vm.errors.student_lname[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c("b-input", {
-                                attrs: {
-                                  placeholder: "Last Name",
-                                  required: "",
-                                },
-                                model: {
-                                  value: _vm.fields.student_lname,
-                                  callback: function ($$v) {
-                                    _vm.$set(_vm.fields, "student_lname", $$v)
-                                  },
-                                  expression: "fields.student_lname",
-                                },
-                              }),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "First Name",
-                                "label-position": "on-border",
-                                type: _vm.errors.student_fname
-                                  ? "is-danger"
-                                  : "",
-                                message: _vm.errors.student_fname
-                                  ? _vm.errors.student_fname[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c("b-input", {
-                                attrs: {
-                                  placeholder: "First Name",
-                                  required: "",
-                                },
-                                model: {
-                                  value: _vm.fields.student_fname,
-                                  callback: function ($$v) {
-                                    _vm.$set(_vm.fields, "student_fname", $$v)
-                                  },
-                                  expression: "fields.student_fname",
-                                },
-                              }),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "columns" }, [
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "Middle Name",
-                                "label-position": "on-border",
-                                type: _vm.errors.student_mname
-                                  ? "is-danger"
-                                  : "",
-                                message: _vm.errors.student_mname
-                                  ? _vm.errors.student_mname[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c("b-input", {
-                                attrs: { placeholder: "Middle Name" },
-                                model: {
-                                  value: _vm.fields.student_mname,
-                                  callback: function ($$v) {
-                                    _vm.$set(_vm.fields, "student_mname", $$v)
-                                  },
-                                  expression: "fields.student_mname",
-                                },
-                              }),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "Suffix",
-                                "label-position": "on-border",
-                                type: _vm.errors.student_suffix
-                                  ? "is-danger"
-                                  : "",
-                                message: _vm.errors.student_suffix
-                                  ? _vm.errors.student_suffix[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c("b-input", {
-                                attrs: { type: "text", placeholder: "Suffix" },
-                                model: {
-                                  value: _vm.fields.student_suffix,
-                                  callback: function ($$v) {
-                                    _vm.$set(_vm.fields, "student_suffix", $$v)
-                                  },
-                                  expression: "fields.student_suffix",
-                                },
-                              }),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                    ]),
-                    _vm._v(" "),
-                    _c("div", { staticClass: "columns" }, [
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "Sex",
-                                "label-position": "on-border",
-                                expanded: "",
-                                type: _vm.errors.sex ? "is-danger" : "",
-                                message: _vm.errors.sex
-                                  ? _vm.errors.sex[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c(
-                                "b-select",
-                                {
-                                  attrs: { expanded: "" },
-                                  model: {
-                                    value: _vm.fields.sex,
-                                    callback: function ($$v) {
-                                      _vm.$set(_vm.fields, "sex", $$v)
-                                    },
-                                    expression: "fields.sex",
-                                  },
-                                },
-                                [
-                                  _c("option", { attrs: { value: "MALE" } }, [
-                                    _vm._v("MALE"),
-                                  ]),
-                                  _vm._v(" "),
-                                  _c("option", { attrs: { value: "FEMALE" } }, [
-                                    _vm._v("FEMALE"),
-                                  ]),
-                                ]
-                              ),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                      _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "column" },
-                        [
-                          _c(
-                            "b-field",
-                            {
-                              attrs: {
-                                label: "Contact No",
-                                "label-position": "on-border",
-                                type: _vm.errors.contact_no ? "is-danger" : "",
-                                message: _vm.errors.contact_no
-                                  ? _vm.errors.contact_no[0]
-                                  : "",
-                              },
-                            },
-                            [
-                              _c("b-input", {
-                                attrs: {
-                                  type: "number",
-                                  placeholder: "Contact No",
-                                  required: "",
-                                },
-                                model: {
-                                  value: _vm.fields.contact_no,
-                                  callback: function ($$v) {
-                                    _vm.$set(_vm.fields, "contact_no", $$v)
-                                  },
-                                  expression: "fields.contact_no",
-                                },
-                              }),
-                            ],
-                            1
-                          ),
-                        ],
-                        1
-                      ),
-                    ]),
-                  ]),
-                ]),
-                _vm._v(" "),
-                _c(
-                  "footer",
-                  { staticClass: "modal-card-foot" },
-                  [
-                    _c("b-button", {
-                      attrs: { label: "Close" },
-                      on: {
-                        click: function ($event) {
-                          _vm.isModalCreate = false
+                    [
+                      _c("b-datepicker", {
+                        attrs: { inline: "", placeholder: "Start Date" },
+                        model: {
+                          value: _vm.fields.start_date,
+                          callback: function ($$v) {
+                            _vm.$set(_vm.fields, "start_date", $$v)
+                          },
+                          expression: "fields.start_date",
                         },
+                      }),
+                    ],
+                    1
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "b-field",
+                    {
+                      attrs: {
+                        label: "End Date",
+                        "label-position": "on-border",
                       },
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        class: _vm.btnClass,
-                        attrs: { label: "Save", type: "is-success" },
-                      },
-                      [_vm._v("SAVE")]
-                    ),
-                  ],
-                  1
-                ),
-              ]),
-            ]
-          ),
+                    },
+                    [
+                      _c("b-datepicker", {
+                        attrs: { inline: "", placeholder: "End Date" },
+                        model: {
+                          value: _vm.fields.end_date,
+                          callback: function ($$v) {
+                            _vm.$set(_vm.fields, "end_date", $$v)
+                          },
+                          expression: "fields.end_date",
+                        },
+                      }),
+                    ],
+                    1
+                  ),
+                ],
+                1
+              ),
+            ]),
+            _vm._v(" "),
+            _c(
+              "footer",
+              { staticClass: "modal-card-foot" },
+              [
+                _c("b-button", {
+                  class: _vm.btnClass,
+                  attrs: {
+                    "icon-left": "magnify",
+                    label: "Browse",
+                    type: "is-success",
+                  },
+                  on: { click: _vm.submit },
+                }),
+              ],
+              1
+            ),
+          ]),
         ]
       ),
     ],

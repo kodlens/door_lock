@@ -245,6 +245,9 @@ class MyAttendanceController extends Controller
     }
 
 
+    
+
+
 
 
     
@@ -274,6 +277,30 @@ class MyAttendanceController extends Controller
         return response()->json([
             'status' => 'deleted'
         ], 200);
+    }
+
+
+
+
+
+
+
+
+
+    //Fetch data attendance of the faculty from database
+    public function generateMyAttendance(Request $req){
+        $user = Auth::user();
+
+        //convert date from javascript to UNIX Time and convert format Y-m-d
+        $dStart = date('Y-m-d', strtotime($req->start_date));
+        $dEnd = date('Y-m-d', strtotime($req->end_date));
+        
+        //
+        $schedules = Schedule::where('user_id', $user->user_id)
+            ->get();
+
+        return $schedules;
+        
     }
 
 }

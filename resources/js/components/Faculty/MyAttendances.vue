@@ -66,7 +66,11 @@
 
                         <div class="buttons mt-3">
                             <b-button @click="createAttendance" icon-left="plus" class="is-success">New Attendance</b-button>
-                            <b-button tag="a" icon-left="chart-box-outline" class="is-info is-outlined">Generate Attendance</b-button>
+                            <b-button 
+                                icon-left="chart-box-outline" 
+                                class="is-info is-outlined"
+                                @click="openModalPickDate"
+                            >Generate Attendance</b-button>
                         </div>
 
 
@@ -164,129 +168,54 @@
 
 
         <!--modal create-->
-        <b-modal v-model="isModalCreate" has-modal-card
-                 trap-focus
-                 :width="640"
-                 aria-role="dialog"
-                 aria-label="Modal"
-                 aria-modal>
+        <b-modal v-model="modalPickDate" has-modal-card
+            trap-focus
+            aria-role="dialog"
+            aria-label="Modal"
+            aria-modal
+        >
 
-            <form @submit.prevent="submit">
-                <div class="modal-card">
-                    <header class="modal-card-head">
-                        <p class="modal-card-title">Student Information</p>
-                        <!-- <b-button type="is-primary" @click="debug">
-                            debug
-                        </b-button> -->
-                        <button
-                            type="button"
-                            class="delete"
-                            @click="isModalCreate = false"/>
-                    </header>
+           
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Pick Date Range</p>
+                    <!-- <b-button type="is-primary" @click="debug">
+                        debug
+                    </b-button> -->
+                    <button
+                        type="button"
+                        class="delete"
+                        @click="modalPickDate = false"/>
+                </header>
 
-                    <section class="modal-card-body">
-                        <div class="wrapper">
+                <section class="modal-card-body">
+                    <div class="wrapper">
+                        <b-field label="Start Date" 
+                            label-position="on-border">
+                            <b-datepicker v-model="fields.start_date"
+                                inline
+                                placeholder="Start Date"></b-datepicker>
+                        </b-field>
 
-                            <div class="columns">
-                                <div class="column">
-                                    <b-field label="Academic Year" 
-                                        label-position="on-border"
-                                        :type="errors.ay ? 'is-danger':''"
-                                        :message="errors.ay ? errors.ay[0] : ''">
-                                        <b-select v-model="fields.ay"
-                                            placeholder="Academic Year" required>
-                                            <option 
-                                                v-for="(item, index) in academicYears"
-                                                :key="index"
-                                                :value="item.ay_id">
-                                                    {{  item.ay_code }} - {{ item.ay_desc }}
-                                                </option>
-                                        </b-select>
-                                    </b-field>
-                                </div>
-                            </div>
-
-                            <div class="columns">
-                                <div class="column">
-                                    <b-field label="Last Name" label-position="on-border"
-                                        :type="errors.student_lname ? 'is-danger':''"
-                                        :message="errors.student_lname ? errors.student_lname[0] : ''">
-                                        <b-input v-model="fields.student_lname"
-                                            placeholder="Last Name" required>
-                                        </b-input>
-                                    </b-field>
-                                </div>
-                                <div class="column">
-                                    <b-field label="First Name" label-position="on-border"
-                                        :type="errors.student_fname ? 'is-danger':''"
-                                        :message="errors.student_fname ? errors.student_fname[0] : ''">
-                                        <b-input v-model="fields.student_fname"
-                                            placeholder="First Name" required>
-                                        </b-input>
-                                    </b-field>
-                                </div>
-                            </div>
-
-                            <div class="columns">
-                                <div class="column">
-                                    <b-field label="Middle Name" label-position="on-border"
-                                        :type="errors.student_mname ? 'is-danger':''"
-                                        :message="errors.student_mname ? errors.student_mname[0] : ''">
-                                        <b-input v-model="fields.student_mname"
-                                            placeholder="Middle Name">
-                                        </b-input>
-                                    </b-field>
-                                </div>
-
-                                <div class="column">
-                                    <b-field label="Suffix" label-position="on-border"
-                                        :type="errors.student_suffix ? 'is-danger':''"
-                                        :message="errors.student_suffix ? errors.student_suffix[0] : ''">
-                                        <b-input type="text" v-model="fields.student_suffix"
-                                            placeholder="Suffix">
-                                        </b-input>
-                                    </b-field>
-                                </div>
-                            </div>
-
-                            <div class="columns">
-                                <div class="column">
-                                    <b-field label="Sex" label-position="on-border" expanded
-                                        :type="errors.sex ? 'is-danger':''"
-                                        :message="errors.sex ? errors.sex[0] : ''"
-                                    >
-                                        <b-select v-model="fields.sex" expanded>
-                                            <option value="MALE">MALE</option>
-                                            <option value="FEMALE">FEMALE</option>
-                                        </b-select>
-                                    </b-field>
-                                </div>
-
-                                <div class="column">
-                                    <b-field label="Contact No" label-position="on-border"
-                                        :type="errors.contact_no ? 'is-danger':''"
-                                        :message="errors.contact_no ? errors.contact_no[0] : ''">
-                                        <b-input type="number" v-model="fields.contact_no"
-                                            placeholder="Contact No" required>
-                                        </b-input>
-                                    </b-field>
-                                </div>
-                            </div>
-
-
-                        </div>
-                    </section>
-                    <footer class="modal-card-foot">
-                        <b-button
-                            label="Close"
-                            @click="isModalCreate=false"/>
-                        <button
-                            :class="btnClass"
-                            label="Save"
-                            type="is-success">SAVE</button>
-                    </footer>
-                </div>
-            </form><!--close form-->
+                        <b-field label="End Date" 
+                            label-position="on-border">
+                            <b-datepicker
+                                inline v-model="fields.end_date"
+                                placeholder="End Date"></b-datepicker>
+                        </b-field>
+                        
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <b-button
+                        :class="btnClass"
+                        icon-left="magnify"
+                        label="Browse"
+                        @click="submit"
+                        type="is-success"></b-button>
+                </footer>
+            </div> <!--modal card -->
+          
         </b-modal>
         <!--close modal-->
 
@@ -296,6 +225,7 @@
 <script>
 
 export default{
+
     data() {
         return{
             data: [],
@@ -316,15 +246,11 @@ export default{
                 ay: '',
             },
 
-            isModalCreate: false,
-            modalResetPassword: false,
+            modalPickDate: false,
 
             fields: {
-                rfid: '',
-                username: '',
-                lname: '', fname: '', mname: '',
-                password: '', password_confirmation : '',
-                sex : '', role: '', contact_no : '',
+                start_date: new Date(),
+                end_date: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
             },
             errors: {},
 
@@ -332,11 +258,6 @@ export default{
                 'is-success': true,
                 'button': true,
                 'is-loading':false,
-            },
-
-            rfid: {
-                type:'',
-                msg: '',
             },
 
         }
@@ -413,61 +334,27 @@ export default{
         },
 
     
+        openModalPickDate(){
+            this.modalPickDate = true;
+        },
+
+
+
         submit: function(){
-            if(this.global_id > 0){
-                //update
-                axios.put('/users/'+this.global_id, this.fields).then(res=>{
-                    if(res.data.status === 'updated'){
-                        this.$buefy.dialog.alert({
-                            title: 'UPDATED!',
-                            message: 'Successfully updated.',
-                            type: 'is-success',
-                            onConfirm: () => {
-                                this.loadAsyncData();
-                                this.clearFields();
-                                this.global_id = 0;
-                                this.isModalCreate = false;
-                            }
-                        })
-                    }
-                }).catch(err=>{
-                    if(err.response.status === 422){
-                        this.errors = err.response.data.errors;
+            let dStart = new Date(this.fields.start_date)
+            let dEnd = new Date(this.fields.end_date)
 
-                        if(this.errors.rfid){
-                            this.rfid.type = 'is-danger'
-                            this.rfid.msg = this.errors.rfid[0]
-                        }
-                    }
-                })
-            }else{
-                //INSERT HERE
-                axios.post('/users', this.fields).then(res=>{
-                    if(res.data.status === 'saved'){
-                        this.$buefy.dialog.alert({
-                            title: 'SAVED!',
-                            message: 'Successfully saved.',
-                            type: 'is-success',
-                            confirmText: 'OK',
-                            onConfirm: () => {
-                                this.isModalCreate = false;
-                                this.loadAsyncData();
-                                this.clearFields();
-                                this.global_id = 0;
-                            }
-                        })
-                    }
-                }).catch(err=>{
-                    if(err.response.status === 422){
-                        this.errors = err.response.data.errors;
+            let startDate = dStart.getFullYear() + '-' + (dStart.getMonth() + 1).toString().padStart(2, '0') + '-'
+                + (dStart.getDate()).toString().padStart(2, '0')
 
-                        if(this.errors.rfid){
-                            this.rfid.type = 'is-danger'
-                            this.rfid.msg = this.errors.rfid[0]
-                        }
-                    }
-                });
-            }
+            let endDate = dEnd.getFullYear() + '-' + (dEnd.getMonth() + 1).toString().padStart(2, '0') + '-'
+                + (dEnd.getDate()).toString().padStart(2, '0')
+
+            const params = [
+                `start_date=${startDate}`,
+                `end_date=${endDate}`
+            ].join('&')
+            window.location = '/generate-my-attendance?' + params
         },
 
 

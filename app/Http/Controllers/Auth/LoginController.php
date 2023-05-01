@@ -58,7 +58,7 @@ class LoginController extends Controller
             $user = Auth::user();
             
             AppLog::create([
-                'user' => $user->lname . ', ' . $user->lname . ' ' . $user->mname,
+                'user' => $user->lname . ', ' . $user->fname . ' ' . $user->mname,
                 'activity' => 'Login to the system.',
                 'role' => $user->role
             ]);
@@ -77,7 +77,7 @@ class LoginController extends Controller
     public function logout(Request $req){
         $user = Auth::user();
         AppLog::create([
-            'user' => $user->lname . ', ' . $user->lname . ' ' . $user->mname,
+            'user' => $user->lname . ', ' . $user->fname . ' ' . $user->mname,
             'activity' => 'Logout to the system.',
             'role' => $user->role
         ]);
