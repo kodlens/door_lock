@@ -5,7 +5,7 @@
                 <div class="column is-6">
                     <div class="box">
 
-                        <div class="is-flex mb-2" style="font-size: 20px; font-weight: bold;">Add New Schedule</div>
+                        <div class="is-flex mb-2" style="font-size: 20px; font-weight: bold;">Add/Edit Schedule</div>
 
                         <div class="section">
 

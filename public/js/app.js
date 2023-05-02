@@ -41224,7 +41224,7 @@ var render = function () {
                 staticClass: "is-flex mb-2",
                 staticStyle: { "font-size": "20px", "font-weight": "bold" },
               },
-              [_vm._v("Add New Schedule")]
+              [_vm._v("Add/Edit Schedule")]
             ),
             _vm._v(" "),
             _c("div", { staticClass: "section" }, [
