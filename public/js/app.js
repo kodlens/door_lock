@@ -9116,7 +9116,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -40507,7 +40506,7 @@ var render = function () {
                             _vm._v(" "),
                             _c("b-table-column", {
                               attrs: {
-                                field: "user",
+                                field: "user_name",
                                 label: "Name",
                                 sortable: "",
                               },
@@ -40518,7 +40517,7 @@ var render = function () {
                                     return [
                                       _vm._v(
                                         "\n                                    " +
-                                          _vm._s(props.row.user) +
+                                          _vm._s(props.row.user_name) +
                                           "\n                                "
                                       ),
                                     ]

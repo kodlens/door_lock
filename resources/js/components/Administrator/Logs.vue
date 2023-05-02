@@ -89,8 +89,8 @@
                                         {{ props.row.id }}
                                     </b-table-column>
     
-                                    <b-table-column field="user" label="Name" sortable v-slot="props">
-                                        {{ props.row.user }}
+                                    <b-table-column field="user_name" label="Name" sortable v-slot="props">
+                                        {{ props.row.user_name }}
                                     </b-table-column>
     
                                     <b-table-column width="400" field="activity" label="Activity" sortable v-slot="props">
@@ -103,7 +103,6 @@
     
                                     <b-table-column field="door" label="Door" sortable v-slot="props">
                                         <span v-if="props.row.door">{{ props.row.door }}</span>
-                                        
                                     </b-table-column>
     
                                     <b-table-column field="date_created" label="Attendance Date Time" sortable v-slot="props">
