@@ -391,6 +391,9 @@ export default{
         loadAcademicYears(){
             axios.get('/get-open-academic-years').then(res=>{
                 this.academicYears = res.data
+
+                this.search.ay = this.academicYears.filter(item => item.active === 1)[0].ay_id;
+
             })
         },
 

@@ -13153,6 +13153,9 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get('/get-open-academic-years').then(function (res) {
         _this2.academicYears = res.data;
+        _this2.search.ay = _this2.academicYears.filter(function (item) {
+          return item.active === 1;
+        })[0].ay_id;
       });
     },
     submit: function submit() {
