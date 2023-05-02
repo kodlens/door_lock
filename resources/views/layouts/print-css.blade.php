@@ -33,15 +33,27 @@
         .att-table{
             margin: 10px auto;
             padding: 10px;
+            font-size: .7em;
         }
 
         .att-table tr th{
             padding: 8px;
             /* border: 1px solid red; */
+            border: 1px solid rgb(180, 180, 180);
+
         }
         .att-table tr td{
-            padding: 8px;
+            padding: 5px;
+            border: 1px solid rgb(180, 180, 180);
         }
+
+
+        @media print {
+            .att-table {
+                page-break-inside: avoid;
+            }
+        }
+
     </style>
 
 </head>

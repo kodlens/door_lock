@@ -173,6 +173,7 @@ class ScheduleController extends Controller
         //return $req;
         $arrData = [];
         foreach($req->data as $item){
+            
             if($item['schedule_description'] != null || $item['schedule_description' != '']){
 
                 $timeFrom = date("H:i:s", strtotime($item['time_start'])); //convert to date format UNIX

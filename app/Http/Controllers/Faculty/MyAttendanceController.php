@@ -312,6 +312,7 @@ class MyAttendanceController extends Controller
 
             ->get();
 
+       // return $schedules;
 
         return view('faculty.generate-my-attendance')
             ->with('schedules', $schedules)

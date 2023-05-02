@@ -89,7 +89,7 @@ class RFIDApiController extends Controller
                 ->where('door_id', $data->door_id)
                 ->exists();
 
-            
+                
 
             //check if it is already recorded, 1 attendance per day is recorded.
             if(!$attendanceExist){

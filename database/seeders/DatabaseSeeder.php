@@ -23,6 +23,8 @@ class DatabaseSeeder extends Seeder
             DoorSeeder::class,
             ScheduleSeeder::class,
             ScheduleStudentListSeeder::class,
+            FacultyAttendanceSeeder::class,
+
         ]);
     }
 }
