@@ -14,7 +14,7 @@
                                     <b-field label="Academic Year" label-position="on-border"
                                             :type="errors.ay_id ? 'is-danger':''"
                                             :message="errors.ay_id ? errors.ay_id[0] : ''">
-                                        <b-select v-model="fields.ay_id" expanded disabled>
+                                        <b-select v-model="fields.ay_id" expanded :disabled="isDisabled">
                                             <option v-for="(item, index) in academic_years"
                                                 :key="index" 
                                                 :value="item.ay_id">{{ item.ay_code }} - {{ item.ay_desc }}
@@ -210,6 +210,8 @@ export default{
 
             schedule: {},
 
+            isDisabled: true,
+
             isModalCreate: false,
             modalResetPassword: false,
 
@@ -357,6 +359,8 @@ export default{
             this.fields.fri = this.schedule.fri;
             this.fields.sat = this.schedule.sat;
             this.fields.sun = this.schedule.sun;
+
+            this.isDisabled = false;
         },
 
         emitBrowseUser(row){

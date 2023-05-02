@@ -9780,6 +9780,7 @@ __webpack_require__.r(__webpack_exports__);
       door: {},
       doorName: '',
       schedule: {},
+      isDisabled: true,
       isModalCreate: false,
       modalResetPassword: false,
       fields: {},
@@ -9910,6 +9911,7 @@ __webpack_require__.r(__webpack_exports__);
       this.fields.fri = this.schedule.fri;
       this.fields.sat = this.schedule.sat;
       this.fields.sun = this.schedule.sun;
+      this.isDisabled = false;
     },
     emitBrowseUser: function emitBrowseUser(row) {
       this.fields.user_id = row.user_id;
@@ -41247,7 +41249,7 @@ var render = function () {
                         _c(
                           "b-select",
                           {
-                            attrs: { expanded: "", disabled: "" },
+                            attrs: { expanded: "", disabled: _vm.isDisabled },
                             model: {
                               value: _vm.fields.ay_id,
                               callback: function ($$v) {
