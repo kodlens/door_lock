@@ -9147,6 +9147,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -9169,6 +9180,7 @@ __webpack_require__.r(__webpack_exports__);
       defaultSortDirection: 'asc',
       search: {
         user: '',
+        faculty: '',
         start_date: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
         end_date: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
       }
@@ -9223,7 +9235,7 @@ __webpack_require__.r(__webpack_exports__);
     loadAsyncDataAttendance: function loadAsyncDataAttendance() {
       var _this2 = this;
 
-      var params = ["sort_by=".concat(this.sortFieldAttendance, ".").concat(this.sortOrderAttendance), "perpage=".concat(this.perPageAttendance), "page=".concat(this.pageAttendance)].join('&');
+      var params = ["sort_by=".concat(this.sortFieldAttendance, ".").concat(this.sortOrderAttendance), "faculty=".concat(this.search.faculty), "perpage=".concat(this.perPageAttendance), "page=".concat(this.pageAttendance)].join('&');
       this.loadingAttendance = true;
       axios.get("/get-attendance-logs?".concat(params)).then(function (_ref2) {
         var data = _ref2.data;
@@ -40683,6 +40695,81 @@ var render = function () {
                             },
                           },
                           [
+                            _c(
+                              "b-field",
+                              {
+                                attrs: {
+                                  label: "Search Faculty",
+                                  "label-position": "on-border",
+                                },
+                              },
+                              [
+                                _c("b-input", {
+                                  attrs: {
+                                    type: "text",
+                                    placeholder: "Search Faculty",
+                                  },
+                                  nativeOn: {
+                                    keyup: function ($event) {
+                                      if (
+                                        !$event.type.indexOf("key") &&
+                                        _vm._k(
+                                          $event.keyCode,
+                                          "enter",
+                                          13,
+                                          $event.key,
+                                          "Enter"
+                                        )
+                                      ) {
+                                        return null
+                                      }
+                                      return _vm.loadAsyncDataAttendance.apply(
+                                        null,
+                                        arguments
+                                      )
+                                    },
+                                  },
+                                  model: {
+                                    value: _vm.search.faculty,
+                                    callback: function ($$v) {
+                                      _vm.$set(_vm.search, "faculty", $$v)
+                                    },
+                                    expression: "search.faculty",
+                                  },
+                                }),
+                                _vm._v(" "),
+                                _c(
+                                  "p",
+                                  { staticClass: "control" },
+                                  [
+                                    _c(
+                                      "b-tooltip",
+                                      {
+                                        attrs: {
+                                          label: "Search",
+                                          type: "is-success",
+                                        },
+                                      },
+                                      [
+                                        _c("b-button", {
+                                          attrs: {
+                                            type: "is-primary",
+                                            "icon-right": "magnify",
+                                          },
+                                          on: {
+                                            click: _vm.loadAsyncDataAttendance,
+                                          },
+                                        }),
+                                      ],
+                                      1
+                                    ),
+                                  ],
+                                  1
+                                ),
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
                             _c("b-table-column", {
                               attrs: { field: "id", label: "ID", sortable: "" },
                               scopedSlots: _vm._u([

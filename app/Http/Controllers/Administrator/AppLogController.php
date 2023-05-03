@@ -49,7 +49,13 @@ class AppLogController extends Controller
     public function getAttendanceLogs(Request $req){
         $sort = explode('.', $req->sort_by);
 
+        $key = '';
+        if(isset($req->faculty)){
+            $key = $req->faculty;   
+        }
+
         $data = FacultyAttendance::with(['door', 'schedule', 'user'])
+            ->where('user_name', 'like', '%' . $key . '%')
             ->orderBy($sort[0], $sort[1])
             ->paginate($req->perpage);
 

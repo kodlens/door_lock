@@ -112,6 +112,17 @@
                                     backend-sorting
                                     :default-sort-direction="defaultSortDirectionAttendance"
                                     @sort="onSortAttendance">
+
+                                    <b-field label="Search Faculty" label-position="on-border">
+                                        <b-input type="text"
+                                            v-model="search.faculty" placeholder="Search Faculty"
+                                            @keyup.native.enter="loadAsyncDataAttendance"/>
+                                        <p class="control">
+                                            <b-tooltip label="Search" type="is-success">
+                                                <b-button type="is-primary" icon-right="magnify" @click="loadAsyncDataAttendance"/>
+                                            </b-tooltip>
+                                        </p>
+                                    </b-field>
     
                                     <b-table-column field="id" label="ID" sortable v-slot="props">
                                         {{ props.row.id }}
@@ -195,6 +206,7 @@ export default{
 
             search: {
                 user: '',
+                faculty: '',
                 start_date: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
                 end_date: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
             }
@@ -264,6 +276,7 @@ export default{
         loadAsyncDataAttendance() {
             const params = [
                 `sort_by=${this.sortFieldAttendance}.${this.sortOrderAttendance}`,
+                `faculty=${this.search.faculty}`,
                 `perpage=${this.perPageAttendance}`,
                 `page=${this.pageAttendance}`
             ].join('&')
