@@ -9116,6 +9116,41 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -9135,14 +9170,19 @@ __webpack_require__.r(__webpack_exports__);
       perPageAttendance: 20,
       perPage: 20,
       defaultSortDirectionAttendance: 'asc',
-      defaultSortDirection: 'asc'
+      defaultSortDirection: 'asc',
+      search: {
+        user: '',
+        start_date: new Date(),
+        end_date: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+      }
     };
   },
   methods: {
     loadAsyncData: function loadAsyncData() {
       var _this = this;
 
-      var params = ["sort_by=".concat(this.sortField, ".").concat(this.sortOrder), "perpage=".concat(this.perPage), "page=".concat(this.page)].join('&');
+      var params = ["sort_by=".concat(this.sortField, ".").concat(this.sortOrder), "perpage=".concat(this.perPage), "user=".concat(this.search.user), "page=".concat(this.page)].join('&');
       this.loading = true;
       axios.get("/get-logs?".concat(params)).then(function (_ref) {
         var data = _ref.data;
@@ -40288,6 +40328,168 @@ var render = function () {
                             },
                           },
                           [
+                            _c("div", { staticClass: "is-flex" }, [
+                              _c(
+                                "div",
+                                [
+                                  _c(
+                                    "b-field",
+                                    {
+                                      attrs: {
+                                        label: "Search",
+                                        "label-position": "on-border",
+                                      },
+                                    },
+                                    [
+                                      _c("b-input", {
+                                        attrs: {
+                                          type: "text",
+                                          placeholder: "Search User",
+                                        },
+                                        nativeOn: {
+                                          keyup: function ($event) {
+                                            if (
+                                              !$event.type.indexOf("key") &&
+                                              _vm._k(
+                                                $event.keyCode,
+                                                "enter",
+                                                13,
+                                                $event.key,
+                                                "Enter"
+                                              )
+                                            ) {
+                                              return null
+                                            }
+                                            return _vm.loadAsyncData.apply(
+                                              null,
+                                              arguments
+                                            )
+                                          },
+                                        },
+                                        model: {
+                                          value: _vm.search.user,
+                                          callback: function ($$v) {
+                                            _vm.$set(_vm.search, "user", $$v)
+                                          },
+                                          expression: "search.user",
+                                        },
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "p",
+                                        { staticClass: "control" },
+                                        [
+                                          _c(
+                                            "b-tooltip",
+                                            {
+                                              attrs: {
+                                                label: "Search",
+                                                type: "is-success",
+                                              },
+                                            },
+                                            [
+                                              _c("b-button", {
+                                                attrs: {
+                                                  type: "is-primary",
+                                                  "icon-right": "magnify",
+                                                },
+                                                on: {
+                                                  click: _vm.loadAsyncData,
+                                                },
+                                              }),
+                                            ],
+                                            1
+                                          ),
+                                        ],
+                                        1
+                                      ),
+                                    ],
+                                    1
+                                  ),
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                [
+                                  _c("b-button", {
+                                    staticClass: "is-outlined ml-2",
+                                    attrs: {
+                                      type: "is-info",
+                                      "icon-left": "printer",
+                                    },
+                                  }),
+                                ],
+                                1
+                              ),
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "mt-2" },
+                              [
+                                _c(
+                                  "b-field",
+                                  [
+                                    _c(
+                                      "b-field",
+                                      {
+                                        attrs: {
+                                          label: "From",
+                                          "label-position": "on-border",
+                                        },
+                                      },
+                                      [
+                                        _c("b-datepicker", {
+                                          model: {
+                                            value: _vm.search.start_date,
+                                            callback: function ($$v) {
+                                              _vm.$set(
+                                                _vm.search,
+                                                "start_date",
+                                                $$v
+                                              )
+                                            },
+                                            expression: "search.start_date",
+                                          },
+                                        }),
+                                      ],
+                                      1
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "b-field",
+                                      {
+                                        attrs: {
+                                          label: "To",
+                                          "label-position": "on-border",
+                                        },
+                                      },
+                                      [
+                                        _c("b-datepicker", {
+                                          model: {
+                                            value: _vm.search.end_date,
+                                            callback: function ($$v) {
+                                              _vm.$set(
+                                                _vm.search,
+                                                "end_date",
+                                                $$v
+                                              )
+                                            },
+                                            expression: "search.end_date",
+                                          },
+                                        }),
+                                      ],
+                                      1
+                                    ),
+                                  ],
+                                  1
+                                ),
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
                             _c("b-table-column", {
                               attrs: { field: "id", label: "ID", sortable: "" },
                               scopedSlots: _vm._u([
@@ -40455,7 +40657,12 @@ var render = function () {
                 _vm._v(" "),
                 _c(
                   "b-tab-item",
-                  { attrs: { label: "Attendance", icon: "view-list-outline" } },
+                  {
+                    attrs: {
+                      label: "Faculty Attendance",
+                      icon: "view-list-outline",
+                    },
+                  },
                   [
                     _c(
                       "div",
@@ -40517,7 +40724,11 @@ var render = function () {
                                     return [
                                       _vm._v(
                                         "\n                                    " +
-                                          _vm._s(props.row.user_name) +
+                                          _vm._s(props.row.user.lname) +
+                                          ", " +
+                                          _vm._s(props.row.user.fname) +
+                                          " " +
+                                          _vm._s(props.row.user.mname) +
                                           "\n                                "
                                       ),
                                     ]
@@ -40528,9 +40739,8 @@ var render = function () {
                             _vm._v(" "),
                             _c("b-table-column", {
                               attrs: {
-                                width: "400",
-                                field: "activity",
-                                label: "Activity",
+                                field: "schedule",
+                                label: "Schedule",
                                 sortable: "",
                               },
                               scopedSlots: _vm._u([
@@ -40538,11 +40748,53 @@ var render = function () {
                                   key: "default",
                                   fn: function (props) {
                                     return [
-                                      _vm._v(
-                                        "\n                                    " +
-                                          _vm._s(props.row.activity) +
-                                          "\n                                "
-                                      ),
+                                      props.row.schedule
+                                        ? _c("span", [
+                                            _vm._v(
+                                              "\n                                        " +
+                                                _vm._s(
+                                                  _vm._f("formatTime")(
+                                                    props.row.schedule
+                                                      .time_start
+                                                  )
+                                                ) +
+                                                " -\n                                        " +
+                                                _vm._s(
+                                                  _vm._f("formatTime")(
+                                                    props.row.schedule.time_end
+                                                  )
+                                                ) +
+                                                "\n                                    "
+                                            ),
+                                          ])
+                                        : _vm._e(),
+                                    ]
+                                  },
+                                },
+                              ]),
+                            }),
+                            _vm._v(" "),
+                            _c("b-table-column", {
+                              attrs: {
+                                field: "door",
+                                label: "Door",
+                                sortable: "",
+                              },
+                              scopedSlots: _vm._u([
+                                {
+                                  key: "default",
+                                  fn: function (props) {
+                                    return [
+                                      props.row.door
+                                        ? _c("span", [
+                                            _vm._v(
+                                              _vm._s(props.row.door.door_name) +
+                                                " (" +
+                                                _vm._s(props.row.door.mac_add) +
+                                                ")"
+                                            ),
+                                          ])
+                                        : _vm._e(),
                                     ]
                                   },
                                 },
@@ -40565,28 +40817,6 @@ var render = function () {
                                           _vm._s(props.row.role) +
                                           "\n                                "
                                       ),
-                                    ]
-                                  },
-                                },
-                              ]),
-                            }),
-                            _vm._v(" "),
-                            _c("b-table-column", {
-                              attrs: {
-                                field: "door",
-                                label: "Door",
-                                sortable: "",
-                              },
-                              scopedSlots: _vm._u([
-                                {
-                                  key: "default",
-                                  fn: function (props) {
-                                    return [
-                                      props.row.door
-                                        ? _c("span", [
-                                            _vm._v(_vm._s(props.row.door)),
-                                          ])
-                                        : _vm._e(),
                                     ]
                                   },
                                 },

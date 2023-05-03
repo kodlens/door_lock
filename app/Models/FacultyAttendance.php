@@ -23,5 +23,16 @@ class FacultyAttendance extends Model
         'log_type'
     ];
 
+    public function schedule(){
+        return $this->hasOne(Schedule::class,'schedule_id','schedule_id');
+    }
+
+    public function door(){
+        return $this->hasOne(Door::class,'door_id','door_id');
+    }
+
+    public function user(){
+        return $this->hasOne(User::class,'user_id','user_id');
+    }
 
 }

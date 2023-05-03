@@ -26,6 +26,38 @@
                                     backend-sorting
                                     :default-sort-direction="defaultSortDirection"
                                     @sort="onSort">
+
+                                    <div class="is-flex">
+                                        <div>
+                                            <b-field label="Search" label-position="on-border">
+                                                <b-input type="text"
+                                                    v-model="search.user" placeholder="Search User"
+                                                    @keyup.native.enter="loadAsyncData"/>
+                                                <p class="control">
+                                                    <b-tooltip label="Search" type="is-success">
+                                                        <b-button type="is-primary" icon-right="magnify" @click="loadAsyncData"/>
+                                                    </b-tooltip>
+                                                </p>
+                                            </b-field>
+                                        </div>
+                                        <div>
+                                            <b-button type="is-info"
+                                                class="is-outlined ml-2"
+                                                icon-left="printer"></b-button>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-2">
+                                        <b-field>
+                                            <b-field label="From" label-position="on-border">
+                                                <b-datepicker v-model="search.start_date"></b-datepicker>
+                                            </b-field>
+                                            <b-field label="To" label-position="on-border">
+                                                <b-datepicker v-model="search.end_date"></b-datepicker>
+                                            </b-field>
+                                        </b-field>
+                                    </div>
+                                    
     
                                     <b-table-column field="id" label="ID" sortable v-slot="props">
                                         {{ props.row.id }}
@@ -65,7 +97,7 @@
                             </div>
                         </b-tab-item>
                         
-                        <b-tab-item label="Attendance" icon="view-list-outline">
+                        <b-tab-item label="Faculty Attendance" icon="view-list-outline">
                             <div class="panel-body">
                                 
                                 <b-table
@@ -90,21 +122,24 @@
                                     </b-table-column>
     
                                     <b-table-column field="user_name" label="Name" sortable v-slot="props">
-                                        {{ props.row.user_name }}
+                                        {{ props.row.user.lname }}, {{ props.row.user.fname}} {{ props.row.user.mname }}
                                     </b-table-column>
-    
-                                    <b-table-column width="400" field="activity" label="Activity" sortable v-slot="props">
-                                        {{ props.row.activity }}
+
+                                    <b-table-column field="schedule" label="Schedule" sortable v-slot="props">
+                                        <span v-if="props.row.schedule">
+                                            {{ props.row.schedule.time_start | formatTime }} -
+                                            {{ props.row.schedule.time_end | formatTime}}
+                                        </span>
+                                    </b-table-column>
+
+                                    <b-table-column field="door" label="Door" sortable v-slot="props">
+                                        <span v-if="props.row.door">{{ props.row.door.door_name }} ({{ props.row.door.mac_add }})</span>
                                     </b-table-column>
     
                                     <b-table-column field="role" label="System Role" sortable v-slot="props">
                                         {{ props.row.role }}
                                     </b-table-column>
-    
-                                    <b-table-column field="door" label="Door" sortable v-slot="props">
-                                        <span v-if="props.row.door">{{ props.row.door }}</span>
-                                    </b-table-column>
-    
+
                                     <b-table-column field="date_created" label="Attendance Date Time" sortable v-slot="props">
                                         {{ props.row.created_at | formatDateTime }}
                                     </b-table-column>
@@ -162,6 +197,13 @@ export default{
             defaultSortDirection: 'asc',
 
 
+            search: {
+                user: '',
+                start_date: new Date(),
+                end_date: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+            }
+
+
         }
     },
 
@@ -171,6 +213,7 @@ export default{
             const params = [
                 `sort_by=${this.sortField}.${this.sortOrder}`,
                 `perpage=${this.perPage}`,
+                `user=${this.search.user}`,
                 `page=${this.page}`
             ].join('&')
 

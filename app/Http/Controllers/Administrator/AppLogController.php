@@ -18,7 +18,12 @@ class AppLogController extends Controller
     public function getLogs(Request $req){
         $sort = explode('.', $req->sort_by);
 
-        $data = AppLog::orderBy($sort[0], $sort[1])
+        $key = '';
+        if(isset($req->user)){
+            $key = $req->user;   
+        }
+
+        $data = AppLog::where('user', 'like', '%' . $key . '%')->orderBy($sort[0], $sort[1])
             ->paginate($req->perpage);
 
         return $data;
@@ -27,7 +32,8 @@ class AppLogController extends Controller
     public function getAttendanceLogs(Request $req){
         $sort = explode('.', $req->sort_by);
 
-        $data = FacultyAttendance::orderBy($sort[0], $sort[1])
+        $data = FacultyAttendance::with(['door', 'schedule', 'user'])
+            ->orderBy($sort[0], $sort[1])
             ->paginate($req->perpage);
 
         return $data;
