@@ -113,16 +113,40 @@
                                     :default-sort-direction="defaultSortDirectionAttendance"
                                     @sort="onSortAttendance">
 
-                                    <b-field label="Search Faculty" label-position="on-border">
-                                        <b-input type="text"
-                                            v-model="search.faculty" placeholder="Search Faculty"
-                                            @keyup.native.enter="loadAsyncDataAttendance"/>
-                                        <p class="control">
-                                            <b-tooltip label="Search" type="is-success">
-                                                <b-button type="is-primary" icon-right="magnify" @click="loadAsyncDataAttendance"/>
-                                            </b-tooltip>
-                                        </p>
-                                    </b-field>
+                                    
+
+
+                                    <div class="is-flex">
+                                        <div>
+                                            <b-field label="Search Faculty" label-position="on-border">
+                                                <b-input type="text"
+                                                    v-model="facultySearch.faculty" placeholder="Search Faculty"
+                                                    @keyup.native.enter="loadAsyncDataAttendance"/>
+                                                <p class="control">
+                                                    <b-tooltip label="Search" type="is-success">
+                                                        <b-button type="is-primary" icon-right="magnify" @click="loadAsyncDataAttendance"/>
+                                                    </b-tooltip>
+                                                </p>
+                                            </b-field>
+                                        </div>
+                                        <div>
+                                            <b-button type="is-info"
+                                                class="is-outlined ml-2"
+                                                icon-left="printer" @click="openWindowPrintFaculty"></b-button>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-2">
+                                        <b-field>
+                                            <b-field label="From" label-position="on-border">
+                                                <b-datepicker v-model="search.start_date"></b-datepicker>
+                                            </b-field>
+                                            <b-field label="To" label-position="on-border">
+                                                <b-datepicker v-model="search.end_date"></b-datepicker>
+                                            </b-field>
+                                        </b-field>
+                                    </div>
+
     
                                     <b-table-column field="id" label="ID" sortable v-slot="props">
                                         {{ props.row.id }}
@@ -206,6 +230,12 @@ export default{
 
             search: {
                 user: '',
+               
+                start_date: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+                end_date: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+            },
+
+            facultySearch: {
                 faculty: '',
                 start_date: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
                 end_date: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
@@ -276,7 +306,7 @@ export default{
         loadAsyncDataAttendance() {
             const params = [
                 `sort_by=${this.sortFieldAttendance}.${this.sortOrderAttendance}`,
-                `faculty=${this.search.faculty}`,
+                `faculty=${this.facultySearch.faculty}`,
                 `perpage=${this.perPageAttendance}`,
                 `page=${this.pageAttendance}`
             ].join('&')
@@ -324,6 +354,12 @@ export default{
 
         openWindowPrint(){
             window.location = '/logs-print-preview?start=' + this.$formatDate(this.search.start_date) + '&end=' + this.$formatDate(this.search.end_date)
+        },
+
+        openWindowPrintFaculty(){
+            window.location = '/logs-print-preview-faculty-attendance?start=' 
+                + this.$formatDate(this.search.start_date) 
+                + '&end=' + this.$formatDate(this.search.end_date)
         }
 
 
