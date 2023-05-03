@@ -23,10 +23,27 @@ class AppLogController extends Controller
             $key = $req->user;   
         }
 
-        $data = AppLog::where('user', 'like', '%' . $key . '%')->orderBy($sort[0], $sort[1])
+        $data = AppLog::where('user', 'like', '%' . $key . '%')
+            ->whereBetween('created_at', [$req->start . ' 00:00:00', $req->end . ' 23:59:59']) //added time to do trick
+            ->orderBy($sort[0], $sort[1])
             ->paginate($req->perpage);
 
         return $data;
+    }
+
+    public function logsPrintPreview(Request $req){
+        $key = '';
+        if(isset($req->user)){
+            $key = $req->user;   
+        }
+        $data = AppLog::where('user', 'like', '%' . $key . '%')
+            ->whereBetween('created_at', [$req->start . ' 00:00:00', $req->end . ' 23:59:59']) //added time to do trick
+            ->get();
+
+        return view('administrator.logs-print-preview')
+            ->with('data', $data)
+            ->with('start', $req->start)
+            ->with('end', $req->end);
     }
 
     public function getAttendanceLogs(Request $req){

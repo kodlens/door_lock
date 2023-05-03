@@ -1,5 +1,44 @@
 @extends('layouts.print-css')
 
+@section('custom-css')
+    <style>
+
+        @page{
+            size: 8.5 13in
+        }
+
+        .print-caontainer{
+            margin: 0;
+            padding: 0;
+        }
+
+        .att-table{
+            margin: 10px auto;
+            padding: 10px;
+            font-size: .7em;
+        }
+
+        .att-table tr th{
+            padding: 8px;
+            /* border: 1px solid red; */
+            border: 1px solid rgb(180, 180, 180);
+
+        }
+        .att-table tr td{
+            padding: 5px;
+            border: 1px solid rgb(180, 180, 180);
+        }
+
+
+        @media print {
+            .att-table {
+                page-break-inside: avoid;
+            }
+        }
+
+    </style>
+@endsection
+
 @section('content')
     
     

@@ -43,7 +43,7 @@
                                         <div>
                                             <b-button type="is-info"
                                                 class="is-outlined ml-2"
-                                                icon-left="printer"></b-button>
+                                                icon-left="printer" @click="openWindowPrint"></b-button>
                                         </div>
                                     </div>
 
@@ -79,10 +79,6 @@
                                         <span v-if="props.row.door">{{ props.row.door }}</span>
                                     </b-table-column>
 
-                                    <b-table-column field="log_type" label="Log Type" sortable v-slot="props">
-                                        <span v-if="props.row.log_type">{{ props.row.log_type }}</span>
-                                    </b-table-column>
-    
                                     <b-table-column field="date_created" label="Date Created" sortable v-slot="props">
                                         {{ props.row.created_at | formatDateTime }}
                                     </b-table-column>
@@ -199,7 +195,7 @@ export default{
 
             search: {
                 user: '',
-                start_date: new Date(),
+                start_date: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
                 end_date: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
             }
 
@@ -210,10 +206,15 @@ export default{
     methods: {
 
         loadAsyncData() {
+
+            //console.log(this.$formatDate(this.search.start_date))
+
             const params = [
                 `sort_by=${this.sortField}.${this.sortOrder}`,
                 `perpage=${this.perPage}`,
                 `user=${this.search.user}`,
+                `start=${this.$formatDate(this.search.start_date)}`,                
+                `end=${this.$formatDate(this.search.end_date)}`,
                 `page=${this.page}`
             ].join('&')
 
@@ -257,6 +258,7 @@ export default{
         setPerPage(){
             this.loadAsyncData()
         },
+
 
         //FOR ATTENDANCE ASYNC
         loadAsyncDataAttendance() {
@@ -307,12 +309,20 @@ export default{
             this.loadAsyncDataAttendance()
         },
 
+        openWindowPrint(){
+            window.location = '/logs-print-preview?start=' + this.$formatDate(this.search.start_date) + '&end=' + this.$formatDate(this.search.end_date)
+        }
+
 
     },
 
     mounted(){
         this.loadAsyncData()
         this.loadAsyncDataAttendance()
+    },
+
+    computed:{
+      
     }
 }
 </script>

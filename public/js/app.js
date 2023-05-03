@@ -9147,10 +9147,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -9173,7 +9169,7 @@ __webpack_require__.r(__webpack_exports__);
       defaultSortDirection: 'asc',
       search: {
         user: '',
-        start_date: new Date(),
+        start_date: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
         end_date: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
       }
     };
@@ -9182,7 +9178,8 @@ __webpack_require__.r(__webpack_exports__);
     loadAsyncData: function loadAsyncData() {
       var _this = this;
 
-      var params = ["sort_by=".concat(this.sortField, ".").concat(this.sortOrder), "perpage=".concat(this.perPage), "user=".concat(this.search.user), "page=".concat(this.page)].join('&');
+      //console.log(this.$formatDate(this.search.start_date))
+      var params = ["sort_by=".concat(this.sortField, ".").concat(this.sortOrder), "perpage=".concat(this.perPage), "user=".concat(this.search.user), "start=".concat(this.$formatDate(this.search.start_date)), "end=".concat(this.$formatDate(this.search.end_date)), "page=".concat(this.page)].join('&');
       this.loading = true;
       axios.get("/get-logs?".concat(params)).then(function (_ref) {
         var data = _ref.data;
@@ -9265,12 +9262,16 @@ __webpack_require__.r(__webpack_exports__);
     },
     setPerPageAttendance: function setPerPageAttendance() {
       this.loadAsyncDataAttendance();
+    },
+    openWindowPrint: function openWindowPrint() {
+      window.location = '/logs-print-preview?start=' + this.$formatDate(this.search.start_date) + '&end=' + this.$formatDate(this.search.end_date);
     }
   },
   mounted: function mounted() {
     this.loadAsyncData();
     this.loadAsyncDataAttendance();
-  }
+  },
+  computed: {}
 });
 
 /***/ }),
@@ -15545,6 +15546,16 @@ Vue.filter('formatTime', function (value) {
 Vue.filter('formatDateTime', function (value) {
   return new Date(value).toLocaleString();
 });
+
+Vue.prototype.$formatDate = function (value) {
+  if (!value) return '';
+  var date = new Date(value);
+  var year = date.getFullYear();
+  var month = String(date.getMonth() + 1).padStart(2, '0');
+  var day = String(date.getDate()).padStart(2, '0');
+  return "".concat(year, "-").concat(month, "-").concat(day);
+};
+
 var app = new Vue({
   el: '#app'
 });
@@ -40419,6 +40430,7 @@ var render = function () {
                                       type: "is-info",
                                       "icon-left": "printer",
                                     },
+                                    on: { click: _vm.openWindowPrint },
                                   }),
                                 ],
                                 1
@@ -40589,28 +40601,6 @@ var render = function () {
                                       props.row.door
                                         ? _c("span", [
                                             _vm._v(_vm._s(props.row.door)),
-                                          ])
-                                        : _vm._e(),
-                                    ]
-                                  },
-                                },
-                              ]),
-                            }),
-                            _vm._v(" "),
-                            _c("b-table-column", {
-                              attrs: {
-                                field: "log_type",
-                                label: "Log Type",
-                                sortable: "",
-                              },
-                              scopedSlots: _vm._u([
-                                {
-                                  key: "default",
-                                  fn: function (props) {
-                                    return [
-                                      props.row.log_type
-                                        ? _c("span", [
-                                            _vm._v(_vm._s(props.row.log_type)),
                                           ])
                                         : _vm._e(),
                                     ]
