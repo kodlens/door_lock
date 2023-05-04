@@ -113,8 +113,6 @@
                                     :default-sort-direction="defaultSortDirectionAttendance"
                                     @sort="onSortAttendance">
 
-                                    
-
 
                                     <div class="is-flex">
                                         <div>
@@ -139,10 +137,10 @@
                                     <div class="mt-2">
                                         <b-field>
                                             <b-field label="From" label-position="on-border">
-                                                <b-datepicker v-model="search.start_date"></b-datepicker>
+                                                <b-datepicker v-model="facultySearch.start_date"></b-datepicker>
                                             </b-field>
                                             <b-field label="To" label-position="on-border">
-                                                <b-datepicker v-model="search.end_date"></b-datepicker>
+                                                <b-datepicker v-model="facultySearch.end_date"></b-datepicker>
                                             </b-field>
                                         </b-field>
                                     </div>
@@ -307,6 +305,8 @@ export default{
             const params = [
                 `sort_by=${this.sortFieldAttendance}.${this.sortOrderAttendance}`,
                 `faculty=${this.facultySearch.faculty}`,
+                `start=${this.$formatDate(this.facultySearch.start_date)}`,                
+                `end=${this.$formatDate(this.facultySearch.end_date)}`,
                 `perpage=${this.perPageAttendance}`,
                 `page=${this.pageAttendance}`
             ].join('&')
@@ -357,9 +357,15 @@ export default{
         },
 
         openWindowPrintFaculty(){
-            window.location = '/logs-print-preview-faculty-attendance?start=' 
-                + this.$formatDate(this.search.start_date) 
-                + '&end=' + this.$formatDate(this.search.end_date)
+
+            const params = [
+                `faculty=${this.facultySearch.faculty}`,
+                `start=${this.$formatDate(this.facultySearch.start_date)}`,                
+                `end=${this.$formatDate(this.facultySearch.end_date)}`,
+    
+            ].join('&')
+
+            window.location = `/logs-attendance-print-preview?${params}`;
         }
 
 

@@ -9158,6 +9158,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -9180,6 +9202,10 @@ __webpack_require__.r(__webpack_exports__);
       defaultSortDirection: 'asc',
       search: {
         user: '',
+        start_date: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+        end_date: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
+      },
+      facultySearch: {
         faculty: '',
         start_date: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
         end_date: new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0)
@@ -9235,7 +9261,7 @@ __webpack_require__.r(__webpack_exports__);
     loadAsyncDataAttendance: function loadAsyncDataAttendance() {
       var _this2 = this;
 
-      var params = ["sort_by=".concat(this.sortFieldAttendance, ".").concat(this.sortOrderAttendance), "faculty=".concat(this.search.faculty), "perpage=".concat(this.perPageAttendance), "page=".concat(this.pageAttendance)].join('&');
+      var params = ["sort_by=".concat(this.sortFieldAttendance, ".").concat(this.sortOrderAttendance), "faculty=".concat(this.facultySearch.faculty), "start=".concat(this.$formatDate(this.facultySearch.start_date)), "end=".concat(this.$formatDate(this.facultySearch.end_date)), "perpage=".concat(this.perPageAttendance), "page=".concat(this.pageAttendance)].join('&');
       this.loadingAttendance = true;
       axios.get("/get-attendance-logs?".concat(params)).then(function (_ref2) {
         var data = _ref2.data;
@@ -9277,6 +9303,10 @@ __webpack_require__.r(__webpack_exports__);
     },
     openWindowPrint: function openWindowPrint() {
       window.location = '/logs-print-preview?start=' + this.$formatDate(this.search.start_date) + '&end=' + this.$formatDate(this.search.end_date);
+    },
+    openWindowPrintFaculty: function openWindowPrintFaculty() {
+      var params = ["faculty=".concat(this.facultySearch.faculty), "start=".concat(this.$formatDate(this.facultySearch.start_date)), "end=".concat(this.$formatDate(this.facultySearch.end_date))].join('&');
+      window.location = "/logs-attendance-print-preview?".concat(params);
     }
   },
   mounted: function mounted() {
@@ -40695,69 +40725,164 @@ var render = function () {
                             },
                           },
                           [
+                            _c("div", { staticClass: "is-flex" }, [
+                              _c(
+                                "div",
+                                [
+                                  _c(
+                                    "b-field",
+                                    {
+                                      attrs: {
+                                        label: "Search Faculty",
+                                        "label-position": "on-border",
+                                      },
+                                    },
+                                    [
+                                      _c("b-input", {
+                                        attrs: {
+                                          type: "text",
+                                          placeholder: "Search Faculty",
+                                        },
+                                        nativeOn: {
+                                          keyup: function ($event) {
+                                            if (
+                                              !$event.type.indexOf("key") &&
+                                              _vm._k(
+                                                $event.keyCode,
+                                                "enter",
+                                                13,
+                                                $event.key,
+                                                "Enter"
+                                              )
+                                            ) {
+                                              return null
+                                            }
+                                            return _vm.loadAsyncDataAttendance.apply(
+                                              null,
+                                              arguments
+                                            )
+                                          },
+                                        },
+                                        model: {
+                                          value: _vm.facultySearch.faculty,
+                                          callback: function ($$v) {
+                                            _vm.$set(
+                                              _vm.facultySearch,
+                                              "faculty",
+                                              $$v
+                                            )
+                                          },
+                                          expression: "facultySearch.faculty",
+                                        },
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "p",
+                                        { staticClass: "control" },
+                                        [
+                                          _c(
+                                            "b-tooltip",
+                                            {
+                                              attrs: {
+                                                label: "Search",
+                                                type: "is-success",
+                                              },
+                                            },
+                                            [
+                                              _c("b-button", {
+                                                attrs: {
+                                                  type: "is-primary",
+                                                  "icon-right": "magnify",
+                                                },
+                                                on: {
+                                                  click:
+                                                    _vm.loadAsyncDataAttendance,
+                                                },
+                                              }),
+                                            ],
+                                            1
+                                          ),
+                                        ],
+                                        1
+                                      ),
+                                    ],
+                                    1
+                                  ),
+                                ],
+                                1
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "div",
+                                [
+                                  _c("b-button", {
+                                    staticClass: "is-outlined ml-2",
+                                    attrs: {
+                                      type: "is-info",
+                                      "icon-left": "printer",
+                                    },
+                                    on: { click: _vm.openWindowPrintFaculty },
+                                  }),
+                                ],
+                                1
+                              ),
+                            ]),
+                            _vm._v(" "),
                             _c(
-                              "b-field",
-                              {
-                                attrs: {
-                                  label: "Search Faculty",
-                                  "label-position": "on-border",
-                                },
-                              },
+                              "div",
+                              { staticClass: "mt-2" },
                               [
-                                _c("b-input", {
-                                  attrs: {
-                                    type: "text",
-                                    placeholder: "Search Faculty",
-                                  },
-                                  nativeOn: {
-                                    keyup: function ($event) {
-                                      if (
-                                        !$event.type.indexOf("key") &&
-                                        _vm._k(
-                                          $event.keyCode,
-                                          "enter",
-                                          13,
-                                          $event.key,
-                                          "Enter"
-                                        )
-                                      ) {
-                                        return null
-                                      }
-                                      return _vm.loadAsyncDataAttendance.apply(
-                                        null,
-                                        arguments
-                                      )
-                                    },
-                                  },
-                                  model: {
-                                    value: _vm.search.faculty,
-                                    callback: function ($$v) {
-                                      _vm.$set(_vm.search, "faculty", $$v)
-                                    },
-                                    expression: "search.faculty",
-                                  },
-                                }),
-                                _vm._v(" "),
                                 _c(
-                                  "p",
-                                  { staticClass: "control" },
+                                  "b-field",
                                   [
                                     _c(
-                                      "b-tooltip",
+                                      "b-field",
                                       {
                                         attrs: {
-                                          label: "Search",
-                                          type: "is-success",
+                                          label: "From",
+                                          "label-position": "on-border",
                                         },
                                       },
                                       [
-                                        _c("b-button", {
-                                          attrs: {
-                                            type: "is-primary",
-                                            "icon-right": "magnify",
+                                        _c("b-datepicker", {
+                                          model: {
+                                            value: _vm.facultySearch.start_date,
+                                            callback: function ($$v) {
+                                              _vm.$set(
+                                                _vm.facultySearch,
+                                                "start_date",
+                                                $$v
+                                              )
+                                            },
+                                            expression:
+                                              "facultySearch.start_date",
                                           },
-                                          on: {
-                                            click: _vm.loadAsyncDataAttendance,
+                                        }),
+                                      ],
+                                      1
+                                    ),
+                                    _vm._v(" "),
+                                    _c(
+                                      "b-field",
+                                      {
+                                        attrs: {
+                                          label: "To",
+                                          "label-position": "on-border",
+                                        },
+                                      },
+                                      [
+                                        _c("b-datepicker", {
+                                          model: {
+                                            value: _vm.facultySearch.end_date,
+                                            callback: function ($$v) {
+                                              _vm.$set(
+                                                _vm.facultySearch,
+                                                "end_date",
+                                                $$v
+                                              )
+                                            },
+                                            expression:
+                                              "facultySearch.end_date",
                                           },
                                         }),
                                       ],

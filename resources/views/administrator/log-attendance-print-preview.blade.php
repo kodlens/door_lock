@@ -29,6 +29,10 @@
             border: 1px solid rgb(180, 180, 180);
         }
 
+        .hide-print{
+            width: inherit;
+        }
+
         
         @media print {
 
@@ -40,7 +44,7 @@
             .hide-print{
                 display: none;
             }
-
+            
             .print-table {
                 page-break-inside: avoid;
             }
@@ -57,7 +61,7 @@
     <div class="print-container">
 
         <div style="text-align: center; font-weight:bold;">
-            ACTIVITY LOGS
+            FACULTY ATTENDANCE
         </div>
         <div style="text-align: center;">
             <span style="font-weight: bold;">FROM: {{ $start }} - {{ $end }} </span>
@@ -68,17 +72,42 @@
                 <tr>
                     <th>User</th>
                     <th>Role</th>
-                    <th>Activity</th>
+                    <th>Schedule</th>
                     <th>Door</th>
                     <th>Date Time Logs</th>
                 </tr>
 
             @foreach ($data as $item)
                 <tr>
-                    <td>{{ $item['user'] }}</td>
+                    <td>{{ $item['user_name'] }}</td>
                     <td>{{ $item['role'] }}</td>
-                    <td>{{ $item['activity'] }}</td>
-                    <td>{{ $item['door'] }}</td>
+                    <td>{{ $item['schedule']->schedule_description }} 
+                        ({{ date('h:i A', strtotime($item['schedule']->time_start)) }} - {{ date('h:i A', strtotime($item['schedule']->time_end)) }})
+                        (
+                            @if($item['schedule']->mon == 1)
+                                M
+                            @endif
+                            @if($item['schedule']->tue == 1)
+                                T
+                            @endif
+                            @if($item['schedule']->wed == 1)
+                                W
+                            @endif
+                            @if($item['schedule']->thu == 1)
+                                TH
+                            @endif
+                            @if($item['schedule']->fri == 1)
+                                F
+                            @endif
+                            @if($item['schedule']->sat == 1)
+                                SAT
+                            @endif
+                            @if($item['schedule']->sun == 1)
+                                SUN
+                            @endif
+                        )
+                    </td>
+                    <td>{{ $item['door']->door_name }} ({{ $item['door']->mac_add }})</td>
                     <td>{{ $item['created_at'] }}</td>
                 </tr>
             @endforeach
@@ -91,7 +120,6 @@
                     Print
                 </button>
             </div>
-
         </div>
            
         

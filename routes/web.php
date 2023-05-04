@@ -99,7 +99,7 @@ Route::middleware(['auth'])->group(function() {
     Route::get('/logs-print-preview', [App\Http\Controllers\Administrator\AppLogController::class, 'logsPrintPreview']);
 
     Route::get('/get-attendance-logs', [App\Http\Controllers\Administrator\AppLogController::class, 'getAttendanceLogs']);
-
+    Route::get('/logs-attendance-print-preview', [App\Http\Controllers\Administrator\AppLogController::class, 'logsAttendancePrintPreview']);
 
 
 
