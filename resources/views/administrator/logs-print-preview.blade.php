@@ -43,9 +43,7 @@
 
             .print-table {
                 page-break-inside: avoid;
-            }
-
-           
+            } 
         }
 
     </style>
