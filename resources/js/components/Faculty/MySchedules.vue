@@ -93,8 +93,8 @@
                                 {{ props.row.schedule_id }}
                             </b-table-column>
 
-                            <b-table-column field="schedule_desc" label="Description" sortable v-slot="props">
-                                {{ props.row.schedule_desc }}
+                            <b-table-column field="schedule_description" label="Description" sortable v-slot="props">
+                                {{ props.row.schedule_description }}
                             </b-table-column>
 
                              <b-table-column field="academic_year" label="A.Y." sortable v-slot="props">

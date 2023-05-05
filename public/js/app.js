@@ -46850,7 +46850,7 @@ var render = function () {
                     _vm._v(" "),
                     _c("b-table-column", {
                       attrs: {
-                        field: "schedule_desc",
+                        field: "schedule_description",
                         label: "Description",
                         sortable: "",
                       },
@@ -46861,7 +46861,7 @@ var render = function () {
                             return [
                               _vm._v(
                                 "\n                            " +
-                                  _vm._s(props.row.schedule_desc) +
+                                  _vm._s(props.row.schedule_description) +
                                   "\n                        "
                               ),
                             ]
